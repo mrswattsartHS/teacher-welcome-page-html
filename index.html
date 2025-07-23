@@ -1,59 +1,354 @@
-<!-- ✅ Replace your existing HTML with this -->
-<div id="output" style="white-space: pre-wrap; background: #fdfdfd; padding: 1.5rem; border: 2px dashed #ccc; border-radius: 12px; margin: 2rem auto; max-width: 800px; font-size: 0.95rem;">
-  <textarea id="htmlOutput" rows="20" style="width: 100%; padding: 1rem; font-family: monospace; border: 1px solid #ccc; border-radius: 8px;"></textarea>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Canvas Course Landing Page Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(to right, #f0f4f8, #e0ecf7);
+      margin: 0; padding: 2rem;
+      color: #333;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      font-weight: 700;
+      margin-top: 1rem;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.25rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      font-family: 'Nunito', sans-serif;
+    }
+    button {
+      margin-top: 1.5rem;
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #2c80b4;
+    }
+    .form-container {
+      max-width: 900px;
+      margin: 0 auto 3rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    #output {
+      max-width: 900px;
+      margin: 0 auto;
+      white-space: pre-wrap;
+      background: #fefefe;
+      border: 2px dashed #ccc;
+      padding: 1.5rem;
+      border-radius: 12px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      min-height: 300px;
+      overflow-y: auto;
+      user-select: text;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 3rem;
+    }
+    details summary {
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      font-weight: 700;
+      background-color: #e1ecf4;
+      border-radius: 8px;
+      margin-top: 1rem;
+      user-select: none;
+    }
+    details div.content {
+      padding: 0.5rem 1rem 1rem 1rem;
+      border-left: 3px solid #3498db;
+      margin-left: 1rem;
+      background-color: #f9fbfc;
+      border-radius: 0 8px 8px 8px;
+    }
+    img.header-img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    a.start-link {
+      text-decoration: underline;
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: 700;
+      font-size: 24pt;
+      color: #1a73e8;
+    }
+    .start-links-container {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Canvas Course Landing Page Generator</h1>
+  <div class="form-container">
+    <form id="courseForm" onsubmit="event.preventDefault(); generateHTML();">
+      <label for="headerImageUrl">Header Banner Image URL (optional):</label>
+      <input type="url" id="headerImageUrl" placeholder="https://example.com/banner.jpg" />
 
-<script>
-  function getColor(subject) {
-    const colors = {
-      math: '#cce0ff',
-      english: '#ffd6d6',
-      science: '#d1f7d6',
-      social: '#fff2cc',
-      arts: '#ecd4f2',
-      language: '#f7e2c4',
-      pe: '#c8f7f2',
-      elective: '#e4e4e4',
-      other: '#dddddd'
-    };
-    return colors[subject] || '#ffffff';
-  }
+      <label for="startLink1">Start Link Text 1:</label>
+      <input type="text" id="startLink1" placeholder="Begin the Course" />
+      <label for="startLinkUrl1">Start Link URL 1:</label>
+      <input type="url" id="startLinkUrl1" placeholder="https://example.com/course-start" />
 
-  function generateHTML() {
-    const subject = document.getElementById("subject").value;
-    const bgColor = getColor(subject);
+      <label for="startLink2">Start Link Text 2 (optional):</label>
+      <input type="text" id="startLink2" placeholder="Alternative Start Link" />
+      <label for="startLinkUrl2">Start Link URL 2 (optional):</label>
+      <input type="url" id="startLinkUrl2" placeholder="https://example.com/course-start2" />
 
-    const html = `
-<div style="font-family: 'Nunito', sans-serif; background-color: ${bgColor}; padding: 20px; border-radius: 10px;">
-  ${document.getElementById("bannerImage").value ? `<img src="${document.getElementById("bannerImage").value}" alt="Header Banner" style="width: 100%; border-radius: 10px;" />` : ''}
-  <h1>${document.getElementById("className").value}</h1>
-  <h2>Welcome from ${document.getElementById("teacherName").value}</h2>
-  <p>${document.getElementById("welcome").value}</p>
-  <p><strong>📧 Email:</strong> ${document.getElementById("email").value}</p>
-  ${document.getElementById("phone").value ? `<p><strong>📞 Phone:</strong> ${document.getElementById("phone").value}</p>` : ''}
-  ${document.getElementById("hours").value ? `<p><strong>🕒 Office Hours:</strong> ${document.getElementById("hours").value}</p>` : ''}
-  ${document.getElementById("photo").value ? `<img src="${document.getElementById("photo").value}" alt="Teacher Photo" style="max-width: 150px; border-radius: 50%;" />` : ''}
-  <p><strong>📘 Syllabus:</strong> <a href="${document.getElementById("syllabus").value}" target="_blank">View Syllabus</a></p>
-  <p><strong>🖥️ Live Sessions:</strong> ${document.getElementById("liveInfo").value}</p>
-  ${document.getElementById("importantLinks").value.split(',').map(link => {
-      const [title, url] = link.split('|');
-      return url ? `<p><a href="${url.trim()}" target="_blank">🔗 ${title.trim()}</a></p>` : '';
-    }).join('')}
-  ${document.getElementById("quote").value ? `<blockquote>${document.getElementById("quote").value}</blockquote>` : ''}
-  <p><em>Academic Year: ${document.getElementById("schoolYear").value}</em></p>
-</div>`;
+      <label for="courseTitle">Course Title and Number:</label>
+      <input type="text" id="courseTitle" placeholder="e.g., Fine Arts 101" />
 
-    document.getElementById("htmlOutput").value = html.trim();
-    window.generatedHTML = html;
-  }
+      <label for="meetingTimes">Meeting Times and Location:</label>
+      <textarea id="meetingTimes" rows="2" placeholder="Days, time, location or platform"></textarea>
 
-  function downloadHTML() {
-    const blob = new Blob([window.generatedHTML || ''], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'canvas-landing-page.html';
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-</script>
+      <label for="semesterTerm">Semester/Term:</label>
+      <input type="text" id="semesterTerm" placeholder="e.g., Fall 2025" />
+
+      <label for="instructorName">Instructor Name and Title:</label>
+      <input type="text" id="instructorName" placeholder="e.g., Ashley Watts, Art Teacher" />
+
+      <label for="officeLocation">Office Location:</label>
+      <input type="text" id="officeLocation" placeholder="e.g., Room 204 or Zoom link" />
+
+      <label for="officeHours">Office Hours:</label>
+      <input type="text" id="officeHours" placeholder="Days and times" />
+
+      <label for="phoneNumber">Phone Number:</label>
+      <input type="text" id="phoneNumber" placeholder="e.g., 555-123-4567" />
+
+      <label for="emailAddress">Email Address:</label>
+      <input type="email" id="emailAddress" placeholder="example@school.edu" />
+
+      <label for="courseDescription">Course Description:</label>
+      <textarea id="courseDescription" rows="4" placeholder="Brief overview of the course"></textarea>
+
+      <label for="prerequisites">Prerequisites:</label>
+      <textarea id="prerequisites" rows="2" placeholder="Required prior courses or knowledge"></textarea>
+
+      <label for="courseObjectives">Course Objectives:</label>
+      <textarea id="courseObjectives" rows="3" placeholder="What students will learn"></textarea>
+
+      <label for="intendedLearningOutcomes">Intended Learning Outcomes (ILOs):</label>
+      <textarea id="intendedLearningOutcomes" rows="3" placeholder="Knowledge, skills, competencies"></textarea>
+
+      <label for="gradingBreakdown">Grading Breakdown:</label>
+      <textarea id="gradingBreakdown" rows="3" placeholder="How grades are calculated"></textarea>
+
+      <label for="assignmentsDueDates">Assignments and Due Dates:</label>
+      <textarea id="assignmentsDueDates" rows="4" placeholder="List assignments, projects, exams, due dates"></textarea>
+
+      <label for="gradingPolicies">Grading Policies:</label>
+      <textarea id="gradingPolicies" rows="3" placeholder="Late work, extra credit, calculation"></textarea>
+
+      <label for="academicIntegrity">Academic Integrity Statement:</label>
+      <textarea id="academicIntegrity" rows="3" placeholder="Honesty and plagiarism policies"></textarea>
+
+      <label for="attendancePolicy">Attendance Policy:</label>
+      <textarea id="attendancePolicy" rows="2" placeholder="Attendance, tardiness, absences"></textarea>
+
+      <label for="lateWorkPolicy">Late Work Policy:</label>
+      <textarea id="lateWorkPolicy" rows="2" placeholder="How late submissions are handled"></textarea>
+
+      <label for="communicationGuidelines">Communication Guidelines:</label>
+      <textarea id="communicationGuidelines" rows="3" placeholder="How students should communicate"></textarea>
+
+      <label for="accessibilityStatement">Accessibility Statement:</label>
+      <textarea id="accessibilityStatement" rows="3" placeholder="Accommodations for disabilities"></textarea>
+
+      <label for="otherPolicies">Other Policies:</label>
+      <textarea id="otherPolicies" rows="3" placeholder="Tech use, participation, conduct"></textarea>
+
+      <label for="requiredTexts">Required Texts and Materials:</label>
+      <textarea id="requiredTexts" rows="3" placeholder="Required readings, textbooks, materials"></textarea>
+
+      <label for="recommendedResources">Recommended Resources:</label>
+      <textarea id="recommendedResources" rows="3" placeholder="Additional helpful readings/resources"></textarea>
+
+      <label for="onlineResources">Online Resources:</label>
+      <textarea id="onlineResources" rows="3" placeholder="Links to online materials, platforms"></textarea>
+
+      <label for="courseSchedule">Course Schedule (weekly topics, readings, assignments):</label>
+      <textarea id="courseSchedule" rows="5" placeholder="Week-by-week breakdown"></textarea>
+
+      <label for="importantDates">Important Dates (exams, projects, deadlines):</label>
+      <textarea id="importantDates" rows="3" placeholder="Key dates"></textarea>
+
+      <label for="teachingRationale">Rationale for Teaching Methods:</label>
+      <textarea id="teachingRationale" rows="3" placeholder="Why teaching methods chosen"></textarea>
+
+      <label for="teachingPhilosophy">Your Teaching Philosophy:</label>
+      <textarea id="teachingPhilosophy" rows="3" placeholder="Approach to teaching and learning"></textarea>
+
+      <label for="studentExpectations">Student Expectations:</label>
+      <textarea id="studentExpectations" rows="3" placeholder="Participation, engagement, learning"></textarea>
+
+      <button type="submit">Generate HTML</button>
+      <button type="button" onclick="downloadHTML()">Download HTML</button>
+    </form>
+  </div>
+
+  <h2 style="text-align:center;">Generated HTML Output</h2>
+  <pre id="output"></pre>
+
+  <footer>
+    &copy; B. Watts 2025
+  </footer>
+
+  <script>
+    function isFilled(id) {
+      const val = document.getElementById(id).value.trim();
+      return val.length > 0;
+    }
+
+    function safeHTML(text) {
+      // Simple escape for special characters to avoid breaking HTML output
+      return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/\n/g, '<br>');
+    }
+
+    function generateAccordion(title, content, icon = '') {
+      return `<details><summary>${icon} <strong>${title}</strong></summary><div class="content">${content}</div></details>`;
+    }
+
+    function generateHTML() {
+      let html = '';
+
+      // Header Image
+      const headerImg = document.getElementById('headerImageUrl').value.trim();
+      if(headerImg) {
+        html += `<img src="${headerImg}" alt="Header Banner" class="header-img">\n`;
+      }
+
+      // Start links block
+      const startLink1Text = document.getElementById('startLink1').value.trim();
+      const startLink1Url = document.getElementById('startLinkUrl1').value.trim();
+      const startLink2Text = document.getElementById('startLink2').value.trim();
+      const startLink2Url = document.getElementById('startLinkUrl2').value.trim();
+
+      if(startLink1Text && startLink1Url) {
+        html += `<div class="start-links-container">\n`;
+        html += `<a href="${startLink1Url}" class="start-link" target="_blank">${safeHTML(startLink1Text)}</a>\n`;
+        if(startLink2Text && startLink2Url) {
+          html += `<br><a href="${startLink2Url}" class="start-link" target="_blank">${safeHTML(startLink2Text)}</a>\n`;
+        }
+        html += `</div>\n`;
+      }
+
+      // Build accordions for all provided sections:
+
+      const sections = [
+        { id:'courseTitle', title:'Basic Course Information', icon:'📚', contentFields: [
+          { id:'courseTitle', label:'Course Title and Number' },
+          { id:'meetingTimes', label:'Meeting Times and Location' },
+          { id:'semesterTerm', label:'Semester/Term' },
+          { id:'instructorName', label:'Instructor Information' },
+          { id:'officeLocation', label:'Office Location' },
+          { id:'officeHours', label:'Office Hours' },
+          { id:'phoneNumber', label:'Phone Number' },
+          { id:'emailAddress', label:'Email Address' },
+          { id:'courseDescription', label:'Course Description' },
+          { id:'prerequisites', label:'Prerequisites' },
+        ]},
+        { id:'learningObjectives', title:'Learning Objectives', icon:'🎯', contentFields: [
+          { id:'courseObjectives', label:'Course Objectives' },
+          { id:'intendedLearningOutcomes', label:'Intended Learning Outcomes (ILOs)' },
+        ]},
+        { id:'assignmentsGrading', title:'Assignments and Grading', icon:'📝', contentFields: [
+          { id:'gradingBreakdown', label:'Grading Breakdown' },
+          { id:'assignmentsDueDates', label:'Assignments and Due Dates' },
+          { id:'gradingPolicies', label:'Grading Policies' },
+          { id:'academicIntegrity', label:'Academic Integrity' },
+        ]},
+        { id:'policies', title:'Policies', icon:'📜', contentFields: [
+          { id:'attendancePolicy', label:'Attendance Policy' },
+          { id:'lateWorkPolicy', label:'Late Work Policy' },
+          { id:'communicationGuidelines', label:'Communication Guidelines' },
+          { id:'accessibilityStatement', label:'Accessibility Statement' },
+          { id:'otherPolicies', label:'Other Policies' },
+        ]},
+        { id:'resources', title:'Resources', icon:'📚', contentFields: [
+          { id:'requiredTexts', label:'Required Texts and Materials' },
+          { id:'recommendedResources', label:'Recommended Resources' },
+          { id:'onlineResources', label:'Online Resources' },
+        ]},
+        { id:'schedule', title:'Course Schedule', icon:'📅', contentFields: [
+          { id:'courseSchedule', label:'Detailed Schedule' },
+          { id:'importantDates', label:'Important Dates' },
+        ]},
+        { id:'additionalInfo', title:'Additional Information', icon:'💡', contentFields: [
+          { id:'teachingRationale', label:'Rationale for Teaching Methods' },
+          { id:'teachingPhilosophy', label:'Your Teaching Philosophy' },
+          { id:'studentExpectations', label:'Student Expectations' },
+        ]}
+      ];
+
+      for(const section of sections) {
+        let contentHTML = '';
+        for(const field of section.contentFields) {
+          if(isFilled(field.id)) {
+            contentHTML += `<p><strong>${field.label}:</strong><br>${safeHTML(document.getElementById(field.id).value)}</p>\n`;
+          }
+        }
+        if(contentHTML) {
+          html += generateAccordion(section.title, contentHTML, section.icon) + '\n';
+        }
+      }
+
+      document.getElementById('output').textContent = html.trim();
+      window.generatedHTML = html.trim();
+    }
+
+    function downloadHTML() {
+      if(!window.generatedHTML) {
+        alert('Please generate the HTML first.');
+        return;
+      }
+      const blob = new Blob([window.generatedHTML], {type: 'text/html'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'canvas-course-landing-page.html';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>
