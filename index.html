@@ -1,0 +1,53 @@
+ <label>Subject Area:</label>
+  <select id="subject">
+    <option value="">-- Select --</option>
+    <option value="math">Math</option>
+    <option value="english">English</option>
+    <option value="science">Science</option>
+    <option value="social">Social Studies</option>
+    <option value="arts">Fine Arts</option>
+    <option value="language">World Language</option>
+    <option value="pe">Physical Education</option>
+    <option value="elective">Elective</option>
+    <option value="other">Other</option>
+  </select>
+
+  <label>Header Banner Image URL (Optional):</label>
+  <input type="url" id="bannerImage" />
+
+  <label>Teacher Name:</label>
+  <input type="text" id="teacherName" />
+
+  <label>Email:</label>
+  <input type="email" id="email" />
+
+  <label>Phone (Optional):</label>
+  <input type="text" id="phone" />
+
+  <label>Office Hours (Optional):</label>
+  <input type="text" id="hours" />
+
+  <label>Profile Photo URL (Optional):</label>
+  <input type="url" id="photo" />
+
+  <label>Welcome Message:</label>
+  <textarea id="welcome"></textarea>
+
+  <label>Syllabus Link:</label>
+  <input type="url" id="syllabus" />
+
+  <label>Live Session Info:</label>
+  <textarea id="liveInfo"></textarea>
+
+  <label>Important Links (comma separated as Title|URL):</label>
+  <textarea id="importantLinks"></textarea>
+
+  <label>Fun Fact/Quote (Optional):</label>
+  <input type="text" id="quote" />
+
+  <label>School Year:</label>
+  <input type="text" id="schoolYear" />
+</div>
+
+<button type="button" onclick="generateHTML()">Generate HTML</button>
+<button type="button" onclick="downloadHTML()">Download HTML</button>
