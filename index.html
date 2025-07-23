@@ -1,215 +1,1063 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Canvas Course Page Generator</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(to bottom right, #f0f8ff, #e6f7ff);
-      color: #333;
-      transition: background 0.5s;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Syllabus HTML Generator - Mrs. B. Watts 2025</title>
+<style>
+  /* Reset & base */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f7f9;
+    color: #333;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+  }
+  /* Sticky wide header with scroll */
+  header#page-header {
+    position: sticky; top: 0; left: 0; right: 0;
+    background: linear-gradient(90deg, #007acc, #00bcd4);
+    color: white; padding: 10px 0;
+    font-weight: 700; font-size: 1.25rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    z-index: 1100;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  header#page-header div.container {
+    width: 1200px; /* max content width */
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+  /* Form Container */
+  main {
+    flex-grow: 1;
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    background: white;
+    box-shadow: 0 8px 20px rgb(0 0 0 / 0.05);
+    border-radius: 10px;
+    padding: 25px 30px;
+  }
+
+  /* Responsive grid layout for forms */
+  form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 40px;
+  }
+  form > .full-width {
+    grid-column: 1 / -1;
+  }
+
+  label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+  }
+  input[type=text], input[type=url], textarea, select {
+    width: 100%;
+    padding: 9px 12px;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 1.8px solid #bbb;
+    transition: border-color 0.3s;
+    font-family: inherit;
+    resize: vertical;
+  }
+  input[type=text]:focus, input[type=url]:focus, textarea:focus, select:focus {
+    border-color: #00bcd4;
+    outline: none;
+  }
+  textarea {
+    min-height: 100px;
+  }
+  /* Required label asterisks */
+  .required::after {
+    content: " *";
+    color: #e53935;
+    font-weight: 900;
+  }
+
+  /* Sections collapsible styling for optional */
+  .optional-section {
+    border: 1px solid #ddd; padding: 12px 15px;
+    border-radius: 8px;
+    background: #fafafa;
+    cursor: pointer;
+    user-select: none;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+  }
+  .optional-section:hover {
+    background: #defaff;
+    border-color: #00bcd4;
+  }
+  .optional-content {
+    padding: 15px 10px 30px 10px;
+    background: #fcfdff;
+    border: 1px solid #eee;
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    display: none;
+    animation: slideDownFade 0.4s ease forwards;
+    overflow: hidden;
+  }
+  .optional-section.open + .optional-content {
+    display: block;
+  }
+  .toggle-icon {
+    font-size: 1.35rem;
+    user-select: none;
+    color: #777;
+    transition: transform 0.3s ease;
+  }
+  .optional-section.open .toggle-icon {
+    transform: rotate(90deg);
+    color: #00bcd4;
+  }
+  @keyframes slideDownFade {
+    from {opacity: 0;max-height: 0;}
+    to {opacity: 1; max-height: 500px;}
+  }
+
+  /* Buttons */
+  button {
+    grid-column: 1 / -1;
+    justify-self: center;
+    margin-top: 25px;
+    padding: 14px 42px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    background: #007acc;
+    border: none;
+    border-radius: 30px;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgb(0 123 204 / 0.6);
+    transition: background-color 0.25s ease;
+  }
+  button:hover, button:focus {
+    background-color: #005ea1;
+    outline: none;
+  }
+  button:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  /* Preview container */
+  #preview-container {
+    margin-top: 40px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  /* Left: generated HTML code */
+  #output-area {
+    flex: 1 1 600px;
+    display: flex;
+    flex-direction: column;
+  }
+  #generated-html {
+    height: 400px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    white-space: pre-wrap;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    resize: vertical;
+    background: #fefefe;
+    box-shadow: inset 0 0 11px rgba(0,0,0,0.04);
+  }
+  #copy-btn, #download-btn {
+    margin-top: 12px;
+    padding: 10px 25px;
+    font-weight: 600;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    background: #00bcd4;
+    color: white;
+    box-shadow: 0 5px 15px rgb(0 188 212 / 0.5);
+    transition: background-color 0.3s ease;
+    align-self: flex-start;
+    user-select: none;
+  }
+  #copy-btn:hover, #download-btn:hover {
+    background: #0097a7;
+  }
+  /* Right: iframe preview */
+  #iframe-preview-container {
+    flex: 1 1 500px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+    background: white;
+    max-height: 410px;
+  }
+  #iframe-preview-container h3 {
+    margin: 0;
+    padding: 12px 18px;
+    background: #222;
+    color: #fff;
+    font-weight: 700;
+  }
+  #iframe-preview {
+    flex-grow: 1;
+    border: none;
+    width: 100%;
+  }
+  #iframe-fallback {
+    background: #efefef;
+    padding: 15px 10px;
+    font-size: 0.85rem;
+    color: #0097a7;
+    border-top: 1px solid #ddd;
+    text-align: center;
+  }
+
+  /* Header Image Preview */
+  #header-image-preview {
+    max-width: 100%;
+    max-height: 220px;
+    border-radius: 12px;
+    margin-top: 6px;
+    object-fit: contain;
+    box-shadow: 0 4px 22px rgb(0 0 0 / 0.12);
+    user-select: none;
+    pointer-events: none;
+  }
+
+  /* Loading spinner overlay */
+  #loading-overlay {
+    position: fixed;
+    top:0; left:0; right:0; bottom:0;
+    background: rgba(255,255,255,0.75);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+  }
+  .spinner {
+    width: 42px;
+    height: 42px;
+    border: 5px solid #cfd0d1;
+    border-top-color: #007acc;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    to {transform: rotate(360deg);}
+  }
+
+  /* Color Themes For Preview & Output */
+  :root {
+    --color-primary: #007acc;
+    --color-secondary: #00bcd4;
+    --color-accent: #e53935;
+    --color-bg: #f9f9f9;
+  }
+  .theme-cool {
+    --color-primary: #1976d2;
+    --color-secondary: #00bcd4;
+    --color-accent: #e53935;
+    --color-bg: #e3f2fd;
+  }
+  .theme-warm {
+    --color-primary: #f06292;
+    --color-secondary: #ff7043;
+    --color-accent: #d84315;
+    --color-bg: #fff3e0;
+  }
+  .theme-neutral {
+    --color-primary: #616161;
+    --color-secondary: #9e9e9e;
+    --color-accent: #b71c1c;
+    --color-bg: #eeeeee;
+  }
+  .theme-complementary {
+    --color-primary: #00796b;
+    --color-secondary: #f48fb1;
+    --color-accent: #ad1457;
+    --color-bg: #e0f2f1;
+  }
+
+  /* Use CSS variables in the generated preview if animations selected */
+  .preview-wrapper {
+    background: var(--color-bg);
+    color: var(--color-primary);
+    border-radius: 12px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.07);
+    overflow-y: auto;
+    max-height: 410px;
+  }
+  /* Animation themes styles - shown only in preview */
+
+  /* Stars & Sparkles */
+  .anim-stars .star {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 6px 2px white;
+    animation: sparkle 2.5s infinite alternate;
+  }
+  @keyframes sparkle {
+    0% {opacity: 1; transform: scale(1);}
+    100% {opacity: 0.3; transform: scale(0.7);}
+  }
+
+  /* Paint Splats */
+  .anim-paintsplat svg {
+    animation: paintsplat-pulse 4s infinite ease-in-out;
+    transform-origin: center center;
+    width: 100%;
+    height: 100%;
+  }
+  @keyframes paintsplat-pulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  /* Water Ripples */
+  .anim-waterripples {
+    position: relative;
+  }
+  .anim-waterripples .ripple {
+    border: 3px solid var(--color-primary);
+    border-radius: 50%;
+    opacity: 0.5;
+    animation: rippleScale 3s infinite;
+    position: absolute;
+  }
+  .anim-waterripples .ripple:nth-child(1) {
+    width: 60px; height: 60px; top: 20px; left: 20px;
+    animation-delay: 0;
+  }
+  .anim-waterripples .ripple:nth-child(2) {
+    width: 90px; height: 90px; top: 10px; left: 50px;
+    animation-delay: 1s;
+  }
+  .anim-waterripples .ripple:nth-child(3) {
+    width: 120px; height: 120px; top: 0; left: 90px;
+    animation-delay: 2s;
+  }
+  @keyframes rippleScale {
+    0% { transform: scale(0.8); opacity: 0.6;}
+    50% { opacity: 0; }
+    100% { transform: scale(1.5); opacity: 0;}
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    main {padding: 20px;}
+    form {
+      grid-template-columns: 1fr;
     }
-    header {
-      background: #004080;
-      color: white;
-      padding: 0.5em;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    #preview-container {
+      flex-direction: column;
     }
-    header img {
-      max-height: 40px;
-      margin-right: 10px;
-    }
-    main {
-      padding: 2em;
-      max-width: 1000px;
-      margin: auto;
-    }
-    label {
-      display: block;
-      margin-top: 1em;
-      font-weight: bold;
-    }
-    input[type="text"], textarea, select {
+    #output-area, #iframe-preview-container {
+      flex: 1 1 auto;
       width: 100%;
-      padding: 0.5em;
-      margin-top: 0.5em;
     }
-    button {
-      margin-top: 1em;
-      padding: 0.7em 1.5em;
-      background: #0066cc;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 1em;
-      transition: background 0.3s;
+    #generated-html {
+      height: 300px;
     }
-    button:hover {
-      background: #004080;
+    #iframe-preview-container {
+      max-height: 300px;
     }
-    #output {
-      margin-top: 2em;
-      white-space: pre-wrap;
-      background: #f9f9f9;
-      padding: 1em;
-      border: 1px solid #ccc;
-    }
-    iframe.preview {
-      margin-top: 2em;
-      width: 100%;
-      height: 400px;
-      border: 2px solid #0066cc;
-    }
-    footer {
-      text-align: center;
-      padding: 1em;
-      background: #f0f0f0;
-      margin-top: 3em;
-    }
-    .color-scheme {
-      margin-top: 1em;
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <header>
-    <img id="headerImgPreview" src="" alt="Header Image Preview" style="display:none;">
-    <h1>Canvas Course Page Generator</h1>
-  </header>
-  <main>
-    <p>Fill in the information below to generate an HTML course homepage for Canvas. You can embed a webpage and include a backup link. Customize color theme, heading text, and effects below.</p>
+<header id="page-header" role="banner" tabindex="0">
+  <div class="container" aria-label="Page Header">Mrs. B. Watts Syllabus HTML Generator (2025)</div>
+</header>
 
-    <label for="colorTheme">Select a Color Scheme:</label>
-    <select id="colorTheme" class="color-scheme" onchange="changeColorScheme()">
-      <option value="default">Blue Sky</option>
-      <option value="sunset">Sunset Orange</option>
-      <option value="forest">Forest Green</option>
-      <option value="night">Night Mode</option>
-    </select>
+<main role="main" aria-label="Syllabus generator form">
+<form id="syllabus-form" novalidate aria-required="true" aria-describedby="form-instructions">
+  <p id="form-instructions" style="grid-column:1/-1; color:#555; font-style: italic;">
+    Fill all <span style="color:#e53935;">required*</span> fields below. Use the optional sections if you'd like.
+  </p>
 
-    <label for="sparkle">Add Effects:</label>
-    <select id="sparkle">
-      <option value="none">None</option>
-      <option value="stars">Stars and Sparkles</option>
-      <option value="paint">Paint Splats and Splashes</option>
-      <option value="water">Water and Ripples</option>
-    </select>
+  <!-- Basic Course Info -->
+  <label class="required" for="course-title">Course Title</label>
+  <input type="text" id="course-title" name="courseTitle" placeholder="e.g. Introduction to Biology" required aria-required="true" autocomplete="off">
 
-    <label for="headerImg">Header Image URL (optional):</label>
-    <input type="text" id="headerImg" oninput="previewHeaderImage()" />
+  <label class="required" for="course-code">Course Code</label>
+  <input type="text" id="course-code" name="courseCode" placeholder="e.g. BIO101" required aria-required="true" autocomplete="off">
 
-    <label for="courseTitle">Course Title:</label>
-    <input type="text" id="courseTitle" />
+  <!-- Instructor Info -->
+  <label class="required" for="instructor-name">Instructor Name</label>
+  <input type="text" id="instructor-name" name="instructorName" placeholder="Full Name" required aria-required="true" autocomplete="off">
 
-    <label for="embedUrl">Webpage to Embed:</label>
-    <input type="text" id="embedUrl" />
+  <label class="required" for="instructor-email">Instructor Email</label>
+  <input type="text" id="instructor-email" name="instructorEmail" placeholder="e.g. email@school.edu" required aria-required="true" autocomplete="off">
 
-    <button onclick="generateHTML()">Generate HTML</button>
-    <button onclick="downloadHTML()">Download HTML File</button>
+  <!-- Course Description -->
+  <label class="required" for="course-description">Course Description</label>
+  <textarea id="course-description" name="courseDescription" placeholder="Brief description of course..." required aria-required="true"></textarea>
 
-    <div id="output"></div>
-    <iframe id="previewFrame" class="preview" style="display:none;"></iframe>
-  </main>
-  <footer>
-    &copy; B. Watts 2025
-  </footer>
+  <!-- Learning Objectives -->
+  <label class="required" for="learning-objectives">Learning Objectives / Outcomes</label>
+  <textarea id="learning-objectives" name="learningObjectives" placeholder="E.g. Students will be able to..." required aria-required="true"></textarea>
 
-  <script>
-    function get(id) {
-      return document.getElementById(id).value.trim();
-    }
+  <!-- Required Materials -->
+  <label class="required" for="required-materials">Required Materials</label>
+  <textarea id="required-materials" name="requiredMaterials" placeholder="Books, software, supplies..." required aria-required="true"></textarea>
 
-    function previewHeaderImage() {
-      const url = get("headerImg");
-      const img = document.getElementById("headerImgPreview");
-      if (url) {
-        img.src = url;
-        img.style.display = "block";
+  <!-- Course Policies -->
+  <label class="required" for="course-policies">Course Policies</label>
+  <textarea id="course-policies" name="coursePolicies" placeholder="Attendance, late work, plagiarism..." required aria-required="true"></textarea>
+
+  <!-- Grading Criteria -->
+  <label class="required" for="grading-criteria">Grading Criteria</label>
+  <textarea id="grading-criteria" name="gradingCriteria" placeholder="How grades are calculated..." required aria-required="true"></textarea>
+
+  <!-- Course Schedule -->
+  <label class="required" for="course-schedule">Course Schedule</label>
+  <textarea id="course-schedule" name="courseSchedule" placeholder="Weekly topics, assignments..." required aria-required="true"></textarea>
+
+  <!-- Academic Conduct -->
+  <label class="required" for="academic-conduct">Academic Conduct Expectations</label>
+  <textarea id="academic-conduct" name="academicConduct" placeholder="Honor code, cheating policy..." required aria-required="true"></textarea>
+
+  <!-- Accessibility Statement -->
+  <label class="required" for="accessibility-statement">Accessibility Statement</label>
+  <textarea id="accessibility-statement" name="accessibilityStatement" placeholder="Accessibility and accommodations statement..." required aria-required="true"></textarea>
+
+  <!-- Contact Instructions -->
+  <label class="required" for="contact-instructions">Contact Instructions</label>
+  <textarea id="contact-instructions" name="contactInstructions" placeholder="How to contact the instructor..." required aria-required="true"></textarea>
+
+  <!-- Website URL embedding -->
+  <label class="required" for="embed-url">Website URL to Embed (Canvas iframe)</label>
+  <input type="url" id="embed-url" name="embedUrl" placeholder="https://example.com" required aria-required="true" autocomplete="off">
+
+  <!-- Backup Link (optional, shows below iframe) -->
+  <label for="backup-link">Backup Link Text (optional)</label>
+  <input type="text" id="backup-link" name="backupLinkText" placeholder="Link text if iframe does not load (e.g. 'Click here to open site')" autocomplete="off">
+
+  <!-- Header Image URL -->
+  <label for="header-image-url">Header Image URL (will preview)</label>
+  <input type="url" id="header-image-url" name="headerImageUrl" placeholder="https://example.com/image.jpg" autocomplete="off" aria-describedby="header-image-desc" />
+  <small id="header-image-desc" style="color:#666;">This image will appear at the top of the syllabus preview.</small>
+  <img id="header-image-preview" alt="Header image preview" src="" aria-hidden="true" />
+
+  <!-- Color Theme -->
+  <label for="color-theme">Choose Color Theme</label>
+  <select id="color-theme" name="colorTheme" aria-label="Select color theme">
+    <option value="cool" selected>Cool (Blue)</option>
+    <option value="warm">Warm (Orange/Pink)</option>
+    <option value="neutral">Neutral (Gray)</option>
+    <option value="complementary">Complementary (Teal/Pink)</option>
+  </select>
+
+  <!-- Animation Theme -->
+  <label for="animation-theme">Choose Animation Theme</label>
+  <select id="animation-theme" name="animationTheme" aria-label="Select animation theme">
+    <option value="none" selected>No Animation</option>
+    <option value="stars">Stars & Sparkles</option>
+    <option value="paintsplat">Paint Splats</option>
+    <option value="waterripples">Water Ripples</option>
+  </select>
+
+  <!-- Optional Sections Toggle Buttons -->
+  <div class="optional-section" tabindex="0" role="button" aria-expanded="false" aria-controls="rationale-content" id="rationale-toggle">Rationale for Teaching Methods <span class="toggle-icon">▶</span></div>
+  <div class="optional-content" id="rationale-content">
+    <textarea id="rationale-text" name="rationale" placeholder="Explain rationale for your teaching methods..."></textarea>
+  </div>
+
+  <div class="optional-section" tabindex="0" role="button" aria-expanded="false" aria-controls="etiquette-content" id="etiquette-toggle">Classroom Etiquette <span class="toggle-icon">▶</span></div>
+  <div class="optional-content" id="etiquette-content">
+    <textarea id="etiquette-text" name="etiquette" placeholder="Rules and behavior expectations..."></textarea>
+  </div>
+
+  <div class="optional-section" tabindex="0" role="button" aria-expanded="false" aria-controls="techpolicy-content" id="techpolicy-toggle">Technology Use Policy <span class="toggle-icon">▶</span></div>
+  <div class="optional-content" id="techpolicy-content">
+    <textarea id="techpolicy-text" name="techPolicy" placeholder="Technology rules and guidelines..."></textarea>
+  </div>
+
+  <button type="submit" id="generate-btn" aria-label="Generate HTML syllabus code">Generate Syllabus</button>
+</form>
+
+<div id="loading-overlay" aria-live="polite" aria-busy="true" aria-label="Loading overlay, generating syllabus HTML">
+  <div class="spinner" role="img" aria-label="Loading spinner"></div>
+</div>
+
+<section id="preview-container" aria-label="Generated HTML code and live website preview" tabindex="0">
+
+  <div id="output-area" role="region" aria-live="polite" aria-label="Generated HTML code output" tabindex="0" hidden>
+    <h2>Generated HTML Code:</h2>
+    <textarea id="generated-html" readonly spellcheck="false" aria-describedby="output-description"></textarea>
+    <div style="margin-top:8px;">
+      <button id="copy-btn" aria-label="Copy generated code to clipboard">Copy</button>
+      <button id="download-btn" aria-label="Download generated code as .html">Download</button>
+    </div>
+    <small id="output-description" style="display:block; margin-top:10px; color:#444;">
+      Copy or download this complete HTML syllabus code. Paste into your Canvas blank page HTML editor or host as standalone.
+    </small>
+  </div>
+
+  <div id="iframe-preview-container" role="region" aria-label="Website embed preview" hidden>
+    <h3>Live Website Embed Preview:</h3>
+    <div class="preview-wrapper" id="animation-preview-wrapper">
+      <iframe id="iframe-preview" title="Embedded Website Preview" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" frameborder="0"></iframe>
+      <div id="iframe-fallback" hidden></div>
+      <div id="animation-overlay"></div>
+    </div>
+  </div>
+  
+</section>
+
+<script>
+  (() => {
+    // Elements
+    const form = document.getElementById('syllabus-form');
+    const headerImageInput = document.getElementById('header-image-url');
+    const headerImagePreview = document.getElementById('header-image-preview');
+
+    const iframePreviewContainer = document.getElementById('iframe-preview-container');
+    const iframe = document.getElementById('iframe-preview');
+    const iframeFallback = document.getElementById('iframe-fallback');
+
+    const outputArea = document.getElementById('output-area');
+    const generatedHtmlTextarea = document.getElementById('generated-html');
+    const copyBtn = document.getElementById('copy-btn');
+    const downloadBtn = document.getElementById('download-btn');
+    const loadingOverlay = document.getElementById('loading-overlay');
+
+    const animationPreviewWrapper = document.getElementById('animation-preview-wrapper');
+
+    // Optional sections toggles
+    const optionalToggles = [
+      { toggle: document.getElementById('rationale-toggle'), content: document.getElementById('rationale-content') },
+      { toggle: document.getElementById('etiquette-toggle'), content: document.getElementById('etiquette-content') },
+      { toggle: document.getElementById('techpolicy-toggle'), content: document.getElementById('techpolicy-content') },
+    ];
+
+    // Manage optional sections toggling for accessibility and UX
+    optionalToggles.forEach(({toggle, content}) => {
+      const toggleState = () => {
+        const expanded = toggle.classList.contains('open');
+        toggle.classList.toggle('open');
+        content.style.display = expanded ? 'none' : 'block';
+        toggle.setAttribute('aria-expanded', !expanded);
+      };
+      toggle.addEventListener('click', toggleState);
+      toggle.addEventListener('keydown', e => {
+        if(e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggleState();
+        }
+      });
+    });
+
+    // Update header image preview live
+    headerImageInput.addEventListener('input', e => {
+      const url = e.target.value.trim();
+      if (url && isValidUrl(url)) {
+        headerImagePreview.src = url;
+        headerImagePreview.style.display = 'block';
       } else {
-        img.style.display = "none";
+        headerImagePreview.src = '';
+        headerImagePreview.style.display = 'none';
       }
-    }
+    });
 
-    function changeColorScheme() {
-      const scheme = get("colorTheme");
-      const body = document.body;
-      switch (scheme) {
-        case "sunset":
-          body.style.background = "linear-gradient(to right, #ff9966, #ff5e62)";
-          break;
-        case "forest":
-          body.style.background = "linear-gradient(to right, #a8e063, #56ab2f)";
-          break;
-        case "night":
-          body.style.background = "linear-gradient(to right, #232526, #414345)";
-          body.style.color = "#f5f5f5";
-          break;
-        default:
-          body.style.background = "linear-gradient(to bottom right, #f0f8ff, #e6f7ff)";
-          body.style.color = "#333";
+    // URL Validation helper
+    const isValidUrl = (str) => {
+      try {
+        new URL(str);
+        return true;
+      } catch {
+        return false;
       }
-    }
+    };
 
-    function getEffectCSS(effect) {
-      switch (effect) {
-        case "stars":
-          return `<style>body::after { content: ''; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-image: url('https://i.imgur.com/5FzJzyf.gif'); background-size: cover; opacity: 0.3; pointer-events: none; }</style>`;
-        case "paint":
-          return `<style>body::after { content: ''; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-image: url('https://i.imgur.com/VevJrjH.png'); background-size: contain; background-repeat: repeat; opacity: 0.2; pointer-events: none; }</style>`;
-        case "water":
-          return `<style>body::after { content: ''; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-image: url('https://i.imgur.com/SZ0K5cL.gif'); background-size: cover; opacity: 0.2; pointer-events: none; }</style>`;
-        default:
-          return "";
+    // Form validation function:
+    const validateForm = () => {
+      let valid = true;
+      [...form.elements].forEach(el => {
+        if (el.hasAttribute('required')) {
+          if (!el.value.trim()) {
+            valid = false;
+            el.focus();
+            alert(`Please fill the required field: ${el.previousElementSibling.textContent.replace(' *','')}`);
+            return false;
+          }
+        }
+      });
+      return valid;
+    };
+
+    // Animation theme mapping to CSS classes & overlays
+    const animationThemeClasses = {
+      none: '',
+      stars: 'anim-stars',
+      paintsplat: 'anim-paintsplat',
+      waterripples: 'anim-waterripples',
+      waterripples: 'anim-waterripples', // correct spelling fallback
+    };
+
+    // Functions to add/remove animation overlays for live preview only
+    const clearAnimationOverlay = () => animationPreviewWrapper.querySelectorAll('.star, svg.paint-splat, .ripple').forEach(x => x.remove()); 
+
+    const setAnimationOverlay = (theme) => {
+      clearAnimationOverlay();
+      if(theme==='stars'){
+        // Add some tiny sparkle divs in random positions
+        for(let i=0; i<12; i++) {
+          const star = document.createElement('div');
+          star.className = 'star';
+          star.style.top = `${Math.random() * 100}%`;
+          star.style.left = `${Math.random() * 100}%`;
+          star.style.animationDelay = `${(Math.random()*3).toFixed(2)}s`;
+          animationPreviewWrapper.appendChild(star);
+        }
+      } else if(theme==='paintsplat'){
+        // Use SVG splat shapes with pulsing animation
+        const svgNS = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(svgNS, 'svg');
+        svg.setAttribute('viewBox', '0 0 64 64');
+        svg.setAttribute('class', 'paint-splat');
+        svg.style.position = 'absolute';
+        svg.style.top = '10%';
+        svg.style.right = '12%';
+        svg.style.width = '80px';
+        svg.style.height = '80px';
+        const path = document.createElementNS(svgNS, 'path');
+        path.setAttribute('fill', 'var(--color-secondary)');
+        path.setAttribute('d', 'M17.9 26.3c-1.5 3.7-.7 11.6 2.4 15.2 2.2 2.6 9 2.4 12.3 3.7 1.6.7 6-3.7 7.8-5.4 3.4-3.4 3-8.3 3.5-14.1.1-1.3-.3-5.2-1.8-7-1.3-1.4-6.4-1.3-7.7-1.2-4.3.2-14.3 2-16.5 8.9z');
+        svg.appendChild(path);
+        animationPreviewWrapper.appendChild(svg);
+      } else if(theme==='waterripples'){
+        // Create ripple divs
+        for(let i=0; i<3; i++){
+          const ripple = document.createElement('div');
+          ripple.className = 'ripple';
+          animationPreviewWrapper.appendChild(ripple);
+        }
       }
-    }
+    };
 
-    function generateHTML() {
-      const headerImg = get("headerImg");
-      const courseTitle = get("courseTitle");
-      const embedUrl = get("embedUrl");
-      const sparkle = get("sparkle");
+    // Main: Generate HTML and preview
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      if(!validateForm()) return;
 
-      let html = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <title>${courseTitle}</title>
-        ${getEffectCSS(sparkle)}
-      </head>
-      <body>
-        ${headerImg ? `<img src="${headerImg}" alt="Header Image" style="max-width: 100%;">` : ""}
-        <h2>${courseTitle}</h2>
-        ${embedUrl ? `<details><summary><strong>Embedded Webpage</strong></summary>
-        <iframe src="${embedUrl}" width="100%" height="300px" style="border:none;"></iframe>
-        <p><a href="${embedUrl}" target="_blank"><button>Open in New Window</button></a></p>
-        </details>` : ""}
-      </body>
-      </html>
-      `;
+      // Show loading spinner
+      loadingOverlay.style.display = 'flex';
 
-      document.getElementById("output").innerText = html;
-      const preview = document.getElementById("previewFrame");
-      preview.style.display = "block";
-      preview.srcdoc = html;
-    }
+      setTimeout(() => {
+        // Gather all form data
+        const data = {};
+        new FormData(form).forEach((v,k) => data[k] = v.trim());
 
-    function downloadHTML() {
-      const blob = new Blob([document.getElementById("output").innerText], { type: 'text/html' });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "canvas_course_page.html";
-      link.click();
-    }
-  </script>
+        // Optional texts
+        data.rationale = data.rationale || '';
+        data.etiquette = data.etiquette || '';
+        data.techPolicy = data.techPolicy || '';
+
+        // Required fields assured filled by validation
+
+        // Prepare styles with chosen theme
+        const themesMap = {
+          cool: {
+            primary: '#1976d2',
+            secondary: '#00bcd4',
+            accent: '#e53935',
+            bg: '#e3f2fd'
+          },
+          warm: {
+            primary: '#f06292',
+            secondary: '#ff7043',
+            accent: '#d84315',
+            bg: '#fff3e0'
+          },
+          neutral: {
+            primary: '#616161',
+            secondary: '#9e9e9e',
+            accent: '#b71c1c',
+            bg: '#eeeeee'
+          },
+          complementary: {
+            primary: '#00796b',
+            secondary: '#f48fb1',
+            accent: '#ad1457',
+            bg: '#e0f2f1'
+          }
+        };
+        const c = themesMap[data.colorTheme] || themesMap.cool;
+
+        // CSS animations for included animation themes
+        const animThemes = ['stars', 'paintsplat', 'waterripples'];
+        const includeAnimations = animThemes.includes(data.animationTheme);
+
+        // Helper: escape HTML entities
+        const escapeHtml = (unsafe) => {
+          if(!unsafe) return '';
+          return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+        };
+
+        // Compose styles (minimal reset + theme + animations if selected)
+        const styleContent = `
+  /* Reset */
+  body, h1, h2, h3, p, ul, li, nav, section, footer {
+    margin: 0; padding:0;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.5;
+    background-color: ${c.bg};
+    color: ${c.primary};
+    padding: 25px 30px;
+    max-width: 850px;
+    margin: auto;
+  }
+  nav {
+    text-align: center;
+    color: white;
+    background: linear-gradient(90deg, ${c.primary}, ${c.secondary});
+    padding: 10px 10px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.15);
+  }
+  nav .course-title {
+    font-size: 2rem;
+    font-weight: 700;
+  }
+  nav .course-code {
+    font-weight: 600;
+    margin-top: 3px;
+  }
+  img.header-image {
+    width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgb(0 0 0 / 0.1);
+    user-select: none;
+    pointer-events: none;
+  }
+  h2.section-header {
+    border-bottom: 3px solid ${c.accent};
+    padding-bottom: 6px;
+    margin-bottom: 14px;
+    color: ${c.primary};
+    font-weight: 700;
+    font-size: 1.6rem;
+  }
+  p, li {
+    font-size: 1.05rem;
+  }
+  ul {
+    padding-left: 1.3rem;
+    margin-bottom: 24px;
+  }
+  footer {
+    margin-top: 50px;
+    padding-top: 14px;
+    text-align: center;
+    border-top: 1px solid ${c.secondary};
+    color: #666;
+    font-size: 0.9rem;
+  }
+  /* iframe embed */
+  .embed-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgb(0 0 0 / 0.12);
+  }
+  .embed-container iframe {
+    position: absolute;
+    top:0; left:0; width:100%; height:100%;
+    border: none;
+    border-radius: 12px;
+  }
+  .backup-link {
+    display: block;
+    font-weight: 600;
+    color: ${c.secondary};
+    text-decoration: underline;
+    margin-bottom: 30px;
+  }
+  /* Optional sections with distinct style */
+  .optional-section {
+    background: #fff;
+    border: 1px solid ${c.secondary};
+    padding: 16px 18px;
+    border-radius: 10px;
+    margin-bottom: 28px;
+    user-select: none;
+  }
+  /* Animations if enabled */
+  ${includeAnimations ? `
+  /* Stars & sparkles animation */
+  .anim-stars {
+    position: relative;
+  }
+  .anim-stars::before, .anim-stars::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    box-shadow:
+      15px 5px 8px ${c.secondary},
+      30px 20px 10px ${c.secondary},
+      50px 40px 12px ${c.secondary},
+      20px 35px 9px ${c.primary};
+    top: -15px; left: -15px;
+    width: 120%;
+    height: 120%;
+    animation: twinkle 3s ease-in-out infinite alternate;
+    opacity: 0.3;
+  }
+  .anim-stars::after {
+    animation-delay: 1.2s;
+  }
+  @keyframes twinkle {
+    from {opacity: 0.3; transform: scale(1);}
+    to {opacity: 1; transform: scale(1.15);}
+  }
+  /* Paint splats */
+  .anim-paintsplat {
+    position: relative;
+  }
+  .anim-paintsplat::before {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    background: ${c.secondary};
+    width: 120%;
+    height: 110%;
+    top: -10%;
+    left: -15%;
+    opacity: 0.12;
+    filter: blur(25px);
+    animation: paintsplat-pulse 4s ease-in-out infinite;
+  }
+  @keyframes paintsplat-pulse {
+    0%, 100% {transform: scale(1);}
+    50% {transform: scale(1.08);}
+  }
+  /* Water Ripples */
+  .anim-waterripples {
+    position: relative;
+  }
+  .anim-waterripples::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    box-shadow:
+      0 0 20px 6px ${c.secondary};
+    animation: rippler 3s ease-in-out infinite;
+    opacity: 0.3;
+  }
+  @keyframes rippler {
+    0%, 100% { box-shadow: 0 0 20px 6px ${c.secondary}; }
+    50% {box-shadow: 0 0 8px 2px ${c.primary}; }
+  }
+  ` : ''}
+        `;
+
+        // Build syllabus HTML output string
+        // Using semantic tags and strong structure for Canvas
+
+        // Helper for optional sections
+        function buildOptionalSection(title, content) {
+          if(!content) return '';
+          // Escape content and keep paragraphs by line breaks
+          const paragraphs = content.trim().split(/\n+/).map(p => `<p>${escapeHtml(p.trim())}</p>`).join('\n');
+          return `<section class="optional-section"><h2 class="section-header">${escapeHtml(title)}</h2>\n${paragraphs}\n</section>`;
+        }
+
+        // Prepare syllabus with required sections
+        const syllabusHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>${escapeHtml(data.courseTitle)} - Syllabus</title>
+  <style>
+  ${styleContent}
+  </style>
+</head>
+<body ${includeAnimations ? `class="anim-${data.animationTheme || 'none'}"` : ''}>
+  <nav aria-label="Course information">
+    <div class="course-title">${escapeHtml(data.courseTitle)}</div>
+    <div class="course-code">${escapeHtml(data.courseCode)}</div>
+  </nav>
+
+  ${data.headerImageUrl ? `<img src="${escapeHtml(data.headerImageUrl)}" alt="Course header image" class="header-image" />` : ''}
+
+  <section aria-label="Instructor Information">
+    <h2 class="section-header">Instructor Information</h2>
+    <p><strong>Name:</strong> ${escapeHtml(data.instructorName)}</p>
+    <p><strong>Email:</strong> <a href="mailto:${escapeHtml(data.instructorEmail)}">${escapeHtml(data.instructorEmail)}</a></p>
+  </section>
+
+  <section aria-label="Course Description">
+    <h2 class="section-header">Course Description</h2>
+    <p>${escapeHtml(data.courseDescription).replace(/\n/g, '<br>')}</p>
+  </section>
+
+  <section aria-label="Learning Objectives / Outcomes">
+    <h2 class="section-header">Learning Objectives / Outcomes</h2>
+    <p>${escapeHtml(data.learningObjectives).replace(/\n/g, '<br>')}</p>
+  </section>
+
+  <section aria-label="Required Materials">
+    <h2 class="section-header">Required Materials</h2>
+    <p>${escapeHtml(data.requiredMaterials).replace(/\n/g, '<br>')}</p>
+  </section>
+
+  <section aria-label="Course Policies">
+    <h2 class="section-header">Course Policies</h2>
+    <p>${escapeHtml(data.coursePolicies).replace(/\n/g, '<br>')}</p>
+  </section>
+
+  <section aria-label="Grading Criteria">
+    <h2 class="section-header">Grading Criteria</h2>
+    <p>${escapeHtml(data.gradingCriteria).replace(/\n/g, '<br>')}</p>
+  </section>
+
+  <section aria-label="Course Schedule">
+    <h2 class="section-header">Course Schedule</h2>
+    <p>${escapeHtml(data.courseSchedule).replace(/\n/g, '<br>')}</p>
+  </section>
+
+  <section aria-label="Academic Conduct Expectations">
+    <h2 class="section-header">Academic Conduct Expectations</h2>
+    <p>${escapeHtml(data.academicConduct).replace(/\n/g, '<br>')}</p>
+  </section>
+
+  <section aria-label="Accessibility Statement">
+    <h2 class="section-header">Accessibility Statement</h2>
+    <p>${escapeHtml(data.accessibilityStatement).replace(/\n/g, '<br>')}</p>
+  </section>
+
+  <section aria-label="Contact Instructions">
+    <h2 class="section-header">Contact Instructions</h2>
+    <p>${escapeHtml(data.contactInstructions).replace(/\n/g, '<br>')}</p>
+  </section>
+
+  ${buildOptionalSection('Rationale For Teaching Methods', data.rationale)}
+  ${buildOptionalSection('Classroom Etiquette', data.etiquette)}
+  ${buildOptionalSection('Technology Use Policy', data.techPolicy)}
+
+  <section aria-label="Embedded Website Content">
+    <h2 class="section-header">Embedded Website</h2>
+    <div class="embed-container">
+      <iframe src="${escapeHtml(data.embedUrl)}" title="Embedded Website" allowfullscreen sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+    </div>
+    ${data.backupLinkText && isValidUrl(data.embedUrl) ? `<a href="${escapeHtml(data.embedUrl)}" target="_blank" class="backup-link" rel="noopener">${escapeHtml(data.backupLinkText)}</a>` : ''}
+  </section>
+
+  <footer>
+    <p>© Mrs. B. Watts 2025</p>
+  </footer>
+</body>
+</html>
+`;
+
+        // Output to textarea
+        generatedHtmlTextarea.value = syllabusHtml;
+
+        // Show output and iframe embed preview
+        outputArea.hidden = false;
+        iframePreviewContainer.hidden = false;
+
+        // Setup iframe live preview
+        iframe.src = data.embedUrl;
+        iframeFallback.hidden = true;
+        iframeFallback.textContent = '';
+        iframe.onload = () => {
+          iframeFallback.hidden = true;
+          iframe.style.borderColor = '';
+        }
+        iframe.onerror = () => {
+          iframeFallback.hidden = false;
+          iframeFallback.textContent = 'Unable to load iframe content. ' + (data.backupLinkText ? data.backupLinkText : 'Open the link in a new tab.');
+          iframe.style.borderColor = 'red';
+        }
+
+        // Update animations overlay preview area classes
+        animationPreviewWrapper.className = 'preview-wrapper';
+        if (includeAnimations && animationThemeClasses[data.animationTheme]) {
+          animationPreviewWrapper.classList.add(animationThemeClasses[data.animationTheme]);
+          setAnimationOverlay(data.animationTheme);
+        } else {
+          clearAnimationOverlay();
+        }
+
+        // Hide loading
+        loadingOverlay.style.display = 'none';
+
+        // Scroll to output
+        outputArea.focus();
+
+      }, 600); // Simulate slight delay to show loading spinner
+    });
+
+    // Copy to clipboard
+    copyBtn.addEventListener('click', () => {
+      generatedHtmlTextarea.select();
+      generatedHtmlTextarea.setSelectionRange(0, 999999);
+      try {
+        if(document.execCommand('copy')) {
+          copyBtn.textContent = 'Copied!';
+          setTimeout(() => copyBtn.textContent = 'Copy', 1500);
+        } else {
+          alert('Copy failed. Please copy manually.');
+        }
+      } catch {
+        alert('Copy failed. Please copy manually.');
+      }
+      window.getSelection().removeAllRanges();
+    });
+
+    // Download as .html
+    downloadBtn.addEventListener('click', () => {
+      const blob = new Blob([generatedHtmlTextarea.value], {type:'text/html'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = (form['courseTitle'].value.trim().replaceAll(/\s+/g,'_') || 'syllabus') + '.html';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+  })();
+</script>
+
 </body>
 </html>
