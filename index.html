@@ -2,199 +2,716 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Canvas Course Page Generator</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+    
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(to bottom right, #f0f8ff, #e6f7ff);
-      color: #333;
+      background: var(--bg-gradient);
+      color: var(--text-color);
+      transition: all 0.3s ease;
+      overflow-x: hidden;
     }
+
+    /* Theme Variables */
+    :root {
+      --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --header-gradient: linear-gradient(90deg, #004080, #0077cc);
+      --text-color: #222;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --border-color: #ddd;
+      --button-bg: #0066cc;
+      --button-hover: #0052a3;
+      --accent-color: #ff6b6b;
+    }
+
+    .theme-cool {
+      --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --header-gradient: linear-gradient(90deg, #2196F3, #21CBF3);
+      --accent-color: #00BCD4;
+    }
+
+    .theme-warm {
+      --bg-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --header-gradient: linear-gradient(90deg, #FF5722, #FF9800);
+      --accent-color: #FFC107;
+    }
+
+    .theme-neutral {
+      --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+      --header-gradient: linear-gradient(90deg, #6c757d, #495057);
+      --accent-color: #6c757d;
+    }
+
+    .theme-complementary {
+      --bg-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+      --header-gradient: linear-gradient(90deg, #d299c2, #fef9d7);
+      --accent-color: #ff6b9d;
+    }
+
+    /* Animation Themes */
+    .sparkle-stars::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="1" fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.3;0.7" dur="2s" repeatCount="indefinite"/></circle><circle cx="80" cy="30" r="0.5" fill="yellow" opacity="0.5"><animate attributeName="opacity" values="0.5;0.9;0.5" dur="3s" repeatCount="indefinite"/></circle><circle cx="60" cy="70" r="0.8" fill="lightblue" opacity="0.6"><animate attributeName="opacity" values="0.6;0.2;0.6" dur="2.5s" repeatCount="indefinite"/></circle></svg>') repeat;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .sparkle-paint::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 30%, rgba(255,107,107,0.1) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 60%, rgba(107,255,107,0.1) 0%, transparent 50%),
+                  radial-gradient(circle at 40% 80%, rgba(107,107,255,0.1) 0%, transparent 50%);
+      animation: paintSplash 8s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .sparkle-water::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at center, rgba(135,206,235,0.1) 0%, transparent 70%);
+      animation: waterRipple 6s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes paintSplash {
+      0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.1; }
+      50% { transform: scale(1.1) rotate(180deg); opacity: 0.2; }
+    }
+
+    @keyframes waterRipple {
+      0%, 100% { transform: scale(1); opacity: 0.1; }
+      50% { transform: scale(1.2); opacity: 0.15; }
+    }
+
     header {
-      background: #004080;
+      background: var(--header-gradient);
       color: white;
-      padding: 0.5em;
-      text-align: center;
+      padding: 0.8em 1em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       position: sticky;
       top: 0;
       z-index: 1000;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      backdrop-filter: blur(10px);
+      height: 70px;
+      overflow-x: auto;
+      overflow-y: hidden;
     }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      min-width: max-content;
+    }
+
+    header img {
+      max-height: 50px;
+      margin-right: 15px;
+      border-radius: 8px;
+      display: none;
+      flex-shrink: 0;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5em;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .theme-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-shrink: 0;
+      margin-left: 20px;
+    }
+
+    .theme-controls select {
+      padding: 0.3em;
+      border-radius: 5px;
+      border: none;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      font-size: 0.9em;
+    }
+
     main {
       padding: 2em;
-      max-width: 1000px;
+      max-width: 1200px;
       margin: auto;
+      position: relative;
+      z-index: 2;
     }
+
+    .form-container {
+      background: var(--card-bg);
+      padding: 2em;
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      margin-bottom: 2em;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5em;
+    }
+
     label {
       display: block;
       margin-top: 1em;
       font-weight: bold;
+      color: var(--text-color);
+      position: relative;
     }
+
+    .required::after {
+      content: ' *';
+      color: var(--accent-color);
+    }
+
     input[type="text"], textarea, select {
       width: 100%;
-      padding: 0.5em;
+      padding: 0.8em;
       margin-top: 0.5em;
+      border-radius: 8px;
+      border: 2px solid var(--border-color);
+      background: rgba(255,255,255,0.9);
+      transition: all 0.3s ease;
+      font-family: inherit;
     }
+
+    input[type="text"]:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--button-bg);
+      box-shadow: 0 0 0 3px rgba(0,102,204,0.1);
+      transform: translateY(-2px);
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1em;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 2em;
+    }
+
     button {
-      margin-top: 1em;
-      padding: 0.7em 1.5em;
-      background: #0066cc;
+      padding: 1em 2em;
+      background: var(--button-bg);
       color: white;
       border: none;
       cursor: pointer;
       font-size: 1em;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0,102,204,0.3);
+      position: relative;
+      overflow: hidden;
     }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    button:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    button:hover {
+      background: var(--button-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,102,204,0.4);
+    }
+
     #output {
       margin-top: 2em;
       white-space: pre-wrap;
-      background: #f9f9f9;
-      padding: 1em;
-      border: 1px solid #ccc;
+      background: var(--card-bg);
+      padding: 1.5em;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+      max-height: 400px;
+      overflow-y: auto;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
+
+    iframe.preview {
+      margin-top: 2em;
+      width: 100%;
+      height: 500px;
+      border: 3px solid var(--button-bg);
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      background: white;
+    }
+
     footer {
       text-align: center;
-      padding: 1em;
-      background: #f0f0f0;
+      padding: 1.5em;
+      background: var(--card-bg);
       margin-top: 3em;
+      font-size: 0.9em;
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .feature-highlight {
+      background: linear-gradient(45deg, var(--accent-color), transparent);
+      padding: 1em;
+      border-radius: 10px;
+      margin-bottom: 1em;
+      text-align: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .theme-controls {
+        flex-direction: column;
+        gap: 5px;
+      }
+      
+      header h1 {
+        font-size: 1.2em;
+      }
+      
+      main {
+        padding: 1em;
+      }
+      
+      .button-group {
+        flex-direction: column;
+      }
+    }
+
+    /* Loading Animation */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
-<body>
+<body class="theme-cool">
   <header>
-    <h1>Canvas Course Page Generator</h1>
+    <div class="header-content">
+      <img id="headerImgPreview" src="" alt="Header Image Preview" />
+      <h1>Canvas Course Page Generator</h1>
+    </div>
+    <div class="theme-controls">
+      <select id="colorTheme" onchange="changeTheme()">
+        <option value="cool">Cool Theme</option>
+        <option value="warm">Warm Theme</option>
+        <option value="neutral">Neutral Theme</option>
+        <option value="complementary">Complementary Theme</option>
+      </select>
+      <select id="sparkleTheme" onchange="changeSparkle()">
+        <option value="">No Effects</option>
+        <option value="stars">Stars & Sparkles</option>
+        <option value="paint">Paint Splats</option>
+        <option value="water">Water Ripples</option>
+      </select>
+    </div>
   </header>
+
   <main>
-    <p>Fill in the form below to create an HTML course homepage for Canvas LMS. Copy/paste the final HTML into a Canvas "Page" using the HTML editor.</p>
+    <div class="feature-highlight">
+      ✨ Generate professional Canvas course pages with live preview, themes, and embedded content! ✨
+    </div>
 
-    <label for="theme">Choose a Color Theme:</label>
-    <select id="theme">
-      <option value="cool">Cool Colors (blue, teal, violet)</option>
-      <option value="warm">Warm Colors (red, orange, yellow)</option>
-      <option value="neutral">Neutral Colors (gray, beige, white)</option>
-      <option value="complementary">Complementary Colors (high contrast)</option>
-    </select>
+    <div class="form-container">
+      <div class="form-grid">
+        <div>
+          <label for="headerImg">Header Image URL (optional):</label>
+          <input type="text" id="headerImg" oninput="previewHeaderImage()" placeholder="https://example.com/image.jpg" />
 
-    <label for="sparkle">Add a Decorative Effect:</label>
-    <select id="sparkle">
-      <option value="none">None</option>
-      <option value="stars">Stars & Sparkles</option>
-      <option value="paint">Paint Splats & Splashes</option>
-      <option value="water">Water & Ripples</option>
-    </select>
+          <label for="courseTitle" class="required">Course Title:</label>
+          <input type="text" id="courseTitle" placeholder="e.g., Introduction to Psychology" />
 
-    <label for="courseTitle">Course Title:</label>
-    <input type="text" id="courseTitle" />
+          <label for="courseDetails" class="required">Basic Course Information:</label>
+          <textarea id="courseDetails" placeholder="Course number, section, meeting times, days, location, semester..."></textarea>
 
-    <label for="courseDetails">Basic Course Information (Number, Section, Time, Days, Semester):</label>
-    <textarea id="courseDetails"></textarea>
+          <label for="instructorInfo" class="required">Instructor Information:</label>
+          <textarea id="instructorInfo" placeholder="Name, title, office location, phone, email..."></textarea>
 
-    <label for="instructorInfo">Instructor Information (Name, Office, Contact):</label>
-    <textarea id="instructorInfo"></textarea>
+          <label for="description" class="required">Course Description:</label>
+          <textarea id="description" placeholder="Overview, goals, prerequisites, content summary..."></textarea>
 
-    <label for="description">Course Description:</label>
-    <textarea id="description"></textarea>
+          <label for="objectives" class="required">Learning Objectives/Outcomes:</label>
+          <textarea id="objectives" placeholder="What students will learn and be able to do..."></textarea>
 
-    <label for="objectives">Learning Objectives/Outcomes:</label>
-    <textarea id="objectives"></textarea>
+          <label for="materials" class="required">Required Materials:</label>
+          <textarea id="materials" placeholder="Textbooks, resources, supplies needed..."></textarea>
+        </div>
 
-    <label for="materials">Required Materials:</label>
-    <textarea id="materials"></textarea>
+        <div>
+          <label for="policies" class="required">Course Policies:</label>
+          <textarea id="policies" placeholder="Attendance, late work, grading, academic integrity..."></textarea>
 
-    <label for="policies">Course Policies (attendance, grading, integrity, etc.):</label>
-    <textarea id="policies"></textarea>
+          <label for="grading" class="required">Grading Criteria:</label>
+          <textarea id="grading" placeholder="How work is evaluated, weighting of assignments..."></textarea>
 
-    <label for="grading">Grading Criteria:</label>
-    <textarea id="grading"></textarea>
+          <label for="schedule" class="required">Course Schedule:</label>
+          <textarea id="schedule" placeholder="Calendar with due dates, exams, projects..."></textarea>
 
-    <label for="schedule">Course Schedule:</label>
-    <textarea id="schedule"></textarea>
+          <label for="conduct" class="required">Academic Conduct Expectations:</label>
+          <textarea id="conduct" placeholder="Academic honesty, plagiarism policies..."></textarea>
 
-    <label for="conduct">Expectations for Academic Conduct:</label>
-    <textarea id="conduct"></textarea>
+          <label for="accessibility" class="required">Accessibility Statement:</label>
+          <textarea id="accessibility" placeholder="Information about accommodations for students with disabilities..."></textarea>
 
-    <label for="rationale">Rationale for Teaching Methods (optional):</label>
-    <textarea id="rationale"></textarea>
+          <label for="contact" class="required">Contact Instructions:</label>
+          <textarea id="contact" placeholder="How to best reach the instructor..."></textarea>
+        </div>
+      </div>
 
-    <label for="etiquette">Classroom Etiquette (optional):</label>
-    <textarea id="etiquette"></textarea>
+      <div class="form-grid" style="margin-top: 2em;">
+        <div>
+          <h3>Optional Sections</h3>
+          <label for="rationale">Rationale for Teaching Methods:</label>
+          <textarea id="rationale" placeholder="Explanation of chosen teaching strategies..."></textarea>
 
-    <label for="technology">Technology Use Policy (optional):</label>
-    <textarea id="technology"></textarea>
+          <label for="etiquette">Classroom Etiquette:</label>
+          <textarea id="etiquette" placeholder="Guidelines for respectful interactions..."></textarea>
 
-    <label for="accessibility">Accessibility Statement:</label>
-    <textarea id="accessibility"></textarea>
+          <label for="technology">Technology Use Policy:</label>
+          <textarea id="technology" placeholder="Policies for computers, tablets, devices..."></textarea>
+        </div>
 
-    <label for="contact">Contact Instructions:</label>
-    <textarea id="contact"></textarea>
+        <div>
+          <h3>Embedded Content</h3>
+          <label for="embedUrl">Embed Webpage URL:</label>
+          <input type="text" id="embedUrl" placeholder="https://example.com/" />
+          <small style="color: #666;">Any website URL will be embedded with a backup link</small>
+        </div>
+      </div>
 
-    <label for="embedUrl">Embed Webpage URL (optional):</label>
-    <input type="text" id="embedUrl" />
+      <div class="button-group">
+        <button onclick="generateHTML()" id="generateBtn">
+          <span id="generateText">Generate HTML</span>
+          <span id="generateLoader" class="loading" style="display:none;"></span>
+        </button>
+        <button onclick="downloadHTML()">📥 Download HTML File</button>
+        <button onclick="copyToClipboard()">📋 Copy Code</button>
+        <button onclick="clearForm()">🗑️ Clear Form</button>
+      </div>
+    </div>
 
-    <button onclick="generateHTML()">Generate HTML</button>
-    <button onclick="downloadHTML()">Download HTML File</button>
-
-    <div id="output"></div>
+    <div id="output" style="display:none;"></div>
+    <iframe id="previewFrame" class="preview" style="display:none;"></iframe>
   </main>
+
   <footer>
-    &copy; B. Watts 2025
+    &copy; Mrs. B. Watts 2025 | Canvas Page Generator | All Rights Reserved
   </footer>
 
   <script>
-    const themeColors = {
-      cool: ['#cceeff', '#ccf2ff', '#b3e6ff'],
-      warm: ['#ffe6cc', '#ffcc99', '#ffb366'],
-      neutral: ['#f5f5f5', '#e0e0e0', '#cccccc'],
-      complementary: ['#ffcc00', '#3366cc', '#ff6600']
-    };
+    function get(id) {
+      return document.getElementById(id).value.trim();
+    }
 
-    const sparkleStyles = {
-      stars: "background-image: url('https://www.transparenttextures.com/patterns/stardust.png');",
-      paint: "background-image: url('https://www.transparenttextures.com/patterns/splash.png');",
-      water: "background-image: url('https://www.transparenttextures.com/patterns/wavecut.png');"
-    };
+    function changeTheme() {
+      const theme = document.getElementById('colorTheme').value;
+      document.body.className = document.body.className.replace(/theme-\w+/, `theme-${theme}`);
+    }
+
+    function changeSparkle() {
+      const sparkle = document.getElementById('sparkleTheme').value;
+      document.body.className = document.body.className.replace(/sparkle-\w+/, '');
+      if (sparkle) {
+        document.body.classList.add(`sparkle-${sparkle}`);
+      }
+    }
+
+    function previewHeaderImage() {
+      const url = get("headerImg");
+      const img = document.getElementById("headerImgPreview");
+      if (url) {
+        img.src = url;
+        img.style.display = "block";
+        img.onerror = () => {
+          img.style.display = "none";
+          console.log("Invalid image URL");
+        };
+      } else {
+        img.style.display = "none";
+      }
+    }
 
     function generateHTML() {
-      const get = id => document.getElementById(id).value.trim();
-      const theme = get("theme");
-      const sparkle = get("sparkle");
+      const generateBtn = document.getElementById('generateBtn');
+      const generateText = document.getElementById('generateText');
+      const generateLoader = document.getElementById('generateLoader');
+      
+      // Show loading state
+      generateText.style.display = 'none';
+      generateLoader.style.display = 'inline-block';
+      generateBtn.disabled = true;
 
-      const colors = themeColors[theme] || themeColors.cool;
-      const sparkleBg = sparkleStyles[sparkle] || '';
+      setTimeout(() => {
+        const requiredFields = ['courseTitle', 'courseDetails', 'instructorInfo', 'description', 'objectives', 'materials', 'policies', 'grading', 'schedule', 'conduct', 'accessibility', 'contact'];
+        const missingFields = requiredFields.filter(field => !get(field));
+        
+        if (missingFields.length > 0) {
+          alert('Please fill in all required fields marked with *');
+          generateText.style.display = 'inline';
+          generateLoader.style.display = 'none';
+          generateBtn.disabled = false;
+          return;
+        }
 
-      let html = `
-      <div style="background: linear-gradient(to bottom right, ${colors[0]}, ${colors[1]}); padding: 1em; ${sparkle !== 'none' ? sparkleBg : ''}">
-        <h2 style="color:${colors[2]}">${get("courseTitle")}</h2>
-        <details><summary><strong>Basic Course Info</strong></summary><p>${get("courseDetails")}</p></details>
-        <details><summary><strong>Instructor Info</strong></summary><p>${get("instructorInfo")}</p></details>
-        <details><summary><strong>Course Description</strong></summary><p>${get("description")}</p></details>
-        <details><summary><strong>Learning Objectives</strong></summary><p>${get("objectives")}</p></details>
-        <details><summary><strong>Required Materials</strong></summary><p>${get("materials")}</p></details>
-        <details><summary><strong>Course Policies</strong></summary><p>${get("policies")}</p></details>
-        <details><summary><strong>Grading Criteria</strong></summary><p>${get("grading")}</p></details>
-        <details><summary><strong>Course Schedule</strong></summary><p>${get("schedule")}</p></details>
-        <details><summary><strong>Academic Conduct</strong></summary><p>${get("conduct")}</p></details>
-        ${get("rationale") ? `<details><summary><strong>Rationale for Methods</strong></summary><p>${get("rationale")}</p></details>` : ""}
-        ${get("etiquette") ? `<details><summary><strong>Classroom Etiquette</strong></summary><p>${get("etiquette")}</p></details>` : ""}
-        ${get("technology") ? `<details><summary><strong>Technology Use</strong></summary><p>${get("technology")}</p></details>` : ""}
-        <details><summary><strong>Accessibility Statement</strong></summary><p>${get("accessibility")}</p></details>
-        <details><summary><strong>Contact Instructions</strong></summary><p>${get("contact")}</p></details>
-        ${get("embedUrl") ? `<details><summary><strong>Embedded Webpage</strong></summary>
-        <iframe src="${get("embedUrl")}" width="100%" height="300px" style="border:none;"></iframe>
-        <p>If the embed doesn't work, <a href="${get("embedUrl")}" target="_blank">click here to open the page</a>.</p>
-        </details>` : ""}
+        let html = `
+<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border-radius: 15px;">
+  ${get("headerImg") ? `<img src="${get("headerImg")}" alt="Course Header" style="width: 100%; max-height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">` : ""}
+  
+  <h1 style="color: #2c3e50; text-align: center; margin-bottom: 30px; font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">${get("courseTitle")}</h1>
+  
+  <div style="display: grid; gap: 15px;">
+    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #3498db;">
+      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">📚 Course Information</summary>
+      <div style="margin-top: 10px; line-height: 1.6;">${get("courseDetails").replace(/\n/g, '<br>')}</div>
+    </details>
+    
+    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #e74c3c;">
+      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">👨‍🏫 Instructor Information</summary>
+      <div style="margin-top: 10px; line-height: 1.6;">${get("instructorInfo").replace(/\n/g, '<br>')}</div>
+    </details>
+    
+    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #f39c12;">
+      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">📖 Course Description</summary>
+      <div style="margin-top: 10px; line-height: 1.6;">${get("description").replace(/\n/g, '<br>')}</div>
+    </details>
+    
+    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #27ae60;">
+      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">🎯 Learning Objectives</summary>
+      <div style="margin-top: 10px; line-height: 1.6;">${get("objectives").replace(/\n/g, '<br>')}</div>
+    </details>
+    
+    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #9b59b6;">
+      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">📚 Required Materials</summary>
+      <div style="margin-top: 10px; line-height: 1.6;">${get("materials").replace(/\n/g, '<br>')}</div>
+    </details>
+    
+    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #e67e22;">
+      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">📋 Course Policies</summary>
+      <div style="margin-top: 10px; line-height: 1.6;">${get("policies").replace(/\n/g, '<br>')}</div>
+    </details>
+    
+    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #1abc9c;">
+      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">📊 Grading Criteria</summary>
+      <div style="margin-top: 10px; line-height: 1.6;">${get("grading").replace(/\n/g, '<br>')}</div>
+    </details>
+    
+    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #34495e;">
+      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">📅 Course Schedule</summary>
+      <div style="margin-top: 10px; line-height: 1.6;">${get("schedule").replace(/\n/g, '<br>')}</div>
+    </details>
+    
+    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #c0392b;">
+      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">⚖️ Academic Conduct Expectations</summary>
+      <div style="margin-top: 10px; line-height: 1.6;">${get("conduct").replace(/\n/g, '<br>')}</div>
+    </details>
+    
+    ${get("rationale") ? `<details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #8e44ad;">
+      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">🎓 Teaching Methods Rationale</summary>
+      <div style="margin-top: 10px; line-height: 1.6;">${get("rationale").replace(/\n/g, '<br>')}</div>
+    </details>` : ""}
+    
+    ${get("etiquette") ? `<details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #16a085;">
+      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">🤝 Classroom Etiquette</summary>
+      <div style="margin-top: 10px; line-height: 1.6;">${get("etiquette").replace(/\n/g, '<br>')}</div>
+    </details>` : ""}
+    
+    ${get("technology") ? `<details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #2980b9;">
+      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">💻 Technology Use Policy</summary>
+      <div style="margin-top: 10px; line-height: 1.6;">${get("technology").replace(/\n/g, '<br>')}</div>
+    </details>` : ""}
+    
+    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #d35400;">
+      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">♿ Accessibility Statement</summary>
+      <div style="margin-top: 10px; line-height: 1.6;">${get("accessibility").replace(/\n/g, '<br>')}</div>
+    </details>
+    
+    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #7f8c8d;">
+      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">📞 Contact Instructions</summary>
+      <div style="margin-top: 10px; line-height: 1.6;">${get("contact").replace(/\n/g, '<br>')}</div>
+    </details>
+    
+    ${get("embedUrl") ? `
+    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #e91e63;">
+      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">🌐 Embedded Resource</summary>
+      <div style="margin-top: 15px;">
+        <iframe src="${get("embedUrl")}" width="100%" height="400px" style="border: 2px solid #ddd; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);" frameborder="0"></iframe>
+        <p style="text-align: center; margin-top: 10px;">
+          <a href="${get("embedUrl")}" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold; padding: 8px 16px; background: rgba(52,152,219,0.1); border-radius: 20px; display: inline-block; transition: all 0.3s ease;">
+            🔗 Open in New Tab
+          </a>
+        </p>
       </div>
-      `;
-      document.getElementById("output").innerText = html;
+    </details>` : ""}
+  </div>
+  
+  <div style="text-align: center; margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.7); border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+    <p style="margin: 0; color: #7f8c8d; font-style: italic;">Generated with Canvas Course Page Generator &copy; Mrs. B. Watts 2025</p>
+  </div>
+</div>`;
+
+        document.getElementById("output").innerText = html;
+        document.getElementById("output").style.display = "block";
+        
+        const preview = document.getElementById("previewFrame");
+        preview.style.display = "block";
+        preview.srcdoc = html;
+        
+        // Scroll to preview
+        preview.scrollIntoView({ behavior: 'smooth' });
+        
+        // Reset loading state
+        generateText.style.display = 'inline';
+        generateLoader.style.display = 'none';
+        generateBtn.disabled = false;
+      }, 1000);
     }
 
     function downloadHTML() {
-      const blob = new Blob([document.getElementById("output").innerText], { type: 'text/html' });
+      const output = document.getElementById("output").innerText;
+      if (!output) {
+        alert("Please generate HTML first!");
+        return;
+      }
+      
+      const fullHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${get("courseTitle") || "Canvas Course Page"}</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+    details { margin: 10px 0; }
+    summary { font-weight: bold; cursor: pointer; padding: 10px; background: #e9e9e9; border-radius: 5px; }
+    details[open] summary { border-bottom: 1px solid #ccc; border-radius: 5px 5px 0 0; }
+    details div { padding: 15px; background: white; border-radius: 0 0 5px 5px; }
+  </style>
+</head>
+<body>
+  ${output}
+</body>
+</html>`;
+
+      const blob = new Blob([fullHTML], { type: 'text/html' });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = "canvas_course_page.html";
+      link.download = `${get("courseTitle").replace(/[^a-z0-9]/gi, '_') || "canvas_course_page"}.html`;
       link.click();
     }
+
+    function copyToClipboard() {
+      const output = document.getElementById("output").innerText;
+      if (!output) {
+        alert("Please generate HTML first!");
+        return;
+      }
+      
+      navigator.clipboard.writeText(output).then(() => {
+        alert("HTML code copied to clipboard!");
+      }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement("textarea");
+        textArea.value = output;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert("HTML code copied to clipboard!");
+      });
+    }
+
+    function clearForm() {
+      if (confirm("Are you sure you want to clear all form data?")) {
+        const inputs = document.querySelectorAll('input[type="text"], textarea');
+        inputs.forEach(input => input.value = '');
+        document.getElementById("output").style.display = "none";
+        document.getElementById("previewFrame").style.display = "none";
+        document.getElementById("headerImgPreview").style.display = "none";
+      }
+    }
+
+    // Auto-save form data to prevent loss
+    function saveFormData() {
+      const formData = {};
+      const inputs = document.querySelectorAll('input[type="text"], textarea');
+      inputs.forEach(input => {
+        formData[input.id] = input.value;
+      });
+      // Note: localStorage not used per restrictions, data only persists during session
+    }
+
+    // Save form data on input
+    document.addEventListener('input', saveFormData);
+
+    // Initialize theme
+    changeTheme();
   </script>
 </body>
 </html>
