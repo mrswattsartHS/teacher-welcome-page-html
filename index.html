@@ -2,736 +2,664 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Canvas Course Page Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>John Doe - Portfolio (Customizable)</title>
   <style>
+    /* Reset */
     * {
       box-sizing: border-box;
-    }
-    
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
-      background: var(--bg-gradient);
-      color: var(--text-color);
-      transition: all 0.3s ease;
-      overflow-x: hidden;
     }
-
-    /* Theme Variables */
-    :root {
-      --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      --header-gradient: linear-gradient(90deg, #004080, #0077cc);
-      --text-color: #222;
-      --card-bg: rgba(255, 255, 255, 0.9);
-      --border-color: #ddd;
-      --button-bg: #0066cc;
-      --button-hover: #0052a3;
-      --accent-color: #ff6b6b;
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f9f9f9;
+      padding-bottom: 80px; /* space for settings panel */
     }
-
-    .theme-cool {
-      --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      --header-gradient: linear-gradient(90deg, #2196F3, #21CBF3);
-      --accent-color: #00BCD4;
+    a {
+      text-decoration: none;
+      color: inherit;
     }
-
-    .theme-warm {
-      --bg-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-      --header-gradient: linear-gradient(90deg, #FF5722, #FF9800);
-      --accent-color: #FFC107;
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
     }
-
-    .theme-neutral {
-      --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-      --header-gradient: linear-gradient(90deg, #6c757d, #495057);
-      --accent-color: #6c757d;
-    }
-
-    .theme-complementary {
-      --bg-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-      --header-gradient: linear-gradient(90deg, #d299c2, #fef9d7);
-      --accent-color: #ff6b9d;
-    }
-
-    /* Animation Themes */
-    .effect-sparkle::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: 
-        radial-gradient(2px 2px at 20px 30px, #fff, transparent),
-        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,.8), transparent),
-        radial-gradient(1px 1px at 90px 40px, #fff, transparent),
-        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,.6), transparent),
-        radial-gradient(2px 2px at 160px 30px, #fff, transparent);
-      background-repeat: repeat;
-      background-size: 200px 100px;
-      animation: sparkleMove 20s linear infinite;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .effect-paint::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: 
-        radial-gradient(circle at 15% 25%, rgba(255,107,107,0.3) 0%, transparent 30%),
-        radial-gradient(circle at 85% 45%, rgba(107,255,107,0.3) 0%, transparent 25%),
-        radial-gradient(circle at 45% 75%, rgba(107,107,255,0.3) 0%, transparent 35%),
-        radial-gradient(circle at 75% 15%, rgba(255,255,107,0.3) 0%, transparent 28%),
-        radial-gradient(circle at 25% 85%, rgba(255,107,255,0.3) 0%, transparent 32%);
-      animation: paintSplatter 12s ease-in-out infinite;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .effect-water::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: 
-        radial-gradient(ellipse 200px 100px at 30% 40%, rgba(135,206,235,0.2) 0%, transparent 60%),
-        radial-gradient(ellipse 300px 150px at 70% 60%, rgba(100,149,237,0.15) 0%, transparent 70%),
-        radial-gradient(ellipse 250px 120px at 50% 80%, rgba(173,216,230,0.18) 0%, transparent 65%);
-      animation: waterRipples 10s ease-in-out infinite;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    @keyframes sparkleMove {
-      0% { transform: translateX(-200px) translateY(-100px); }
-      100% { transform: translateX(200px) translateY(100px); }
-    }
-
-    @keyframes paintSplatter {
-      0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.6; }
-      25% { transform: scale(1.2) rotate(90deg); opacity: 0.8; }
-      50% { transform: scale(0.8) rotate(180deg); opacity: 0.4; }
-      75% { transform: scale(1.1) rotate(270deg); opacity: 0.7; }
-    }
-
-    @keyframes waterRipples {
-      0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.3; }
-      33% { transform: scale(1.3) translate(-20px, 10px); opacity: 0.5; }
-      66% { transform: scale(0.9) translate(15px, -15px); opacity: 0.2; }
-    }
-
-    header {
-      background: var(--header-gradient);
+    nav {
+      background-color: #222;
       color: white;
-      padding: 0.8em 0;
       position: sticky;
       top: 0;
       z-index: 1000;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-      backdrop-filter: blur(10px);
-      height: 70px;
-      overflow: hidden;
     }
-
-    .header-scroll {
+    nav .container {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      animation: scrollHeader 30s linear infinite;
-      white-space: nowrap;
-      padding: 0 2em;
+      height: 60px;
     }
-
-    header img {
-      max-height: 50px;
-      margin-right: 15px;
-      border-radius: 8px;
+    nav .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+    }
+    nav ul li {
+      margin-left: 25px;
+    }
+    nav ul li a {
+      color: white;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+    nav ul li a:hover {
+      color: #00bcd4;
+    }
+    .hamburger {
       display: none;
-      flex-shrink: 0;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 1.5em;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    @keyframes scrollHeader {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
-    }
-
-    .theme-controls {
-      position: absolute;
-      right: 1em;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      z-index: 1001;
-    }
-
-    .theme-controls select {
-      padding: 0.3em;
-      border-radius: 5px;
-      border: none;
-      background: rgba(255,255,255,0.2);
-      color: white;
-      font-size: 0.9em;
-    }
-
-    main {
-      padding: 2em;
-      max-width: 1200px;
-      margin: auto;
-      position: relative;
-      z-index: 2;
-    }
-
-    .form-container {
-      background: var(--card-bg);
-      padding: 2em;
-      border-radius: 15px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.2);
-      margin-bottom: 2em;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5em;
-    }
-
-    label {
-      display: block;
-      margin-top: 1em;
-      font-weight: bold;
-      color: var(--text-color);
-      position: relative;
-    }
-
-    .required::after {
-      content: ' *';
-      color: var(--accent-color);
-    }
-
-    input[type="text"], textarea, select {
-      width: 100%;
-      padding: 0.8em;
-      margin-top: 0.5em;
-      border-radius: 8px;
-      border: 2px solid var(--border-color);
-      background: rgba(255,255,255,0.9);
-      transition: all 0.3s ease;
-      font-family: inherit;
-    }
-
-    input[type="text"]:focus, textarea:focus, select:focus {
-      outline: none;
-      border-color: var(--button-bg);
-      box-shadow: 0 0 0 3px rgba(0,102,204,0.1);
-      transform: translateY(-2px);
-    }
-
-    textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-
-    .button-group {
-      display: flex;
-      gap: 1em;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 2em;
-    }
-
-    button {
-      padding: 1em 2em;
-      background: var(--button-bg);
-      color: white;
-      border: none;
+      flex-direction: column;
       cursor: pointer;
-      font-size: 1em;
-      border-radius: 25px;
+    }
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background-color: white;
+      margin: 4px 0;
       transition: all 0.3s ease;
-      font-weight: bold;
-      box-shadow: 0 4px 15px rgba(0,102,204,0.3);
-      position: relative;
-      overflow: hidden;
     }
-
-    button::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      background: rgba(255,255,255,0.2);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      transition: width 0.6s, height 0.6s;
-    }
-
-    button:hover::before {
-      width: 300px;
-      height: 300px;
-    }
-
-    button:hover {
-      background: var(--button-hover);
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(0,102,204,0.4);
-    }
-
-    #output {
-      margin-top: 2em;
-      white-space: pre-wrap;
-      background: var(--card-bg);
-      padding: 1.5em;
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      font-family: 'Courier New', monospace;
-      font-size: 0.9em;
-      max-height: 400px;
-      overflow-y: auto;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-
-    iframe.preview {
-      margin-top: 2em;
-      width: 100%;
-      height: 500px;
-      border: 3px solid var(--button-bg);
-      border-radius: 15px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-      background: white;
-    }
-
-    footer {
+    .hero {
+      background: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1470&q=80') no-repeat center center/cover;
+      height: 90vh;
+      color: white;
+      display: flex;
+      align-items: center;
       text-align: center;
-      padding: 1.5em;
-      background: var(--card-bg);
-      margin-top: 3em;
-      font-size: 0.9em;
-      backdrop-filter: blur(10px);
-      border-top: 1px solid var(--border-color);
+      padding: 0 20px;
     }
-
-    .feature-highlight {
-      background: linear-gradient(45deg, var(--accent-color), transparent);
-      padding: 1em;
+    .hero-content {
+      max-width: 700px;
+      margin: 0 auto;
+      background-color: rgba(0,0,0,0.5);
+      padding: 40px 30px;
       border-radius: 10px;
-      margin-bottom: 1em;
-      text-align: center;
+    }
+    .hero-content h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+    }
+    .hero-content p {
+      font-size: 1.25rem;
+      margin-bottom: 30px;
+    }
+    .hero-content a.btn {
+      background-color: #00bcd4;
+      padding: 12px 30px;
       color: white;
       font-weight: bold;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .theme-controls {
-        flex-direction: column;
-        gap: 5px;
-      }
-      
-      header h1 {
-        font-size: 1.2em;
-      }
-      
-      main {
-        padding: 1em;
-      }
-      
-      .button-group {
-        flex-direction: column;
-      }
-    }
-
-    /* Loading Animation */
-    .loading {
+      border-radius: 50px;
+      transition: background-color 0.3s ease;
       display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255,255,255,.3);
+    }
+    .hero-content a.btn:hover {
+      background-color: #0097a7;
+    }
+    section {
+      padding: 60px 0;
+      background-color: white;
+    }
+    section h2 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 2.5rem;
+      color: #222;
+      transition: opacity 0.5s ease;
+    }
+    /* Hide headings if empty */
+    section h2.hidden {
+      display: none;
+    }
+    .about-container {
+      display: flex;
+      max-width: 1000px;
+      margin: 0 auto;
+      align-items: center;
+      gap: 40px;
+    }
+    .about-container img {
+      flex: 1;
+      border-radius: 10px;
+      max-width: 100%;
+      height: auto;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .about-text {
+      flex: 2;
+      font-size: 1.1rem;
+      color: #555;
+    }
+    .projects-grid {
+      display: grid;
+      max-width: 1100px;
+      margin: 0 auto;
+      gap: 30px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    .project-card {
+      background-color: white;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+    .project-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    .project-card img {
+      width: 100%;
+      display: block;
+      height: 180px;
+      object-fit: cover;
+    }
+    .project-content {
+      padding: 20px;
+    }
+    .project-content h3 {
+      margin-bottom: 10px;
+      color: #222;
+    }
+    .project-content p {
+      font-size: 0.95rem;
+      color: #666;
+      margin-bottom: 15px;
+    }
+    .project-content a {
+      color: #00bcd4;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+    .project-content a:hover {
+      color: #0097a7;
+    }
+    .contact-form {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .contact-form label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #222;
+    }
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+      resize: vertical;
+      transition: border-color 0.3s;
+    }
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      border-color: #00bcd4;
+      outline: none;
+    }
+    .contact-form button {
+      background-color: #00bcd4;
+      border: none;
+      color: white;
+      padding: 14px 30px;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .contact-form button:hover {
+      background-color: #0097a7;
+    }
+    footer {
+      background-color: #222;
+      color: #aaa;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 768px) {
+      nav ul {
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 0;
+        background-color: #222;
+        width: 200px;
+        display: none;
+        border-radius: 0 0 0 10px;
+      }
+      nav ul.active {
+        display: flex;
+      }
+      nav ul li {
+        margin: 15px 0;
+        margin-left: 0;
+        text-align: center;
+      }
+      .hamburger {
+        display: flex;
+      }
+      .about-container {
+        flex-direction: column;
+      }
+    }
+    @media (max-width: 600px) {
+      .hero-content h1 {
+        font-size: 2.1rem;
+      }
+      .hero-content p {
+        font-size: 1rem;
+      }
+      .about-text {
+        font-size: 1rem;
+      }
+    }
+
+    /* Animations */
+
+    /* Fade in + slide up for sections */
+    .animate-section {
+      opacity: 0;
+      transform: translateY(40px);
+      animation-fill-mode: forwards;
+      animation-name: fadeSlideUp;
+      animation-duration: 0.8s;
+      animation-timing-function: ease-out;
+    }
+    .animate-section.delay-0 {
+      animation-delay: 0.1s;
+    }
+    .animate-section.delay-1 {
+      animation-delay: 0.3s;
+    }
+    .animate-section.delay-2 {
+      animation-delay: 0.5s;
+    }
+    .animate-section.delay-3 {
+      animation-delay: 0.7s;
+    }
+    @keyframes fadeSlideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Project card animation on page load */
+    .animate-project {
+      opacity: 0;
+      transform: translateY(40px);
+      animation-fill-mode: forwards;
+      animation-name: fadeSlideUp;
+      animation-duration: 0.7s;
+      animation-timing-function: ease-out;
+    }
+
+    /* Settings Panel Styling */
+    #settings-panel {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      background: #222;
+      color: white;
+      width: 320px;
+      max-height: 80vh;
+      overflow-y: auto;
+      border-radius: 10px 10px 0 0;
+      font-size: 14px;
+      box-shadow: -3px -3px 10px rgba(0, 0, 0, 0.3);
+      z-index: 2000;
+      transition: transform 0.3s ease;
+    }
+    #settings-panel.collapsed {
+      transform: translateY(95%);
+      cursor: pointer;
+      height: 40px;
+      max-height: none;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+    }
+    #settings-panel header {
+      padding: 10px 15px;
+      font-weight: bold;
+      font-size: 16px;
+      border-bottom: 1px solid #444;
+      cursor: grab;
+      user-select: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #settings-panel header .toggle-button {
+      background: #00bcd4;
+      border: none;
+      color: white;
       border-radius: 50%;
-      border-top-color: #fff;
-      animation: spin 1s ease-in-out infinite;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 18px;
+      line-height: 18px;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background-color 0.3s;
     }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    #settings-panel header .toggle-button:hover {
+      background: #0097a7;
     }
-  </style>
-</head>
-<body class="theme-cool">
-  <header>
-    <div class="header-scroll">
-      <img id="headerImgPreview" src="" alt="Header Image Preview" />
-      <h1>✨ Canvas Course Page Generator - Create Professional Course Pages with Live Preview, Themes, and Embedded Content! ✨</h1>
-    </div>
-    <div class="theme-controls">
-      <select id="colorTheme" onchange="changeTheme()">
-        <option value="cool">Cool</option>
-        <option value="warm">Warm</option>
-        <option value="neutral">Neutral</option>
-        <option value="complementary">Complementary</option>
-      </select>
-      <select id="effectTheme" onchange="changeEffect()">
-        <option value="">No Effects</option>
-        <option value="sparkle">Sparkle</option>
-        <option value="paint">Paint Splatter</option>
-        <option value="water">Water Ripples</option>
-      </select>
-    </div>
-  </header>
-
-  <main>
-    <div class="feature-highlight">
-      ✨ Generate Canvas Homepage HTML ✨
-    </div>
-
-    <div class="form-container">
-      <div class="form-grid">
-        <div>
-          <label for="headerImg">Header Image URL (optional):</label>
-          <input type="text" id="headerImg" oninput="previewHeaderImage()" placeholder="https://example.com/image.jpg" />
-
-          <label for="courseTitle" class="required">Course Title:</label>
-          <input type="text" id="courseTitle" placeholder="e.g., Introduction to Psychology" />
-
-          <label for="courseDetails" class="required">Basic Course Information:</label>
-          <textarea id="courseDetails" placeholder="Course number, section, meeting times, days, location, semester..."></textarea>
-
-          <label for="instructorInfo" class="required">Instructor Information:</label>
-          <textarea id="instructorInfo" placeholder="Name, title, office location, phone, email..."></textarea>
-
-          <label for="description" class="required">Course Description:</label>
-          <textarea id="description" placeholder="Overview, goals, prerequisites, content summary..."></textarea>
-
-          <label for="objectives" class="required">Learning Objectives/Outcomes:</label>
-          <textarea id="objectives" placeholder="What students will learn and be able to do..."></textarea>
-
-          <label for="materials" class="required">Required Materials:</label>
-          <textarea id="materials" placeholder="Textbooks, resources, supplies needed..."></textarea>
-        </div>
-
-        <div>
-          <label for="policies" class="required">Course Policies:</label>
-          <textarea id="policies" placeholder="Attendance, late work, grading, academic integrity..."></textarea>
-
-          <label for="grading" class="required">Grading Criteria:</label>
-          <textarea id="grading" placeholder="How work is evaluated, weighting of assignments..."></textarea>
-
-          <label for="schedule" class="required">Course Schedule:</label>
-          <textarea id="schedule" placeholder="Calendar with due dates, exams, projects..."></textarea>
-
-          <label for="conduct" class="required">Academic Conduct Expectations:</label>
-          <textarea id="conduct" placeholder="Academic honesty, plagiarism policies..."></textarea>
-
-          <label for="accessibility" class="required">Accessibility Statement:</label>
-          <textarea id="accessibility" placeholder="Information about accommodations for students with disabilities..."></textarea>
-
-          <label for="contact" class="required">Contact Instructions:</label>
-          <textarea id="contact" placeholder="How to best reach the instructor..."></textarea>
-        </div>
-      </div>
-
-      <div class="form-grid" style="margin-top: 2em;">
-        <div>
-          <h3>Optional Sections</h3>
-          <label for="etiquette">Classroom Etiquette:</label>
-          <textarea id="etiquette" placeholder="Guidelines for respectful interactions..."></textarea>
-
-          <label for="technology">Technology Use Policy:</label>
-          <textarea id="technology" placeholder="Policies for computers, tablets, devices..."></textarea>
-        </div>
-
-        <div>
-          <h3>Embedded Content</h3>
-          <label for="embedUrl">Embed Webpage URL:</label>
-          <input type="text" id="embedUrl" placeholder="https://example.com/" />
-          <small style="color: #666;">Any website URL will be embedded with a backup link</small>
-        </div>
-      </div>
-
-      <div class="button-group">
-        <button onclick="generateHTML()" id="generateBtn">
-          <span id="generateText">Generate HTML</span>
-          <span id="generateLoader" class="loading" style="display:none;"></span>
-        </button>
-        <button onclick="downloadHTML()">📥 Download HTML File</button>
-        <button onclick="copyToClipboard()">📋 Copy Code</button>
-        <button onclick="clearForm()">🗑️ Clear Form</button>
-      </div>
-    </div>
-
-    <div id="output" style="display:none;"></div>
-    <iframe id="previewFrame" class="preview" style="display:none;"></iframe>
-  </main>
-
-  <footer>
-    &copy; Mrs. B. Watts 2025 | Canvas Page Generator | All Rights Reserved
-  </footer>
-
-  <script>
-    function get(id) {
-      return document.getElementById(id).value.trim();
+    #settings-content {
+      padding: 15px;
     }
-
-    function changeTheme() {
-      const theme = document.getElementById('colorTheme').value;
-      document.body.className = document.body.className.replace(/theme-\w+/, `theme-${theme}`);
+    #settings-content label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: 600;
     }
-
-    function changeEffect() {
-      const effect = document.getElementById('effectTheme').value;
-      document.body.className = document.body.className.replace(/effect-\w+/, '');
-      if (effect) {
-        document.body.classList.add(`effect-${effect}`);
-      }
+    #settings-content input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 1px solid #555;
+      background-color: #333;
+      color: white;
     }
-
-    function previewHeaderImage() {
-      const url = get("headerImg");
-      const img = document.getElementById("headerImgPreview");
-      if (url) {
-        img.src = url;
-        img.style.display = "block";
-        img.onerror = () => {
-          img.style.display = "none";
-          console.log("Invalid image URL");
-        };
-      } else {
-        img.style.display = "none";
-      }
+    #settings-content input[type="checkbox"] {
+      width: auto;
+      margin-right: 5px;
+      vertical-align: middle;
     }
-
-    function generateHTML() {
-      const generateBtn = document.getElementById('generateBtn');
-      const generateText = document.getElementById('generateText');
-      const generateLoader = document.getElementById('generateLoader');
-      
-      // Show loading state
-      generateText.style.display = 'none';
-      generateLoader.style.display = 'inline-block';
-      generateBtn.disabled = true;
-
-      setTimeout(() => {
-        const requiredFields = ['courseTitle', 'courseDetails', 'instructorInfo', 'description', 'objectives', 'materials', 'policies', 'grading', 'schedule', 'conduct', 'accessibility', 'contact'];
-        const missingFields = requiredFields.filter(field => !get(field));
-        
-        if (missingFields.length > 0) {
-          alert('Please fill in all required fields marked with *');
-          generateText.style.display = 'inline';
-          generateLoader.style.display = 'none';
-          generateBtn.disabled = false;
-          return;
-        }
-
-        let html = `
-<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border-radius: 15px;">
-  ${get("headerImg") ? `<img src="${get("headerImg")}" alt="Course Header" style="width: 100%; max-height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">` : ""}
-  
-  <h1 style="color: #2c3e50; text-align: center; margin-bottom: 30px; font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">${get("courseTitle")}</h1>
-  
-  <div style="display: grid; gap: 15px;">
-    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #3498db;">
-      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">📚 Course Information</summary>
-      <div style="margin-top: 10px; line-height: 1.6;">${get("courseDetails").replace(/\n/g, '<br>')}</div>
-    </details>
-    
-    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #e74c3c;">
-      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">👨‍🏫 Instructor Information</summary>
-      <div style="margin-top: 10px; line-height: 1.6;">${get("instructorInfo").replace(/\n/g, '<br>')}</div>
-    </details>
-    
-    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #f39c12;">
-      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">📖 Course Description</summary>
-      <div style="margin-top: 10px; line-height: 1.6;">${get("description").replace(/\n/g, '<br>')}</div>
-    </details>
-    
-    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #27ae60;">
-      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">🎯 Learning Objectives</summary>
-      <div style="margin-top: 10px; line-height: 1.6;">${get("objectives").replace(/\n/g, '<br>')}</div>
-    </details>
-    
-    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #9b59b6;">
-      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">📚 Required Materials</summary>
-      <div style="margin-top: 10px; line-height: 1.6;">${get("materials").replace(/\n/g, '<br>')}</div>
-    </details>
-    
-    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #e67e22;">
-      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">📋 Course Policies</summary>
-      <div style="margin-top: 10px; line-height: 1.6;">${get("policies").replace(/\n/g, '<br>')}</div>
-    </details>
-    
-    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #1abc9c;">
-      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">📊 Grading Criteria</summary>
-      <div style="margin-top: 10px; line-height: 1.6;">${get("grading").replace(/\n/g, '<br>')}</div>
-    </details>
-    
-    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #34495e;">
-      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">📅 Course Schedule</summary>
-      <div style="margin-top: 10px; line-height: 1.6;">${get("schedule").replace(/\n/g, '<br>')}</div>
-    </details>
-    
-    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #c0392b;">
-      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">⚖️ Academic Conduct Expectations</summary>
-      <div style="margin-top: 10px; line-height: 1.6;">${get("conduct").replace(/\n/g, '<br>')}</div>
-    </details>
-    
-    ${get("etiquette") ? `<details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #16a085;">
-      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">🤝 Classroom Etiquette</summary>
-      <div style="margin-top: 10px; line-height: 1.6;">${get("etiquette").replace(/\n/g, '<br>')}</div>
-    </details>` : ""}
-    
-    ${get("technology") ? `<details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #2980b9;">
-      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">💻 Technology Use Policy</summary>
-      <div style="margin-top: 10px; line-height: 1.6;">${get("technology").replace(/\n/g, '<br>')}</div>
-    </details>` : ""}
-    
-    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #d35400;">
-      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">♿ Accessibility Statement</summary>
-      <div style="margin-top: 10px; line-height: 1.6;">${get("accessibility").replace(/\n/g, '<br>')}</div>
-    </details>
-    
-    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #7f8c8d;">
-      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">📞 Contact Instructions</summary>
-      <div style="margin-top: 10px; line-height: 1.6;">${get("contact").replace(/\n/g, '<br>')}</div>
-    </details>
-    
-    ${get("embedUrl") ? `
-    <details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #e91e63;">
-      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">🌐 Embedded Resource</summary>
-      <div style="margin-top: 15px;">
-        <iframe src="${get("embedUrl")}" width="100%" height="400px" style="border: 2px solid #ddd; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);" frameborder="0"></iframe>
-        <p style="text-align: center; margin-top: 10px;">
-          <a href="${get("embedUrl")}" target="_blank" style="color: #3498db; text-decoration: none; font-weight: bold; padding: 8px 16px; background: rgba(52,152,219,0.1); border-radius: 20px; display: inline-block; transition: all 0.3s ease;">
-            🔗 Open in New Tab
-          </a>
-        </p>
-      </div>
-    </details>` : ""}
-  </div>
-  
-  <div style="text-align: center; margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.7); border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-    <p style="margin: 0; color: #7f8c8d; font-style: italic;">Generated with Canvas Course Page Generator &copy; Mrs. B. Watts 2025</p>
-  </div>
-</div>`;
-
-        document.getElementById("output").innerText = html;
-        document.getElementById("output").style.display = "block";
-        
-        const preview = document.getElementById("previewFrame");
-        preview.style.display = "block";
-        preview.srcdoc = html;
-        
-        // Scroll to preview
-        preview.scrollIntoView({ behavior: 'smooth' });
-        
-        // Reset loading state
-        generateText.style.display = 'inline';
-        generateLoader.style.display = 'none';
-        generateBtn.disabled = false;
-      }, 1000);
+    #settings-content .checkbox-label {
+      display: flex;
+      align-items: center;
+      margin-top: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      color: white;
     }
-
-    function downloadHTML() {
-      const output = document.getElementById("output").innerText;
-      if (!output) {
-        alert("Please generate HTML first!");
-        return;
-      }
-      
-      const fullHTML = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${get("courseTitle") || "Canvas Course Page"}</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
-    details { margin: 10px 0; }
-    summary { font-weight: bold; cursor: pointer; padding: 10px; background: #e9e9e9; border-radius: 5px; }
-    details[open] summary { border-bottom: 1px solid #ccc; border-radius: 5px 5px 0 0; }
-    details div { padding: 15px; background: white; border-radius: 0 0 5px 5px; }
+    /* Scrollbar for settings */
+    #settings-panel::-webkit-scrollbar {
+      width: 6px;
+    }
+    #settings-panel::-webkit-scrollbar-track {
+      background: #222;
+    }
+    #settings-panel::-webkit-scrollbar-thumb {
+      background-color: #00bcd4;
+      border-radius: 3px;
+    }
   </style>
 </head>
 <body>
-  ${output}
-</body>
-</html>`;
+  <!-- Navigation -->
+  <nav>
+    <div class="container">
+      <div class="logo">John Doe</div>
+      <ul id="nav-links">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#about">About Me</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="hamburger" id="hamburger" aria-label="Toggle navigation menu" role="button" tabindex="0" >
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+  </nav>
 
-      const blob = new Blob([fullHTML], { type: 'text/html' });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `${get("courseTitle").replace(/[^a-z0-9]/gi, '_') || "canvas_course_page"}.html`;
-      link.click();
-    }
+  <!-- Hero Section -->
+  <section class="hero animate-section delay-0" id="hero" aria-label="Introduction">
+    <div class="hero-content" role="main">
+      <h1 id="heading-hero">Hello, I'm John Doe</h1>
+      <p>Full-stack developer passionate about creating beautiful and functional web applications.</p>
+      <a href="#projects" class="btn" aria-label="View my projects">See my work</a>
+    </div>
+  </section>
 
-    function copyToClipboard() {
-      const output = document.getElementById("output").innerText;
-      if (!output) {
-        alert("Please generate HTML first!");
-        return;
+  <!-- About Me -->
+  <section id="about" aria-labelledby="heading-about" class="animate-section delay-1">
+    <h2 id="heading-about">About Me</h2>
+    <div class="about-container container">
+      <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80" alt="Picture of John Doe" />
+      <div class="about-text">
+        <p>
+          I am a passionate web developer with 5+ years of experience in building user-friendly, performant websites and applications. My expertise lies in HTML, CSS, JavaScript, and modern web frameworks. I love solving problems and continuously learning new technologies to improve my craft.
+        </p>
+        <p>
+          When I’m not coding, I enjoy photography and hiking — both of which feed my creativity and inspire my work.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects" aria-labelledby="heading-projects" style="background-color: #f4f7f8;" class="animate-section delay-2">
+    <h2 id="heading-projects">My Projects</h2>
+    <div class="projects-grid container">
+      <!-- Project 1 -->
+      <div class="project-card animate-project" style="animation-delay: 0.1s;">
+        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80" alt="Screenshot of Project One" />
+        <div class="project-content">
+          <h3>Project One</h3>
+          <p>A task management app with real-time collaboration features, built using React and Firebase.</p>
+          <a href="#" target="_blank" rel="noopener noreferrer">View Project</a>
+        </div>
+      </div>
+      <!-- Project 2 -->
+      <div class="project-card animate-project" style="animation-delay: 0.3s;">
+        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80" alt="Screenshot of Project Two" />
+        <div class="project-content">
+          <h3>Project Two</h3>
+          <p>Responsive e-commerce website designed with accessibility and performance in mind.</p>
+          <a href="#" target="_blank" rel="noopener noreferrer">View Project</a>
+        </div>
+      </div>
+      <!-- Project 3 -->
+      <div class="project-card animate-project" style="animation-delay: 0.5s;">
+        <img src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=600&q=80" alt="Screenshot of Project Three" />
+        <div class="project-content">
+          <h3>Project Three</h3>
+          <p>Custom CMS developed with PHP and MySQL for a local business to manage content effortlessly.</p>
+          <a href="#" target="_blank" rel="noopener noreferrer">View Project</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" aria-labelledby="heading-contact" class="animate-section delay-3">
+    <h2 id="heading-contact">Get In Touch</h2>
+    <form class="contact-form" action="#" method="post" aria-label="Contact form">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" required placeholder="Your full name" />
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required placeholder="Your email address" />
+
+      <label for="message">Message</label>
+      <textarea id="message" name="message" rows="6" required placeholder="Write your message here..."></textarea>
+
+      <button type="submit">Send Message</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2024 John Doe. All rights reserved.</p>
+  </footer>
+
+  <!-- Settings Panel -->
+  <div id="settings-panel" role="region" aria-label="Settings panel for customizing headings and animations">
+    <header>
+      Customization
+      <button class="toggle-button" aria-label="Toggle settings panel" title="Toggle Settings">−</button>
+    </header>
+    <div id="settings-content">
+      <label for="input-hero">Hero Heading (Home)</label>
+      <input type="text" id="input-hero" placeholder="Leave blank to hide heading" />
+
+      <label for="input-about">About Me Heading</label>
+      <input type="text" id="input-about" placeholder="Leave blank to hide heading" />
+
+      <label for="input-projects">Projects Heading</label>
+      <input type="text" id="input-projects" placeholder="Leave blank to hide heading" />
+
+      <label for="input-contact">Contact Heading</label>
+      <input type="text" id="input-contact" placeholder="Leave blank to hide heading" />
+
+      <label class="checkbox-label" for="toggle-animations">
+        <input type="checkbox" id="toggle-animations" checked />
+        Enable Animations
+      </label>
+    </div>
+  </div>
+
+  <script>
+    // Hamburger menu for mobile nav
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('nav-links');
+
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      hamburger.classList.toggle('active');
+    });
+    hamburger.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        hamburger.click();
       }
-      
-      navigator.clipboard.writeText(output).then(() => {
-        alert("HTML code copied to clipboard!");
-      }).catch(() => {
-        // Fallback for older browsers
-        const textArea = document.createElement("textarea");
-        textArea.value = output;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        alert("HTML code copied to clipboard!");
+    });
+
+    // Settings Panel toggle minimize/maximize
+    const settingsPanel = document.getElementById('settings-panel');
+    const toggleButton = settingsPanel.querySelector('.toggle-button');
+    toggleButton.addEventListener('click', () => {
+      if (settingsPanel.classList.contains('collapsed')) {
+        settingsPanel.classList.remove('collapsed');
+        toggleButton.textContent = '−';
+        toggleButton.setAttribute('aria-label', 'Collapse settings panel');
+      } else {
+        settingsPanel.classList.add('collapsed');
+        toggleButton.textContent = '+';
+        toggleButton.setAttribute('aria-label', 'Expand settings panel');
+      }
+    });
+
+    // Mapping of input IDs to heading elements IDs and types
+    const headingMap = {
+      'input-hero': { id: 'heading-hero', isMain: true },       // h1
+      'input-about': { id: 'heading-about' },                  // h2
+      'input-projects': { id: 'heading-projects' },            // h2
+      'input-contact': { id: 'heading-contact' }               // h2
+    };
+
+    for (let inputId in headingMap) {
+      const input = document.getElementById(inputId);
+      const headingEl = document.getElementById(headingMap[inputId].id);
+
+      // Initialize input with current heading text
+      if (headingEl) {
+        input.value = headingEl.textContent;
+      }
+
+      input.addEventListener('input', () => {
+        const val = input.value.trim();
+        if (headingEl) {
+          if (val === '') {
+            // Hide the heading if blank
+            headingEl.classList.add('hidden');
+            if (headingMap[inputId].isMain) {
+              // For main heading (h1), hide the entire hero-content container or fallback
+              // Here we hide just heading since hero content has important p and button
+              headingEl.textContent = ''; // clear text
+            }
+          } else {
+            headingEl.classList.remove('hidden');
+            headingEl.textContent = val;
+          }
+        }
       });
     }
 
-    function clearForm() {
-      if (confirm("Are you sure you want to clear all form data?")) {
-        const inputs = document.querySelectorAll('input[type="text"], textarea');
-        inputs.forEach(input => input.value = '');
-        document.getElementById("output").style.display = "none";
-        document.getElementById("previewFrame").style.display = "none";
-        document.getElementById("headerImgPreview").style.display = "none";
-      }
-    }
+    // Animations toggle
+    const toggleAnimationsCheckbox = document.getElementById('toggle-animations');
+    const animatedSections = document.querySelectorAll('.animate-section');
+    const animatedProjects = document.querySelectorAll('.animate-project');
 
-    // Auto-save form data to prevent loss
-    function saveFormData() {
-      const formData = {};
-      const inputs = document.querySelectorAll('input[type="text"], textarea');
-      inputs.forEach(input => {
-        formData[input.id] = input.value;
+    function setAnimationsEnabled(enabled) {
+      animatedSections.forEach(section => {
+        if (enabled) {
+          section.style.animationPlayState = 'running';
+          // Add class to animate
+          section.style.opacity = '';
+          section.style.transform = '';
+        } else {
+          // Disable animations by removing them or freezing styles
+          section.style.animationPlayState = 'paused';
+          // Instantly show all content without animation
+          section.style.opacity = '1';
+          section.style.transform = 'none';
+        }
       });
-      // Note: localStorage not used per restrictions, data only persists during session
+
+      animatedProjects.forEach((card) => {
+        if (enabled) {
+          card.style.animationPlayState = 'running';
+          card.style.opacity = '';
+          card.style.transform = '';
+        } else {
+          card.style.animationPlayState = 'paused';
+          card.style.opacity = '1';
+          card.style.transform = 'none';
+        }
+      });
     }
 
-    // Save form data on input
-    document.addEventListener('input', saveFormData);
+    // Initial state based on checkbox
+    setAnimationsEnabled(toggleAnimationsCheckbox.checked);
 
-    // Initialize theme
-    changeTheme();
+    toggleAnimationsCheckbox.addEventListener('change', () => {
+      setAnimationsEnabled(toggleAnimationsCheckbox.checked);
+    });
+
+    // Accessibility improvement:
+    // Close nav menu when clicking a nav link on mobile
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (navLinks.classList.contains('active')) {
+          navLinks.classList.remove('active');
+          hamburger.classList.remove('active');
+        }
+      });
+    });
   </script>
 </body>
 </html>
