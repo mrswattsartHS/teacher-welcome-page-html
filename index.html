@@ -56,77 +56,97 @@
     }
 
     /* Animation Themes */
-    .sparkle-stars::before {
+    .effect-sparkle::before {
       content: '';
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="1" fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.3;0.7" dur="2s" repeatCount="indefinite"/></circle><circle cx="80" cy="30" r="0.5" fill="yellow" opacity="0.5"><animate attributeName="opacity" values="0.5;0.9;0.5" dur="3s" repeatCount="indefinite"/></circle><circle cx="60" cy="70" r="0.8" fill="lightblue" opacity="0.6"><animate attributeName="opacity" values="0.6;0.2;0.6" dur="2.5s" repeatCount="indefinite"/></circle></svg>') repeat;
+      background: 
+        radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,.8), transparent),
+        radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,.6), transparent),
+        radial-gradient(2px 2px at 160px 30px, #fff, transparent);
+      background-repeat: repeat;
+      background-size: 200px 100px;
+      animation: sparkleMove 20s linear infinite;
       pointer-events: none;
       z-index: 1;
     }
 
-    .sparkle-paint::before {
+    .effect-paint::before {
       content: '';
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle at 20% 30%, rgba(255,107,107,0.1) 0%, transparent 50%),
-                  radial-gradient(circle at 80% 60%, rgba(107,255,107,0.1) 0%, transparent 50%),
-                  radial-gradient(circle at 40% 80%, rgba(107,107,255,0.1) 0%, transparent 50%);
-      animation: paintSplash 8s ease-in-out infinite;
+      background: 
+        radial-gradient(circle at 15% 25%, rgba(255,107,107,0.3) 0%, transparent 30%),
+        radial-gradient(circle at 85% 45%, rgba(107,255,107,0.3) 0%, transparent 25%),
+        radial-gradient(circle at 45% 75%, rgba(107,107,255,0.3) 0%, transparent 35%),
+        radial-gradient(circle at 75% 15%, rgba(255,255,107,0.3) 0%, transparent 28%),
+        radial-gradient(circle at 25% 85%, rgba(255,107,255,0.3) 0%, transparent 32%);
+      animation: paintSplatter 12s ease-in-out infinite;
       pointer-events: none;
       z-index: 1;
     }
 
-    .sparkle-water::before {
+    .effect-water::before {
       content: '';
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: radial-gradient(ellipse at center, rgba(135,206,235,0.1) 0%, transparent 70%);
-      animation: waterRipple 6s ease-in-out infinite;
+      background: 
+        radial-gradient(ellipse 200px 100px at 30% 40%, rgba(135,206,235,0.2) 0%, transparent 60%),
+        radial-gradient(ellipse 300px 150px at 70% 60%, rgba(100,149,237,0.15) 0%, transparent 70%),
+        radial-gradient(ellipse 250px 120px at 50% 80%, rgba(173,216,230,0.18) 0%, transparent 65%);
+      animation: waterRipples 10s ease-in-out infinite;
       pointer-events: none;
       z-index: 1;
     }
 
-    @keyframes paintSplash {
-      0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.1; }
-      50% { transform: scale(1.1) rotate(180deg); opacity: 0.2; }
+    @keyframes sparkleMove {
+      0% { transform: translateX(-200px) translateY(-100px); }
+      100% { transform: translateX(200px) translateY(100px); }
     }
 
-    @keyframes waterRipple {
-      0%, 100% { transform: scale(1); opacity: 0.1; }
-      50% { transform: scale(1.2); opacity: 0.15; }
+    @keyframes paintSplatter {
+      0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.6; }
+      25% { transform: scale(1.2) rotate(90deg); opacity: 0.8; }
+      50% { transform: scale(0.8) rotate(180deg); opacity: 0.4; }
+      75% { transform: scale(1.1) rotate(270deg); opacity: 0.7; }
+    }
+
+    @keyframes waterRipples {
+      0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.3; }
+      33% { transform: scale(1.3) translate(-20px, 10px); opacity: 0.5; }
+      66% { transform: scale(0.9) translate(15px, -15px); opacity: 0.2; }
     }
 
     header {
       background: var(--header-gradient);
       color: white;
-      padding: 0.8em 1em;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      padding: 0.8em 0;
       position: sticky;
       top: 0;
       z-index: 1000;
       box-shadow: 0 4px 20px rgba(0,0,0,0.15);
       backdrop-filter: blur(10px);
       height: 70px;
-      overflow-x: auto;
-      overflow-y: hidden;
+      overflow: hidden;
     }
 
-    .header-content {
+    .header-scroll {
       display: flex;
       align-items: center;
-      min-width: max-content;
+      animation: scrollHeader 30s linear infinite;
+      white-space: nowrap;
+      padding: 0 2em;
     }
 
     header img {
@@ -144,12 +164,20 @@
       flex-shrink: 0;
     }
 
+    @keyframes scrollHeader {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
     .theme-controls {
+      position: absolute;
+      right: 1em;
+      top: 50%;
+      transform: translateY(-50%);
       display: flex;
       gap: 10px;
       align-items: center;
-      flex-shrink: 0;
-      margin-left: 20px;
+      z-index: 1001;
     }
 
     .theme-controls select {
@@ -354,21 +382,21 @@
 </head>
 <body class="theme-cool">
   <header>
-    <div class="header-content">
+    <div class="header-scroll">
       <img id="headerImgPreview" src="" alt="Header Image Preview" />
-      <h1>Canvas Course Page Generator</h1>
+      <h1>✨ Canvas Course Page Generator - Create Professional Course Pages with Live Preview, Themes, and Embedded Content! ✨</h1>
     </div>
     <div class="theme-controls">
       <select id="colorTheme" onchange="changeTheme()">
-        <option value="cool">Cool Theme</option>
-        <option value="warm">Warm Theme</option>
-        <option value="neutral">Neutral Theme</option>
-        <option value="complementary">Complementary Theme</option>
+        <option value="cool">Cool</option>
+        <option value="warm">Warm</option>
+        <option value="neutral">Neutral</option>
+        <option value="complementary">Complementary</option>
       </select>
-      <select id="sparkleTheme" onchange="changeSparkle()">
+      <select id="effectTheme" onchange="changeEffect()">
         <option value="">No Effects</option>
-        <option value="stars">Stars & Sparkles</option>
-        <option value="paint">Paint Splats</option>
+        <option value="sparkle">Sparkle</option>
+        <option value="paint">Paint Splatter</option>
         <option value="water">Water Ripples</option>
       </select>
     </div>
@@ -376,7 +404,7 @@
 
   <main>
     <div class="feature-highlight">
-      ✨ Generate professional Canvas course pages with live preview, themes, and embedded content! ✨
+      ✨ Generate Canvas Homepage HTML ✨
     </div>
 
     <div class="form-container">
@@ -428,9 +456,6 @@
       <div class="form-grid" style="margin-top: 2em;">
         <div>
           <h3>Optional Sections</h3>
-          <label for="rationale">Rationale for Teaching Methods:</label>
-          <textarea id="rationale" placeholder="Explanation of chosen teaching strategies..."></textarea>
-
           <label for="etiquette">Classroom Etiquette:</label>
           <textarea id="etiquette" placeholder="Guidelines for respectful interactions..."></textarea>
 
@@ -475,11 +500,11 @@
       document.body.className = document.body.className.replace(/theme-\w+/, `theme-${theme}`);
     }
 
-    function changeSparkle() {
-      const sparkle = document.getElementById('sparkleTheme').value;
-      document.body.className = document.body.className.replace(/sparkle-\w+/, '');
-      if (sparkle) {
-        document.body.classList.add(`sparkle-${sparkle}`);
+    function changeEffect() {
+      const effect = document.getElementById('effectTheme').value;
+      document.body.className = document.body.className.replace(/effect-\w+/, '');
+      if (effect) {
+        document.body.classList.add(`effect-${effect}`);
       }
     }
 
@@ -571,11 +596,6 @@
       <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">⚖️ Academic Conduct Expectations</summary>
       <div style="margin-top: 10px; line-height: 1.6;">${get("conduct").replace(/\n/g, '<br>')}</div>
     </details>
-    
-    ${get("rationale") ? `<details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #8e44ad;">
-      <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">🎓 Teaching Methods Rationale</summary>
-      <div style="margin-top: 10px; line-height: 1.6;">${get("rationale").replace(/\n/g, '<br>')}</div>
-    </details>` : ""}
     
     ${get("etiquette") ? `<details style="background: rgba(255,255,255,0.9); padding: 15px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-left: 4px solid #16a085;">
       <summary style="font-weight: bold; cursor: pointer; font-size: 1.2em; color: #2c3e50; margin-bottom: 10px;">🤝 Classroom Etiquette</summary>
