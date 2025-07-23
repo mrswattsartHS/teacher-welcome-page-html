@@ -11,40 +11,40 @@
   }
   body {
     margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f4f7f9;
+    background: #f5f7fa;
     color: #333;
     min-height: 100vh;
     display: flex; flex-direction: column;
   }
-  /* Sticky wide header with scroll */
+  /* Sticky horizontal scrollable top header */
   header#page-header {
     position: sticky; top: 0; left: 0; right: 0;
-    background: linear-gradient(90deg, #007acc, #00bcd4);
-    color: white; padding: 10px 0;
-    font-weight: 700; font-size: 1.25rem;
+    background: linear-gradient(90deg, #006bb3, #00b5e2);
+    color: white;
+    padding: 8px 0;
+    font-weight: 700; font-size: 1.2rem;
     box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-    z-index: 1100;
     overflow-x: auto;
     white-space: nowrap;
+    z-index: 1000;
   }
-  header#page-header div.container {
-    width: 1200px; /* max content width */
+  header#page-header > div.container {
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 15px;
   }
-  /* Form Container */
+  /* Form container */
   main {
     flex-grow: 1;
     width: 100%;
     max-width: 1200px;
-    margin: 20px auto;
+    margin: 20px auto 40px;
     background: white;
     box-shadow: 0 8px 20px rgb(0 0 0 / 0.05);
     border-radius: 10px;
-    padding: 25px 30px;
+    padding: 24px 30px;
   }
-
-  /* Responsive grid layout for forms */
+  /* Form grid layout */
   form {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -53,13 +53,12 @@
   form > .full-width {
     grid-column: 1 / -1;
   }
-
   label {
     font-weight: 600;
     display: block;
     margin-bottom: 6px;
   }
-  input[type=text], input[type=url], textarea, select {
+  input[type=text], input[type=url], input[type=email], textarea, select {
     width: 100%;
     padding: 9px 12px;
     font-size: 1rem;
@@ -69,46 +68,50 @@
     font-family: inherit;
     resize: vertical;
   }
-  input[type=text]:focus, input[type=url]:focus, textarea:focus, select:focus {
+  input[type=text]:focus,
+  input[type=url]:focus,
+  input[type=email]:focus,
+  textarea:focus,
+  select:focus {
     border-color: #00bcd4;
     outline: none;
   }
   textarea {
     min-height: 100px;
   }
-  /* Required label asterisks */
   .required::after {
     content: " *";
     color: #e53935;
     font-weight: 900;
   }
-
-  /* Sections collapsible styling for optional */
+  /* Collapsible optional sections */
   .optional-section {
-    border: 1px solid #ddd; padding: 12px 15px;
+    border: 1px solid #ddd; padding: 12px 18px;
     border-radius: 8px;
-    background: #fafafa;
+    background: #fcfcfc;
     cursor: pointer;
     user-select: none;
-    font-weight: bold;
+    font-weight: 700;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 21px;
+    grid-column: 1 / -1;
   }
   .optional-section:hover {
-    background: #defaff;
+    background: #e1f5fe;
     border-color: #00bcd4;
   }
   .optional-content {
-    padding: 15px 10px 30px 10px;
-    background: #fcfdff;
+    padding: 15px 12px 30px;
+    background: #fff;
     border: 1px solid #eee;
     border-top: none;
     border-radius: 0 0 10px 10px;
     display: none;
     animation: slideDownFade 0.4s ease forwards;
     overflow: hidden;
+    grid-column: 1 / -1;
   }
   .optional-section.open + .optional-content {
     display: block;
@@ -128,32 +131,33 @@
     to {opacity: 1; max-height: 500px;}
   }
 
-  /* Buttons */
-  button {
+  button[type=submit], #copy-btn, #download-btn, #clear-btn {
     grid-column: 1 / -1;
     justify-self: center;
-    margin-top: 25px;
+    margin-top: 30px;
     padding: 14px 42px;
-    font-size: 1.15rem;
+    font-size: 1.18rem;
     font-weight: 700;
-    background: #007acc;
-    border: none;
     border-radius: 30px;
+    border: none;
     color: white;
     cursor: pointer;
-    box-shadow: 0 5px 20px rgb(0 123 204 / 0.6);
+    box-shadow: 0 5px 20px rgba(0,188,212,0.6);
+    background: #00bcd4;
     transition: background-color 0.25s ease;
   }
-  button:hover, button:focus {
-    background-color: #005ea1;
+  button[type=submit]:hover,
+  #copy-btn:hover,
+  #download-btn:hover,
+  #clear-btn:hover {
+    background-color: #0097a7;
     outline: none;
   }
-  button:disabled {
-    background-color: #999;
-    cursor: not-allowed;
-    box-shadow: none;
+  button[disabled] {
+    background-color: #999 !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
   }
-
   /* Preview container */
   #preview-container {
     margin-top: 40px;
@@ -161,7 +165,7 @@
     margin-left: auto;
     margin-right: auto;
     display: flex;
-    gap: 25px;
+    gap: 30px;
     flex-wrap: wrap;
     align-items: flex-start;
   }
@@ -172,7 +176,7 @@
     flex-direction: column;
   }
   #generated-html {
-    height: 400px;
+    height: 440px;
     font-family: 'Courier New', Courier, monospace;
     font-size: 14px;
     white-space: pre-wrap;
@@ -180,11 +184,11 @@
     border-radius: 10px;
     border: 1px solid #ccc;
     resize: vertical;
-    background: #fefefe;
-    box-shadow: inset 0 0 11px rgba(0,0,0,0.04);
+    background: #fcfcfc;
+    box-shadow: inset 0 0 12px rgba(0,0,0,0.04);
   }
-  #copy-btn, #download-btn {
-    margin-top: 12px;
+  #copy-btn, #download-btn, #clear-btn {
+    margin-top: 14px;
     padding: 10px 25px;
     font-weight: 600;
     border-radius: 25px;
@@ -197,867 +201,797 @@
     align-self: flex-start;
     user-select: none;
   }
-  #copy-btn:hover, #download-btn:hover {
+  #copy-btn:hover,
+  #download-btn:hover,
+  #clear-btn:hover {
     background: #0097a7;
   }
-  /* Right: iframe preview */
-  #iframe-preview-container {
-    flex: 1 1 500px;
-    display: flex;
-    flex-direction: column;
+  /* Right: page preview with website embed buttons */
+  #page-preview {
+    flex: 1 1 520px;
     border-radius: 10px;
-    box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    overflow-y: auto;
     background: white;
-    max-height: 410px;
+    padding: 22px 25px;
+    max-height: 700px;
   }
-  #iframe-preview-container h3 {
-    margin: 0;
-    padding: 12px 18px;
-    background: #222;
-    color: #fff;
-    font-weight: 700;
+  #page-preview h2 {
+    margin-top: 0;
+    color: #007BB3;
+    font-weight: 800;
+    border-bottom: 3px solid #00BCD4;
+    padding-bottom: 7px;
+    margin-bottom: 20px;
   }
-  #iframe-preview {
-    flex-grow: 1;
-    border: none;
-    width: 100%;
-  }
-  #iframe-fallback {
-    background: #efefef;
-    padding: 15px 10px;
-    font-size: 0.85rem;
-    color: #0097a7;
-    border-top: 1px solid #ddd;
-    text-align: center;
-  }
-
-  /* Header Image Preview */
+  /* Header image preview - scroll horizontally but keep height small */
   #header-image-preview {
-    max-width: 100%;
-    max-height: 220px;
-    border-radius: 12px;
-    margin-top: 6px;
+    width: 100%;
+    max-height: 70px;
     object-fit: contain;
-    box-shadow: 0 4px 22px rgb(0 0 0 / 0.12);
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    box-shadow: 0 5px 18px rgb(0 0 0 / 0.1);
     user-select: none;
     pointer-events: none;
   }
 
-  /* Loading spinner overlay */
-  #loading-overlay {
-    position: fixed;
-    top:0; left:0; right:0; bottom:0;
-    background: rgba(255,255,255,0.75);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1200;
+  /* Buttons for weblinks in preview and output */
+  .embed-link-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
   }
-  .spinner {
-    width: 42px;
-    height: 42px;
-    border: 5px solid #cfd0d1;
-    border-top-color: #007acc;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+  .embed-link-buttons button {
+    flex-grow: 1;
+    min-width: 140px;
+    padding: 12px 0;
+    font-weight: 600;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    background: #039be5;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(3,155,229,0.5);
+    transition: background-color 0.3s ease;
   }
-  @keyframes spin {
-    to {transform: rotate(360deg);}
-  }
-
-  /* Color Themes For Preview & Output */
-  :root {
-    --color-primary: #007acc;
-    --color-secondary: #00bcd4;
-    --color-accent: #e53935;
-    --color-bg: #f9f9f9;
-  }
-  .theme-cool {
-    --color-primary: #1976d2;
-    --color-secondary: #00bcd4;
-    --color-accent: #e53935;
-    --color-bg: #e3f2fd;
-  }
-  .theme-warm {
-    --color-primary: #f06292;
-    --color-secondary: #ff7043;
-    --color-accent: #d84315;
-    --color-bg: #fff3e0;
-  }
-  .theme-neutral {
-    --color-primary: #616161;
-    --color-secondary: #9e9e9e;
-    --color-accent: #b71c1c;
-    --color-bg: #eeeeee;
-  }
-  .theme-complementary {
-    --color-primary: #00796b;
-    --color-secondary: #f48fb1;
-    --color-accent: #ad1457;
-    --color-bg: #e0f2f1;
+  .embed-link-buttons button:hover {
+    background: #0277bd;
   }
 
-  /* Use CSS variables in the generated preview if animations selected */
-  .preview-wrapper {
-    background: var(--color-bg);
-    color: var(--color-primary);
-    border-radius: 12px;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.07);
-    overflow-y: auto;
-    max-height: 410px;
-  }
-  /* Animation themes styles - shown only in preview */
-
-  /* Stars & Sparkles */
-  .anim-stars .star {
+  /* Animation themes inside preview only */
+  .anim-stars .sparkle {
     position: absolute;
-    width: 5px;
-    height: 5px;
     background: white;
     border-radius: 50%;
-    box-shadow: 0 0 6px 2px white;
-    animation: sparkle 2.5s infinite alternate;
+    opacity: 0.75;
+    box-shadow: 0 0 8px 3px white;
+    animation: sparkle 2.8s ease-in-out infinite alternate;
   }
-  @keyframes sparkle {
-    0% {opacity: 1; transform: scale(1);}
-    100% {opacity: 0.3; transform: scale(0.7);}
-  }
-
-  /* Paint Splats */
-  .anim-paintsplat svg {
-    animation: paintsplat-pulse 4s infinite ease-in-out;
-    transform-origin: center center;
-    width: 100%;
-    height: 100%;
-  }
-  @keyframes paintsplat-pulse {
-    0%,100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-  }
-
-  /* Water Ripples */
-  .anim-waterripples {
-    position: relative;
+  .anim-paintsplat .paint-blob {
+    position: absolute;
+    background: var(--accent-color);
+    border-radius: 50%;
+    opacity: 0.15;
+    filter: blur(5px);
+    animation: pulse 5s infinite ease-in-out;
   }
   .anim-waterripples .ripple {
-    border: 3px solid var(--color-primary);
-    border-radius: 50%;
-    opacity: 0.5;
-    animation: rippleScale 3s infinite;
     position: absolute;
+    border: 3px solid var(--primary-color);
+    border-radius: 50%;
+    opacity: 0.25;
+    animation: ripple 3.5s linear infinite;
   }
-  .anim-waterripples .ripple:nth-child(1) {
-    width: 60px; height: 60px; top: 20px; left: 20px;
-    animation-delay: 0;
+  /* Animations keyframes */
+  @keyframes sparkle {
+    0% {opacity: 1; transform: scale(1);}
+    100% {opacity: 0.3; transform: scale(0.5);}
   }
-  .anim-waterripples .ripple:nth-child(2) {
-    width: 90px; height: 90px; top: 10px; left: 50px;
-    animation-delay: 1s;
+  @keyframes pulse {
+    0%, 100% {transform: scale(1);}
+    50% {transform: scale(1.2);}
   }
-  .anim-waterripples .ripple:nth-child(3) {
-    width: 120px; height: 120px; top: 0; left: 90px;
-    animation-delay: 2s;
-  }
-  @keyframes rippleScale {
-    0% { transform: scale(0.8); opacity: 0.6;}
-    50% { opacity: 0; }
-    100% { transform: scale(1.5); opacity: 0;}
+  @keyframes ripple {
+    0% {transform: scale(0.8); opacity: 0.3;}
+    100% {transform: scale(1.8); opacity: 0;}
   }
 
   /* Responsive */
-  @media (max-width: 900px) {
-    main {padding: 20px;}
+  @media (max-width: 980px) {
+    main {
+      padding: 20px 21px;
+    }
     form {
       grid-template-columns: 1fr;
     }
     #preview-container {
       flex-direction: column;
+      padding-bottom: 60px;
     }
-    #output-area, #iframe-preview-container {
-      flex: 1 1 auto;
+    #output-area, #page-preview {
+      flex-basis: auto;
       width: 100%;
     }
     #generated-html {
-      height: 300px;
+      height: 260px;
     }
-    #iframe-preview-container {
-      max-height: 300px;
+    #page-preview {
+      max-height: 500px;
+      padding: 18px 22px;
     }
   }
+
 </style>
 </head>
 <body>
-<header id="page-header" role="banner" tabindex="0">
-  <div class="container" aria-label="Page Header">Mrs. B. Watts Syllabus HTML Generator (2025)</div>
+<header id="page-header" role="banner" tabindex="0" aria-label="Page header with title and horizontal scroll">
+  <div class="container">
+    Mrs. B. Watts Syllabus HTML Generator 2025
+  </div>
 </header>
+<main role="main" aria-label="Syllabus Input Form and Preview">
 
-<main role="main" aria-label="Syllabus generator form">
-<form id="syllabus-form" novalidate aria-required="true" aria-describedby="form-instructions">
-  <p id="form-instructions" style="grid-column:1/-1; color:#555; font-style: italic;">
-    Fill all <span style="color:#e53935;">required*</span> fields below. Use the optional sections if you'd like.
-  </p>
+  <form id="syllabus-form" novalidate aria-describedby="form-instruction" aria-live="assertive" aria-relevant="all">
+    <p id="form-instruction" style="grid-column:1/-1; color:#555; font-style: italic; margin-bottom:18px;">
+      Required fields indicate essential syllabus info for Canvas. Optional sections may be left blank for exclusion.
+    </p>
 
-  <!-- Basic Course Info -->
-  <label class="required" for="course-title">Course Title</label>
-  <input type="text" id="course-title" name="courseTitle" placeholder="e.g. Introduction to Biology" required aria-required="true" autocomplete="off">
+    <!-- Basic Course Information (all optional except title) -->
+    <label class="required" for="course-title">Course Title</label>
+    <input type="text" id="course-title" name="courseTitle" placeholder="e.g. Advanced Botany" required aria-required="true" autocomplete="off">
 
-  <label class="required" for="course-code">Course Code</label>
-  <input type="text" id="course-code" name="courseCode" placeholder="e.g. BIO101" required aria-required="true" autocomplete="off">
+    <label for="course-number">Course Number</label>
+    <input type="text" id="course-number" name="courseNumber" placeholder="e.g. BOT301" autocomplete="off">
 
-  <!-- Instructor Info -->
-  <label class="required" for="instructor-name">Instructor Name</label>
-  <input type="text" id="instructor-name" name="instructorName" placeholder="Full Name" required aria-required="true" autocomplete="off">
+    <label for="course-section">Course Section</label>
+    <input type="text" id="course-section" name="courseSection" placeholder="e.g. Section 01" autocomplete="off">
 
-  <label class="required" for="instructor-email">Instructor Email</label>
-  <input type="text" id="instructor-email" name="instructorEmail" placeholder="e.g. email@school.edu" required aria-required="true" autocomplete="off">
+    <label for="meeting-times">Meeting Times</label>
+    <input type="text" id="meeting-times" name="meetingTimes" placeholder="e.g. 9:30 AM - 11:00 AM" autocomplete="off">
 
-  <!-- Course Description -->
-  <label class="required" for="course-description">Course Description</label>
-  <textarea id="course-description" name="courseDescription" placeholder="Brief description of course..." required aria-required="true"></textarea>
+    <label for="meeting-days">Meeting Days</label>
+    <input type="text" id="meeting-days" name="meetingDays" placeholder="e.g. Mon/Wed/Fri" autocomplete="off">
 
-  <!-- Learning Objectives -->
-  <label class="required" for="learning-objectives">Learning Objectives / Outcomes</label>
-  <textarea id="learning-objectives" name="learningObjectives" placeholder="E.g. Students will be able to..." required aria-required="true"></textarea>
+    <label for="meeting-location">Meeting Location</label>
+    <input type="text" id="meeting-location" name="meetingLocation" placeholder="e.g. Room 220 - Science Building" autocomplete="off">
 
-  <!-- Required Materials -->
-  <label class="required" for="required-materials">Required Materials</label>
-  <textarea id="required-materials" name="requiredMaterials" placeholder="Books, software, supplies..." required aria-required="true"></textarea>
+    <label for="semester">Semester</label>
+    <input type="text" id="semester" name="semester" placeholder="e.g. Spring 2025" autocomplete="off">
 
-  <!-- Course Policies -->
-  <label class="required" for="course-policies">Course Policies</label>
-  <textarea id="course-policies" name="coursePolicies" placeholder="Attendance, late work, plagiarism..." required aria-required="true"></textarea>
+    <!-- Instructor Information -->
+    <label for="instructor-name">Instructor Name</label>
+    <input type="text" id="instructor-name" name="instructorName" placeholder="Full Name" autocomplete="off">
 
-  <!-- Grading Criteria -->
-  <label class="required" for="grading-criteria">Grading Criteria</label>
-  <textarea id="grading-criteria" name="gradingCriteria" placeholder="How grades are calculated..." required aria-required="true"></textarea>
+    <label for="instructor-title">Instructor Title</label>
+    <input type="text" id="instructor-title" name="instructorTitle" placeholder="e.g. Associate Professor" autocomplete="off">
 
-  <!-- Course Schedule -->
-  <label class="required" for="course-schedule">Course Schedule</label>
-  <textarea id="course-schedule" name="courseSchedule" placeholder="Weekly topics, assignments..." required aria-required="true"></textarea>
+    <label for="office-location">Office Location</label>
+    <input type="text" id="office-location" name="officeLocation" placeholder="e.g. Room 311, Main Campus" autocomplete="off">
 
-  <!-- Academic Conduct -->
-  <label class="required" for="academic-conduct">Academic Conduct Expectations</label>
-  <textarea id="academic-conduct" name="academicConduct" placeholder="Honor code, cheating policy..." required aria-required="true"></textarea>
+    <label for="instructor-phone">Instructor Phone</label>
+    <input type="text" id="instructor-phone" name="instructorPhone" placeholder="e.g. (555) 555-5555" autocomplete="off">
 
-  <!-- Accessibility Statement -->
-  <label class="required" for="accessibility-statement">Accessibility Statement</label>
-  <textarea id="accessibility-statement" name="accessibilityStatement" placeholder="Accessibility and accommodations statement..." required aria-required="true"></textarea>
+    <label for="instructor-email">Instructor Email</label>
+    <input type="email" id="instructor-email" name="instructorEmail" placeholder="email@school.edu" autocomplete="off">
 
-  <!-- Contact Instructions -->
-  <label class="required" for="contact-instructions">Contact Instructions</label>
-  <textarea id="contact-instructions" name="contactInstructions" placeholder="How to contact the instructor..." required aria-required="true"></textarea>
+    <!-- Course Description -->
+    <label for="course-description">Course Description</label>
+    <textarea id="course-description" name="courseDescription" placeholder="Course overview, goals, prerequisites, summary"></textarea>
 
-  <!-- Website URL embedding -->
-  <label class="required" for="embed-url">Website URL to Embed (Canvas iframe)</label>
-  <input type="url" id="embed-url" name="embedUrl" placeholder="https://example.com" required aria-required="true" autocomplete="off">
+    <!-- Learning Objectives/Outcomes -->
+    <label for="learning-objectives">Learning Objectives / Outcomes</label>
+    <textarea id="learning-objectives" name="learningObjectives" placeholder="What students will learn and do"></textarea>
 
-  <!-- Backup Link (optional, shows below iframe) -->
-  <label for="backup-link">Backup Link Text (optional)</label>
-  <input type="text" id="backup-link" name="backupLinkText" placeholder="Link text if iframe does not load (e.g. 'Click here to open site')" autocomplete="off">
+    <!-- Required Materials -->
+    <label for="required-materials">Required Materials</label>
+    <textarea id="required-materials" name="requiredMaterials" placeholder="Texts, resources, supplies, etc"></textarea>
 
-  <!-- Header Image URL -->
-  <label for="header-image-url">Header Image URL (will preview)</label>
-  <input type="url" id="header-image-url" name="headerImageUrl" placeholder="https://example.com/image.jpg" autocomplete="off" aria-describedby="header-image-desc" />
-  <small id="header-image-desc" style="color:#666;">This image will appear at the top of the syllabus preview.</small>
-  <img id="header-image-preview" alt="Header image preview" src="" aria-hidden="true" />
+    <!-- Course Policies -->
+    <label for="course-policies">Course Policies</label>
+    <textarea id="course-policies" name="coursePolicies" placeholder="Attendance, late work, grading, academic integrity"></textarea>
 
-  <!-- Color Theme -->
-  <label for="color-theme">Choose Color Theme</label>
-  <select id="color-theme" name="colorTheme" aria-label="Select color theme">
-    <option value="cool" selected>Cool (Blue)</option>
-    <option value="warm">Warm (Orange/Pink)</option>
-    <option value="neutral">Neutral (Gray)</option>
-    <option value="complementary">Complementary (Teal/Pink)</option>
-  </select>
+    <!-- Grading Criteria -->
+    <label for="grading-criteria">Grading Criteria</label>
+    <textarea id="grading-criteria" name="gradingCriteria" placeholder="Breakdown of assessments and weighting"></textarea>
 
-  <!-- Animation Theme -->
-  <label for="animation-theme">Choose Animation Theme</label>
-  <select id="animation-theme" name="animationTheme" aria-label="Select animation theme">
-    <option value="none" selected>No Animation</option>
-    <option value="stars">Stars & Sparkles</option>
-    <option value="paintsplat">Paint Splats</option>
-    <option value="waterripples">Water Ripples</option>
-  </select>
+    <!-- Schedule -->
+    <label for="course-schedule">Course Schedule</label>
+    <textarea id="course-schedule" name="courseSchedule" placeholder="Weekly topics, assignments, exams"></textarea>
 
-  <!-- Optional Sections Toggle Buttons -->
-  <div class="optional-section" tabindex="0" role="button" aria-expanded="false" aria-controls="rationale-content" id="rationale-toggle">Rationale for Teaching Methods <span class="toggle-icon">▶</span></div>
-  <div class="optional-content" id="rationale-content">
-    <textarea id="rationale-text" name="rationale" placeholder="Explain rationale for your teaching methods..."></textarea>
-  </div>
+    <!-- Academic Conduct Expectations -->
+    <label for="academic-conduct">Expectations for Academic Conduct</label>
+    <textarea id="academic-conduct" name="academicConduct" placeholder="Rules on plagiarism, honesty, behavior"></textarea>
 
-  <div class="optional-section" tabindex="0" role="button" aria-expanded="false" aria-controls="etiquette-content" id="etiquette-toggle">Classroom Etiquette <span class="toggle-icon">▶</span></div>
-  <div class="optional-content" id="etiquette-content">
-    <textarea id="etiquette-text" name="etiquette" placeholder="Rules and behavior expectations..."></textarea>
-  </div>
+    <!-- Accessibility Statement -->
+    <label for="accessibility-statement">Accessibility Statement</label>
+    <textarea id="accessibility-statement" name="accessibilityStatement" placeholder="Accommodations for students with disabilities"></textarea>
 
-  <div class="optional-section" tabindex="0" role="button" aria-expanded="false" aria-controls="techpolicy-content" id="techpolicy-toggle">Technology Use Policy <span class="toggle-icon">▶</span></div>
-  <div class="optional-content" id="techpolicy-content">
-    <textarea id="techpolicy-text" name="techPolicy" placeholder="Technology rules and guidelines..."></textarea>
-  </div>
+    <!-- Contact Instructions -->
+    <label for="contact-instructions">Contact Instructions</label>
+    <textarea id="contact-instructions" name="contactInstructions" placeholder="Best ways to reach the instructor"></textarea>
 
-  <button type="submit" id="generate-btn" aria-label="Generate HTML syllabus code">Generate Syllabus</button>
-</form>
+    <!-- Header Image URL & Preview -->
+    <label for="header-image-url">Header Image URL (optional, preview below)</label>
+    <input type="url" id="header-image-url" name="headerImageUrl" placeholder="https://example.com/image.jpg" autocomplete="off" aria-describedby="header-image-note">
+    <small id="header-image-note" style="color:#666; margin-bottom: 6px;">Will appear as a scrollable low-height banner at header top</small>
+    <img id="header-image-preview" alt="Header image preview, scroll horizontally" src="" aria-hidden="true" style="display:none;">
 
-<div id="loading-overlay" aria-live="polite" aria-busy="true" aria-label="Loading overlay, generating syllabus HTML">
-  <div class="spinner" role="img" aria-label="Loading spinner"></div>
-</div>
+    <!-- Embedded Website Links Section -->
+    <label for="website-url-1">Website Link 1 URL</label>
+    <input type="url" id="website-url-1" name="websiteUrl1" placeholder="https://example.com" autocomplete="off">
+    <label for="website-label-1">Button Label 1</label>
+    <input type="text" id="website-label-1" name="websiteLabel1" placeholder="Open Course Website" autocomplete="off">
 
-<section id="preview-container" aria-label="Generated HTML code and live website preview" tabindex="0">
+    <label for="website-url-2">Website Link 2 URL</label>
+    <input type="url" id="website-url-2" name="websiteUrl2" placeholder="https://example.com" autocomplete="off">
+    <label for="website-label-2">Button Label 2</label>
+    <input type="text" id="website-label-2" name="websiteLabel2" placeholder="Access Resource Portal" autocomplete="off">
 
-  <div id="output-area" role="region" aria-live="polite" aria-label="Generated HTML code output" tabindex="0" hidden>
-    <h2>Generated HTML Code:</h2>
-    <textarea id="generated-html" readonly spellcheck="false" aria-describedby="output-description"></textarea>
-    <div style="margin-top:8px;">
-      <button id="copy-btn" aria-label="Copy generated code to clipboard">Copy</button>
-      <button id="download-btn" aria-label="Download generated code as .html">Download</button>
+    <label for="website-url-3">Website Link 3 URL</label>
+    <input type="url" id="website-url-3" name="websiteUrl3" placeholder="https://example.com" autocomplete="off">
+    <label for="website-label-3">Button Label 3</label>
+    <input type="text" id="website-label-3" name="websiteLabel3" placeholder="View Online Schedule" autocomplete="off">
+
+    <!-- Color Themes -->
+    <label for="color-theme">Color Theme</label>
+    <select id="color-theme" name="colorTheme" aria-label="Choose a color theme">
+      <option value="cool" selected>Cool (Blue)</option>
+      <option value="warm">Warm (Orange/Pink)</option>
+      <option value="neutral">Neutral (Gray)</option>
+      <option value="complementary">Complementary (Teal/Pink)</option>
+    </select>
+
+    <!-- Animation Themes -->
+    <label for="animation-theme">Animation Theme</label>
+    <select id="animation-theme" name="animationTheme" aria-label="Choose an animation theme">
+      <option value="none" selected>None</option>
+      <option value="stars">&nbsp;Stars & Sparkles</option>
+      <option value="paintsplat">Paint Splats & Splashes</option>
+      <option value="waterripples">Water & Ripples</option>
+    </select>
+
+    <!-- Optional Sections Collapsibles with Textareas -->
+    <div class="optional-section" tabindex="0" role="button" aria-expanded="false" aria-controls="rationale-content" id="rationale-toggle">
+      Rationale for Teaching Methods <span class="toggle-icon">▶</span>
     </div>
-    <small id="output-description" style="display:block; margin-top:10px; color:#444;">
-      Copy or download this complete HTML syllabus code. Paste into your Canvas blank page HTML editor or host as standalone.
-    </small>
-  </div>
-
-  <div id="iframe-preview-container" role="region" aria-label="Website embed preview" hidden>
-    <h3>Live Website Embed Preview:</h3>
-    <div class="preview-wrapper" id="animation-preview-wrapper">
-      <iframe id="iframe-preview" title="Embedded Website Preview" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" frameborder="0"></iframe>
-      <div id="iframe-fallback" hidden></div>
-      <div id="animation-overlay"></div>
+    <div class="optional-content" id="rationale-content">
+      <textarea name="rationale" placeholder="Explain rationale for your teaching methods..."></textarea>
     </div>
-  </div>
-  
-</section>
+
+    <div class="optional-section" tabindex="0" role="button" aria-expanded="false" aria-controls="etiquette-content" id="etiquette-toggle">
+      Classroom Etiquette <span class="toggle-icon">▶</span>
+    </div>
+    <div class="optional-content" id="etiquette-content">
+      <textarea name="etiquette" placeholder="Guidelines for respectful classroom interactions..."></textarea>
+    </div>
+
+    <div class="optional-section" tabindex="0" role="button" aria-expanded="false" aria-controls="techpolicy-content" id="techpolicy-toggle">
+      Technology Use Policy <span class="toggle-icon">▶</span>
+    </div>
+    <div class="optional-content" id="techpolicy-content">
+      <textarea name="techPolicy" placeholder="Rules regarding technology usage during class..."></textarea>
+    </div>
+
+    <button type="submit" id="generate-btn" aria-label="Generate syllabus HTML">Generate Syllabus</button>
+    <button type="button" id="clear-btn" aria-label="Clear all form inputs and output">Clear Form</button>
+  </form>
+
+  <section id="preview-container" aria-label="Generated code and live preview" tabindex="0" hidden>
+
+    <div id="output-area" role="region" aria-live="polite" aria-label="Generated HTML code output" tabindex="0">
+      <h2>Generated HTML Code</h2>
+      <textarea id="generated-html" readonly spellcheck="false" aria-describedby="output-desc"></textarea>
+      <div style="margin-top:8px;">
+        <button id="copy-btn" aria-label="Copy generated code to clipboard">Copy</button>
+        <button id="download-btn" aria-label="Download generated code as .html file">Download</button>
+      </div>
+      <small id="output-desc" style="display:block; margin-top:10px; color:#444;">
+        Copy or download this code and paste into your Canvas blank page HTML editor.
+      </small>
+    </div>
+
+    <div id="page-preview" role="region" aria-label="Live syllabus page preview" tabindex="0">
+      <h2>Live Syllabus Preview</h2>
+    </div>
+  </section>
+
+</main>
 
 <script>
-  (() => {
-    // Elements
-    const form = document.getElementById('syllabus-form');
-    const headerImageInput = document.getElementById('header-image-url');
-    const headerImagePreview = document.getElementById('header-image-preview');
+(() => {
+  const form = document.getElementById('syllabus-form');
+  const headerImageInput = document.getElementById('header-image-url');
+  const headerImagePreview = document.getElementById('header-image-preview');
 
-    const iframePreviewContainer = document.getElementById('iframe-preview-container');
-    const iframe = document.getElementById('iframe-preview');
-    const iframeFallback = document.getElementById('iframe-fallback');
+  // Optional sections toggle controls
+  const optionalToggles = [
+    { toggle: document.getElementById('rationale-toggle'), content: document.getElementById('rationale-content') },
+    { toggle: document.getElementById('etiquette-toggle'), content: document.getElementById('etiquette-content') },
+    { toggle: document.getElementById('techpolicy-toggle'), content: document.getElementById('techpolicy-content') },
+  ];
+  optionalToggles.forEach(({toggle, content}) => {
+    const toggleState = () => {
+      const isOpen = toggle.classList.contains('open');
+      toggle.classList.toggle('open');
+      content.style.display = isOpen ? 'none' : 'block';
+      toggle.setAttribute('aria-expanded', !isOpen);
+    };
+    toggle.addEventListener('click', toggleState);
+    toggle.addEventListener('keydown', e=> {
+      if(e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleState();
+      }
+    });
+  });
 
-    const outputArea = document.getElementById('output-area');
-    const generatedHtmlTextarea = document.getElementById('generated-html');
-    const copyBtn = document.getElementById('copy-btn');
-    const downloadBtn = document.getElementById('download-btn');
-    const loadingOverlay = document.getElementById('loading-overlay');
+  // Header image preview live update + horizontal scroll with small height
+  headerImageInput.addEventListener('input', e => {
+    const url = e.target.value.trim();
+    if(url && isValidUrl(url)) {
+      headerImagePreview.src = url;
+      headerImagePreview.style.display = 'block';
+    } else {
+      headerImagePreview.src = '';
+      headerImagePreview.style.display = 'none';
+    }
+  });
 
-    const animationPreviewWrapper = document.getElementById('animation-preview-wrapper');
+  // URL Validator
+  const isValidUrl = str => {
+    try {
+      new URL(str);
+      return true;
+    } catch {
+      return false;
+    }
+  };
 
-    // Optional sections toggles
-    const optionalToggles = [
-      { toggle: document.getElementById('rationale-toggle'), content: document.getElementById('rationale-content') },
-      { toggle: document.getElementById('etiquette-toggle'), content: document.getElementById('etiquette-content') },
-      { toggle: document.getElementById('techpolicy-toggle'), content: document.getElementById('techpolicy-content') },
-    ];
+  // Escape HTML characters in output
+  const escapeHtml = str => {
+    if(!str) return '';
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+  };
 
-    // Manage optional sections toggling for accessibility and UX
+  // Clear form helper
+  const clearForm = () => {
+    form.reset();
+    headerImagePreview.src = '';
+    headerImagePreview.style.display = 'none';
+    document.getElementById('preview-container').hidden = true;
+    document.getElementById('generated-html').value = '';
+    document.getElementById('page-preview').innerHTML = '<h2>Live Syllabus Preview</h2>';
+    // Close all optional sections
     optionalToggles.forEach(({toggle, content}) => {
-      const toggleState = () => {
-        const expanded = toggle.classList.contains('open');
-        toggle.classList.toggle('open');
-        content.style.display = expanded ? 'none' : 'block';
-        toggle.setAttribute('aria-expanded', !expanded);
-      };
-      toggle.addEventListener('click', toggleState);
-      toggle.addEventListener('keydown', e => {
-        if(e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          toggleState();
-        }
-      });
+      toggle.classList.remove('open');
+      content.style.display = 'none';
+      toggle.setAttribute('aria-expanded', 'false');
     });
+  };
 
-    // Update header image preview live
-    headerImageInput.addEventListener('input', e => {
-      const url = e.target.value.trim();
-      if (url && isValidUrl(url)) {
-        headerImagePreview.src = url;
-        headerImagePreview.style.display = 'block';
-      } else {
-        headerImagePreview.src = '';
-        headerImagePreview.style.display = 'none';
-      }
-    });
+  // Add event for clear button
+  document.getElementById('clear-btn').addEventListener('click', () => {
+    if(confirm('Clear all inputs and output?')) {
+      clearForm();
+    }
+  });
 
-    // URL Validation helper
-    const isValidUrl = (str) => {
-      try {
-        new URL(str);
-        return true;
-      } catch {
-        return false;
+  // Generate buttons HTML for links (exclude empty)
+  const createLinkButtonHTML = (url, label) => {
+    if(!url) return '';
+    const safeLabel = escapeHtml(label || 'Open Link');
+    const safeUrl = escapeHtml(url);
+    return `<button onclick="window.open('${safeUrl}','_blank','noopener,noreferrer')" aria-label="Open link ${safeLabel}">${safeLabel}</button>`;
+  };
+
+  // Build paragraphs or list from multi-line text for output HTML
+  const buildParagraphsOrList = (text) => {
+    if(!text) return '';
+    // If lines start with "- " treat as list
+    let lines = text.trim().split(/\r?\n/);
+    if(lines.every(l => l.trim().startsWith('- '))) {
+      let items = lines.map(l => `<li>${escapeHtml(l.trim().substring(2))}</li>`).join('\n');
+      return `<ul>\n${items}\n</ul>`;
+    } else {
+      // Otherwise convert paragraphs by double line breaks
+      let paras = text.trim().split(/\r?\n\r?\n/).map(p=>`<p>${escapeHtml(p.trim())}</p>`);
+      return paras.join('\n');
+    }
+  };
+
+  // The main generate function
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+
+    // Collect values
+    const data = {};
+    new FormData(form).forEach((v,k) => data[k] = v.trim());
+
+    // Validate required fields: only courseTitle (required) for this case
+    if(!data.courseTitle) {
+      alert('Please enter the required field: Course Title');
+      form.courseTitle.focus();
+      return;
+    }
+
+    // Prepare color themes (CSS variables)
+    const themes = {
+      cool: {
+        '--primary-color': '#1976d2',
+        '--secondary-color': '#00bcd4',
+        '--accent-color': '#e53935',
+        '--background-color': '#e3f2fd',
+        '--button-bg': '#039be5',
+        '--button-hover-bg': '#0277bd'
+      },
+      warm: {
+        '--primary-color': '#f06292',
+        '--secondary-color': '#ff7043',
+        '--accent-color': '#d84315',
+        '--background-color': '#fff3e0',
+        '--button-bg': '#f06292',
+        '--button-hover-bg': '#e64a19'
+      },
+      neutral: {
+        '--primary-color': '#616161',
+        '--secondary-color': '#9e9e9e',
+        '--accent-color': '#b71c1c',
+        '--background-color': '#eeeeee',
+        '--button-bg': '#616161',
+        '--button-hover-bg': '#424242'
+      },
+      complementary: {
+        '--primary-color': '#00796b',
+        '--secondary-color': '#f48fb1',
+        '--accent-color': '#ad1457',
+        '--background-color': '#e0f2f1',
+        '--button-bg': '#00796b',
+        '--button-hover-bg': '#004d40'
       }
     };
+    const chosenTheme = themes[data.colorTheme] || themes.cool;
 
-    // Form validation function:
-    const validateForm = () => {
-      let valid = true;
-      [...form.elements].forEach(el => {
-        if (el.hasAttribute('required')) {
-          if (!el.value.trim()) {
-            valid = false;
-            el.focus();
-            alert(`Please fill the required field: ${el.previousElementSibling.textContent.replace(' *','')}`);
-            return false;
-          }
-        }
-      });
-      return valid;
-    };
-
-    // Animation theme mapping to CSS classes & overlays
-    const animationThemeClasses = {
+    // Animation CSS per theme for generated HTML (only minimal to avoid huge code)
+    const animCss = {
       none: '',
-      stars: 'anim-stars',
-      paintsplat: 'anim-paintsplat',
-      waterripples: 'anim-waterripples',
-      waterripples: 'anim-waterripples', // correct spelling fallback
+      stars: `
+        /* Stars & Sparkles animation */
+        .anim-stars {
+          position: relative;
+        }
+        .anim-stars::before, .anim-stars::after {
+          content: "";
+          position: absolute;
+          border-radius: 50%;
+          box-shadow:
+            15px 5px 8px var(--secondary-color),
+            30px 20px 10px var(--secondary-color),
+            50px 40px 12px var(--secondary-color),
+            20px 35px 9px var(--primary-color);
+          top: -15px; left: -15px;
+          width: 120%;
+          height: 120%;
+          animation: twinkle 3s ease-in-out infinite alternate;
+          opacity: 0.3;
+          pointer-events:none;
+          z-index:-1;
+        }
+        .anim-stars::after {
+          animation-delay: 1.2s;
+        }
+        @keyframes twinkle {
+          from {opacity: 0.3; transform: scale(1);}
+          to {opacity: 1; transform: scale(1.15);}
+        }
+      `,
+      paintsplat: `
+        /* Paint Splats animation */
+        .anim-paintsplat {
+          position: relative;
+        }
+        .anim-paintsplat::before {
+          content: "";
+          position: absolute;
+          border-radius: 50%;
+          background: var(--secondary-color);
+          width: 120%;
+          height: 110%;
+          top: -10%;
+          left: -15%;
+          opacity: 0.12;
+          filter: blur(25px);
+          animation: paintsplat-pulse 4s ease-in-out infinite;
+          pointer-events:none;
+          z-index:-1;
+        }
+        @keyframes paintsplat-pulse {
+          0%, 100% {transform: scale(1);}
+          50% {transform: scale(1.08);}
+        }
+      `,
+      waterripples: `
+        /* Water Ripples animation */
+        .anim-waterripples {
+          position: relative;
+        }
+        .anim-waterripples::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: 10px;
+          box-shadow:
+            0 0 20px 6px var(--secondary-color);
+          animation: rippler 3s ease-in-out infinite;
+          opacity: 0.3;
+          pointer-events:none;
+          z-index:-1;
+        }
+        @keyframes rippler {
+          0%, 100% { box-shadow: 0 0 20px 6px var(--secondary-color); }
+          50% {box-shadow: 0 0 8px 2px var(--primary-color); }
+        }
+      `
     };
 
-    // Functions to add/remove animation overlays for live preview only
-    const clearAnimationOverlay = () => animationPreviewWrapper.querySelectorAll('.star, svg.paint-splat, .ripple').forEach(x => x.remove()); 
-
-    const setAnimationOverlay = (theme) => {
-      clearAnimationOverlay();
-      if(theme==='stars'){
-        // Add some tiny sparkle divs in random positions
-        for(let i=0; i<12; i++) {
-          const star = document.createElement('div');
-          star.className = 'star';
-          star.style.top = `${Math.random() * 100}%`;
-          star.style.left = `${Math.random() * 100}%`;
-          star.style.animationDelay = `${(Math.random()*3).toFixed(2)}s`;
-          animationPreviewWrapper.appendChild(star);
-        }
-      } else if(theme==='paintsplat'){
-        // Use SVG splat shapes with pulsing animation
-        const svgNS = "http://www.w3.org/2000/svg";
-        const svg = document.createElementNS(svgNS, 'svg');
-        svg.setAttribute('viewBox', '0 0 64 64');
-        svg.setAttribute('class', 'paint-splat');
-        svg.style.position = 'absolute';
-        svg.style.top = '10%';
-        svg.style.right = '12%';
-        svg.style.width = '80px';
-        svg.style.height = '80px';
-        const path = document.createElementNS(svgNS, 'path');
-        path.setAttribute('fill', 'var(--color-secondary)');
-        path.setAttribute('d', 'M17.9 26.3c-1.5 3.7-.7 11.6 2.4 15.2 2.2 2.6 9 2.4 12.3 3.7 1.6.7 6-3.7 7.8-5.4 3.4-3.4 3-8.3 3.5-14.1.1-1.3-.3-5.2-1.8-7-1.3-1.4-6.4-1.3-7.7-1.2-4.3.2-14.3 2-16.5 8.9z');
-        svg.appendChild(path);
-        animationPreviewWrapper.appendChild(svg);
-      } else if(theme==='waterripples'){
-        // Create ripple divs
-        for(let i=0; i<3; i++){
-          const ripple = document.createElement('div');
-          ripple.className = 'ripple';
-          animationPreviewWrapper.appendChild(ripple);
-        }
+    // Compose CSS for the generated site
+    const styleContent = `
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: ${chosenTheme['--background-color']};
+        color: ${chosenTheme['--primary-color']};
+        padding: 25px 30px;
+        max-width: 850px;
+        margin: auto;
       }
+      nav {
+        text-align: center;
+        color: white;
+        background: linear-gradient(90deg, ${chosenTheme['--primary-color']}, ${chosenTheme['--secondary-color']});
+        padding: 10px 10px;
+        border-radius: 10px;
+        margin-bottom: 24px;
+        box-shadow: 0 5px 18px rgba(0,0,0,0.15);
+      }
+      nav .course-title {
+        font-size: 2rem;
+        font-weight: 700;
+      }
+      nav .course-meta {
+        font-weight: 600;
+        margin-top: 2px;
+      }
+      img.header-image {
+        width: 100%;
+        max-height: 70px;
+        object-fit: contain;
+        border-radius: 6px;
+        margin-bottom: 30px;
+        user-select: none;
+        pointer-events: none;
+        box-shadow: 0 5px 18px rgb(0 0 0 / 0.15);
+      }
+      h2.section-header {
+        border-bottom: 3px solid ${chosenTheme['--accent-color']};
+        padding-bottom: 6px;
+        margin-bottom: 14px;
+        color: ${chosenTheme['--primary-color']};
+        font-weight: 700;
+        font-size: 1.6rem;
+      }
+      p, li {
+        font-size: 1.05rem;
+      }
+      ul {
+        padding-left: 22px;
+        margin-bottom: 24px;
+      }
+      section.optional-section {
+        background: #fff;
+        border: 1px solid ${chosenTheme['--secondary-color']};
+        padding: 16px 18px;
+        border-radius: 10px;
+        margin-bottom: 28px;
+        user-select: none;
+      }
+      footer {
+        margin-top: 50px;
+        padding-top: 14px;
+        text-align: center;
+        border-top: 1px solid ${chosenTheme['--secondary-color']};
+        color: #666;
+        font-size: 0.9rem;
+      }
+      .button-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-bottom: 30px;
+      }
+      .button-links button {
+        background-color: ${chosenTheme['--button-bg']};
+        border: none;
+        border-radius: 10px;
+        color: white;
+        padding: 12px 16px;
+        cursor: pointer;
+        font-weight: 600;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        transition: background-color 0.3s ease;
+        flex-grow: 1;
+        min-width: 140px;
+      }
+      .button-links button:hover {
+        background-color: ${chosenTheme['--button-hover-bg']};
+        outline: none;
+      }
+      ${animCss[data.animationTheme] || ''}
+    `;
+
+    // Compose optional sections HTML (only non-empty)
+    const optionalHtml = [
+      ['Rationale for Teaching Methods', data.rationale],
+      ['Classroom Etiquette', data.etiquette],
+      ['Technology Use Policy', data.techPolicy]
+    ].map(([title, content]) => {
+      if(!content) return '';
+      return `<section class="optional-section" aria-label="${escapeHtml(title)}">
+        <h2 class="section-header">${escapeHtml(title)}</h2>
+        ${buildParagraphsOrList(content)}
+      </section>`;
+    }).join('\n');
+
+    // Compose course meta info string if any
+    const metaItemsRaw = [
+      data.courseNumber,
+      data.courseSection,
+      data.meetingTimes,
+      data.meetingDays,
+      data.meetingLocation,
+      data.semester
+    ].filter(Boolean);
+    const metaInfoHTML = metaItemsRaw.length ? `<div class="course-meta">${escapeHtml(metaItemsRaw.join(' | '))}</div>` : '';
+
+    // Prepare instructor info block (conditionally)
+    let instructorHTML = '';
+    if(data.instructorName || data.instructorTitle || data.officeLocation || data.instructorPhone || data.instructorEmail) {
+      instructorHTML = `<section aria-label="Instructor Information">
+        <h2 class="section-header">Instructor Information</h2>
+        ${data.instructorName ? `<p><strong>Name:</strong> ${escapeHtml(data.instructorName)}</p>` : ''}
+        ${data.instructorTitle ? `<p><strong>Title:</strong> ${escapeHtml(data.instructorTitle)}</p>` : ''}
+        ${data.officeLocation ? `<p><strong>Office Location:</strong> ${escapeHtml(data.officeLocation)}</p>` : ''}
+        ${data.instructorPhone ? `<p><strong>Phone:</strong> ${escapeHtml(data.instructorPhone)}</p>` : ''}
+        ${data.instructorEmail ? `<p><strong>Email:</strong> <a href="mailto:${escapeHtml(data.instructorEmail)}">${escapeHtml(data.instructorEmail)}</a></p>` : ''}
+      </section>`;
+    }
+
+    // Compose helper for standard section, skip if empty
+    const sectionIfExists = (title, content, label) => {
+      if(!content) return '';
+      return `<section aria-label="${escapeHtml(label || title)}">
+        <h2 class="section-header">${escapeHtml(title)}</h2>
+        ${buildParagraphsOrList(content)}
+      </section>`;
     };
 
-    // Main: Generate HTML and preview
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      if(!validateForm()) return;
+    // Compose web links buttons HTML (filter pairs with url and label present)
+    const links = [
+      [data.websiteUrl1, data.websiteLabel1],
+      [data.websiteUrl2, data.websiteLabel2],
+      [data.websiteUrl3, data.websiteLabel3]
+    ].filter(([url,label])=> url && label).map(([url,label]) => {
+      return `<button onclick="window.open('${escapeHtml(url)}','_blank','noopener,noreferrer')" aria-label="Open ${escapeHtml(label)}">${escapeHtml(label)}</button>`;
+    });
+    const buttonsSection = links.length ? `<section aria-label="Course Links" class="optional-section">
+      <h2 class="section-header">Course Links</h2>
+      <div class="button-links">${links.join('')}</div>
+    </section>` : '';
 
-      // Show loading spinner
-      loadingOverlay.style.display = 'flex';
+    // Compose header image html if given
+    const headerImgHtml = data.headerImageUrl ? `<img src="${escapeHtml(data.headerImageUrl)}" alt="Course header image" class="header-image">` : '';
 
-      setTimeout(() => {
-        // Gather all form data
-        const data = {};
-        new FormData(form).forEach((v,k) => data[k] = v.trim());
-
-        // Optional texts
-        data.rationale = data.rationale || '';
-        data.etiquette = data.etiquette || '';
-        data.techPolicy = data.techPolicy || '';
-
-        // Required fields assured filled by validation
-
-        // Prepare styles with chosen theme
-        const themesMap = {
-          cool: {
-            primary: '#1976d2',
-            secondary: '#00bcd4',
-            accent: '#e53935',
-            bg: '#e3f2fd'
-          },
-          warm: {
-            primary: '#f06292',
-            secondary: '#ff7043',
-            accent: '#d84315',
-            bg: '#fff3e0'
-          },
-          neutral: {
-            primary: '#616161',
-            secondary: '#9e9e9e',
-            accent: '#b71c1c',
-            bg: '#eeeeee'
-          },
-          complementary: {
-            primary: '#00796b',
-            secondary: '#f48fb1',
-            accent: '#ad1457',
-            bg: '#e0f2f1'
-          }
-        };
-        const c = themesMap[data.colorTheme] || themesMap.cool;
-
-        // CSS animations for included animation themes
-        const animThemes = ['stars', 'paintsplat', 'waterripples'];
-        const includeAnimations = animThemes.includes(data.animationTheme);
-
-        // Helper: escape HTML entities
-        const escapeHtml = (unsafe) => {
-          if(!unsafe) return '';
-          return unsafe
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-        };
-
-        // Compose styles (minimal reset + theme + animations if selected)
-        const styleContent = `
-  /* Reset */
-  body, h1, h2, h3, p, ul, li, nav, section, footer {
-    margin: 0; padding:0;
-  }
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.5;
-    background-color: ${c.bg};
-    color: ${c.primary};
-    padding: 25px 30px;
-    max-width: 850px;
-    margin: auto;
-  }
-  nav {
-    text-align: center;
-    color: white;
-    background: linear-gradient(90deg, ${c.primary}, ${c.secondary});
-    padding: 10px 10px;
-    border-radius: 10px;
-    margin-bottom: 30px;
-    box-shadow: 0 5px 18px rgba(0,0,0,0.15);
-  }
-  nav .course-title {
-    font-size: 2rem;
-    font-weight: 700;
-  }
-  nav .course-code {
-    font-weight: 600;
-    margin-top: 3px;
-  }
-  img.header-image {
-    width: 100%;
-    max-height: 200px;
-    object-fit: contain;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    box-shadow: 0 5px 15px rgb(0 0 0 / 0.1);
-    user-select: none;
-    pointer-events: none;
-  }
-  h2.section-header {
-    border-bottom: 3px solid ${c.accent};
-    padding-bottom: 6px;
-    margin-bottom: 14px;
-    color: ${c.primary};
-    font-weight: 700;
-    font-size: 1.6rem;
-  }
-  p, li {
-    font-size: 1.05rem;
-  }
-  ul {
-    padding-left: 1.3rem;
-    margin-bottom: 24px;
-  }
-  footer {
-    margin-top: 50px;
-    padding-top: 14px;
-    text-align: center;
-    border-top: 1px solid ${c.secondary};
-    color: #666;
-    font-size: 0.9rem;
-  }
-  /* iframe embed */
-  .embed-container {
-    position: relative;
-    padding-bottom: 56.25%;
-    height: 0;
-    overflow: hidden;
-    margin-bottom: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgb(0 0 0 / 0.12);
-  }
-  .embed-container iframe {
-    position: absolute;
-    top:0; left:0; width:100%; height:100%;
-    border: none;
-    border-radius: 12px;
-  }
-  .backup-link {
-    display: block;
-    font-weight: 600;
-    color: ${c.secondary};
-    text-decoration: underline;
-    margin-bottom: 30px;
-  }
-  /* Optional sections with distinct style */
-  .optional-section {
-    background: #fff;
-    border: 1px solid ${c.secondary};
-    padding: 16px 18px;
-    border-radius: 10px;
-    margin-bottom: 28px;
-    user-select: none;
-  }
-  /* Animations if enabled */
-  ${includeAnimations ? `
-  /* Stars & sparkles animation */
-  .anim-stars {
-    position: relative;
-  }
-  .anim-stars::before, .anim-stars::after {
-    content: "";
-    position: absolute;
-    border-radius: 50%;
-    box-shadow:
-      15px 5px 8px ${c.secondary},
-      30px 20px 10px ${c.secondary},
-      50px 40px 12px ${c.secondary},
-      20px 35px 9px ${c.primary};
-    top: -15px; left: -15px;
-    width: 120%;
-    height: 120%;
-    animation: twinkle 3s ease-in-out infinite alternate;
-    opacity: 0.3;
-  }
-  .anim-stars::after {
-    animation-delay: 1.2s;
-  }
-  @keyframes twinkle {
-    from {opacity: 0.3; transform: scale(1);}
-    to {opacity: 1; transform: scale(1.15);}
-  }
-  /* Paint splats */
-  .anim-paintsplat {
-    position: relative;
-  }
-  .anim-paintsplat::before {
-    content: "";
-    position: absolute;
-    border-radius: 50%;
-    background: ${c.secondary};
-    width: 120%;
-    height: 110%;
-    top: -10%;
-    left: -15%;
-    opacity: 0.12;
-    filter: blur(25px);
-    animation: paintsplat-pulse 4s ease-in-out infinite;
-  }
-  @keyframes paintsplat-pulse {
-    0%, 100% {transform: scale(1);}
-    50% {transform: scale(1.08);}
-  }
-  /* Water Ripples */
-  .anim-waterripples {
-    position: relative;
-  }
-  .anim-waterripples::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: 10px;
-    box-shadow:
-      0 0 20px 6px ${c.secondary};
-    animation: rippler 3s ease-in-out infinite;
-    opacity: 0.3;
-  }
-  @keyframes rippler {
-    0%, 100% { box-shadow: 0 0 20px 6px ${c.secondary}; }
-    50% {box-shadow: 0 0 8px 2px ${c.primary}; }
-  }
-  ` : ''}
-        `;
-
-        // Build syllabus HTML output string
-        // Using semantic tags and strong structure for Canvas
-
-        // Helper for optional sections
-        function buildOptionalSection(title, content) {
-          if(!content) return '';
-          // Escape content and keep paragraphs by line breaks
-          const paragraphs = content.trim().split(/\n+/).map(p => `<p>${escapeHtml(p.trim())}</p>`).join('\n');
-          return `<section class="optional-section"><h2 class="section-header">${escapeHtml(title)}</h2>\n${paragraphs}\n</section>`;
-        }
-
-        // Prepare syllabus with required sections
-        const syllabusHtml = `<!DOCTYPE html>
+    // Final full syllabus HTML output string
+    const outputHtml = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>${escapeHtml(data.courseTitle)} - Syllabus</title>
-  <style>
-  ${styleContent}
-  </style>
+  <title>${escapeHtml(data.courseTitle)}</title>
+  <style>${styleContent}</style>
 </head>
-<body ${includeAnimations ? `class="anim-${data.animationTheme || 'none'}"` : ''}>
-  <nav aria-label="Course information">
+<body class="anim-${data.animationTheme}">
+  <nav aria-label="Course Information">
     <div class="course-title">${escapeHtml(data.courseTitle)}</div>
-    <div class="course-code">${escapeHtml(data.courseCode)}</div>
+    ${metaInfoHTML}
   </nav>
-
-  ${data.headerImageUrl ? `<img src="${escapeHtml(data.headerImageUrl)}" alt="Course header image" class="header-image" />` : ''}
-
-  <section aria-label="Instructor Information">
-    <h2 class="section-header">Instructor Information</h2>
-    <p><strong>Name:</strong> ${escapeHtml(data.instructorName)}</p>
-    <p><strong>Email:</strong> <a href="mailto:${escapeHtml(data.instructorEmail)}">${escapeHtml(data.instructorEmail)}</a></p>
-  </section>
-
-  <section aria-label="Course Description">
-    <h2 class="section-header">Course Description</h2>
-    <p>${escapeHtml(data.courseDescription).replace(/\n/g, '<br>')}</p>
-  </section>
-
-  <section aria-label="Learning Objectives / Outcomes">
-    <h2 class="section-header">Learning Objectives / Outcomes</h2>
-    <p>${escapeHtml(data.learningObjectives).replace(/\n/g, '<br>')}</p>
-  </section>
-
-  <section aria-label="Required Materials">
-    <h2 class="section-header">Required Materials</h2>
-    <p>${escapeHtml(data.requiredMaterials).replace(/\n/g, '<br>')}</p>
-  </section>
-
-  <section aria-label="Course Policies">
-    <h2 class="section-header">Course Policies</h2>
-    <p>${escapeHtml(data.coursePolicies).replace(/\n/g, '<br>')}</p>
-  </section>
-
-  <section aria-label="Grading Criteria">
-    <h2 class="section-header">Grading Criteria</h2>
-    <p>${escapeHtml(data.gradingCriteria).replace(/\n/g, '<br>')}</p>
-  </section>
-
-  <section aria-label="Course Schedule">
-    <h2 class="section-header">Course Schedule</h2>
-    <p>${escapeHtml(data.courseSchedule).replace(/\n/g, '<br>')}</p>
-  </section>
-
-  <section aria-label="Academic Conduct Expectations">
-    <h2 class="section-header">Academic Conduct Expectations</h2>
-    <p>${escapeHtml(data.academicConduct).replace(/\n/g, '<br>')}</p>
-  </section>
-
-  <section aria-label="Accessibility Statement">
-    <h2 class="section-header">Accessibility Statement</h2>
-    <p>${escapeHtml(data.accessibilityStatement).replace(/\n/g, '<br>')}</p>
-  </section>
-
-  <section aria-label="Contact Instructions">
-    <h2 class="section-header">Contact Instructions</h2>
-    <p>${escapeHtml(data.contactInstructions).replace(/\n/g, '<br>')}</p>
-  </section>
-
-  ${buildOptionalSection('Rationale For Teaching Methods', data.rationale)}
-  ${buildOptionalSection('Classroom Etiquette', data.etiquette)}
-  ${buildOptionalSection('Technology Use Policy', data.techPolicy)}
-
-  <section aria-label="Embedded Website Content">
-    <h2 class="section-header">Embedded Website</h2>
-    <div class="embed-container">
-      <iframe src="${escapeHtml(data.embedUrl)}" title="Embedded Website" allowfullscreen sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
-    </div>
-    ${data.backupLinkText && isValidUrl(data.embedUrl) ? `<a href="${escapeHtml(data.embedUrl)}" target="_blank" class="backup-link" rel="noopener">${escapeHtml(data.backupLinkText)}</a>` : ''}
-  </section>
-
+  ${headerImgHtml}
+  ${instructorHTML}
+  ${sectionIfExists('Course Description', data.courseDescription)}
+  ${sectionIfExists('Learning Objectives / Outcomes', data.learningObjectives)}
+  ${sectionIfExists('Required Materials', data.requiredMaterials)}
+  ${sectionIfExists('Course Policies', data.coursePolicies)}
+  ${sectionIfExists('Grading Criteria', data.gradingCriteria)}
+  ${sectionIfExists('Course Schedule', data.courseSchedule)}
+  ${sectionIfExists('Expectations for Academic Conduct', data.academicConduct)}
+  ${sectionIfExists('Accessibility Statement', data.accessibilityStatement)}
+  ${sectionIfExists('Contact Instructions', data.contactInstructions)}
+  ${optionalHtml}
+  ${buttonsSection}
   <footer>
-    <p>© Mrs. B. Watts 2025</p>
+    © Mrs. B. Watts 2025
   </footer>
 </body>
-</html>
-`;
+</html>`;
 
-        // Output to textarea
-        generatedHtmlTextarea.value = syllabusHtml;
+    // Show output area and fill code display
+    const previewContainer = document.getElementById('preview-container');
+    const generatedHtmlTextarea = document.getElementById('generated-html');
+    const pagePreview = document.getElementById('page-preview');
 
-        // Show output and iframe embed preview
-        outputArea.hidden = false;
-        iframePreviewContainer.hidden = false;
+    generatedHtmlTextarea.value = outputHtml;
+    previewContainer.hidden = false;
 
-        // Setup iframe live preview
-        iframe.src = data.embedUrl;
-        iframeFallback.hidden = true;
-        iframeFallback.textContent = '';
-        iframe.onload = () => {
-          iframeFallback.hidden = true;
-          iframe.style.borderColor = '';
-        }
-        iframe.onerror = () => {
-          iframeFallback.hidden = false;
-          iframeFallback.textContent = 'Unable to load iframe content. ' + (data.backupLinkText ? data.backupLinkText : 'Open the link in a new tab.');
-          iframe.style.borderColor = 'red';
-        }
+    // Setup live preview by setting innerHTML (careful: sanitized)
+    // For safety do not inject raw HTML with event handlers in live preview; instead remove onclicks and disable pointer events.
+    const previewDocHTML = outputHtml
+      .replaceAll(/onclick="[^"]*"/g, '')
+      .replaceAll(/aria-label="Open [^"]*"/g, '')
+      .replaceAll(/<button([^>]*)>/g, '<button$1 disabled title="Preview buttons disabled">');
+    pagePreview.innerHTML = previewDocHTML;
 
-        // Update animations overlay preview area classes
-        animationPreviewWrapper.className = 'preview-wrapper';
-        if (includeAnimations && animationThemeClasses[data.animationTheme]) {
-          animationPreviewWrapper.classList.add(animationThemeClasses[data.animationTheme]);
-          setAnimationOverlay(data.animationTheme);
-        } else {
-          clearAnimationOverlay();
-        }
+    // Remove 'disabled title' from footer & meta text for accessibility
+    // Because these do not have buttons, safe.
 
-        // Hide loading
-        loadingOverlay.style.display = 'none';
+    // Scroll live preview top
+    pagePreview.scrollTop = 0;
+    // Show header image preview within form area updated already by input listener.
 
-        // Scroll to output
-        outputArea.focus();
+  });
 
-      }, 600); // Simulate slight delay to show loading spinner
-    });
-
-    // Copy to clipboard
-    copyBtn.addEventListener('click', () => {
-      generatedHtmlTextarea.select();
-      generatedHtmlTextarea.setSelectionRange(0, 999999);
-      try {
-        if(document.execCommand('copy')) {
-          copyBtn.textContent = 'Copied!';
-          setTimeout(() => copyBtn.textContent = 'Copy', 1500);
-        } else {
-          alert('Copy failed. Please copy manually.');
-        }
-      } catch {
+  // Copy button
+  document.getElementById('copy-btn').addEventListener('click', () => {
+    const textarea = document.getElementById('generated-html');
+    textarea.select();
+    textarea.setSelectionRange(0, 999999);
+    try {
+      if(document.execCommand('copy')) {
+        const btn = document.getElementById('copy-btn');
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 1500);
+      } else {
         alert('Copy failed. Please copy manually.');
       }
-      window.getSelection().removeAllRanges();
-    });
+    } catch {
+      alert('Copy failed. Please copy manually.');
+    }
+    window.getSelection().removeAllRanges();
+  });
 
-    // Download as .html
-    downloadBtn.addEventListener('click', () => {
-      const blob = new Blob([generatedHtmlTextarea.value], {type:'text/html'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = (form['courseTitle'].value.trim().replaceAll(/\s+/g,'_') || 'syllabus') + '.html';
-      a.click();
-      URL.revokeObjectURL(a.href);
-    });
+  // Download button
+  document.getElementById('download-btn').addEventListener('click', () => {
+    const textarea = document.getElementById('generated-html');
+    const blob = new Blob([textarea.value], { type: 'text/html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    const filename = (form.courseTitle.value.trim() || 'syllabus').toLowerCase().replaceAll(/\s+/g, '_') + '.html';
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
 
-  })();
+  // Utility patch for replaceAll on older browsers
+  if(!String.prototype.replaceAll) {
+    String.prototype.replaceAll = function(str, newStr) {
+      return this.split(str).join(newStr);
+    };
+  }
+})();
 </script>
-
 </body>
 </html>
