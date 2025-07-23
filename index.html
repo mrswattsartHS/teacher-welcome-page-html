@@ -1,4 +1,4 @@
- <label>Subject Area:</label>
+<label>Subject Area:</label>
   <select id="subject">
     <option value="">-- Select --</option>
     <option value="math">Math</option>
@@ -31,16 +31,16 @@
   <input type="url" id="photo" />
 
   <label>Welcome Message:</label>
-  <textarea id="welcome"></textarea>
+  <textarea id="welcome" rows="4"></textarea>
 
   <label>Syllabus Link:</label>
   <input type="url" id="syllabus" />
 
   <label>Live Session Info:</label>
-  <textarea id="liveInfo"></textarea>
+  <textarea id="liveInfo" rows="2"></textarea>
 
   <label>Important Links (comma separated as Title|URL):</label>
-  <textarea id="importantLinks"></textarea>
+  <textarea id="importantLinks" rows="3"></textarea>
 
   <label>Fun Fact/Quote (Optional):</label>
   <input type="text" id="quote" />
@@ -49,5 +49,7 @@
   <input type="text" id="schoolYear" />
 </div>
 
-<button type="button" onclick="generateHTML()">Generate HTML</button>
-<button type="button" onclick="downloadHTML()">Download HTML</button>
+<div class="button-container">
+  <button type="button" onclick="generateHTML()">Generate HTML</button>
+  <button type="button" onclick="downloadHTML()">Download HTML</button>
+</div>
