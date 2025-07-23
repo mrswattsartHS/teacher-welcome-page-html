@@ -1,55 +1,59 @@
-<label>Subject Area:</label>
-  <select id="subject">
-    <option value="">-- Select --</option>
-    <option value="math">Math</option>
-    <option value="english">English</option>
-    <option value="science">Science</option>
-    <option value="social">Social Studies</option>
-    <option value="arts">Fine Arts</option>
-    <option value="language">World Language</option>
-    <option value="pe">Physical Education</option>
-    <option value="elective">Elective</option>
-    <option value="other">Other</option>
-  </select>
-
-  <label>Header Banner Image URL (Optional):</label>
-  <input type="url" id="bannerImage" />
-
-  <label>Teacher Name:</label>
-  <input type="text" id="teacherName" />
-
-  <label>Email:</label>
-  <input type="email" id="email" />
-
-  <label>Phone (Optional):</label>
-  <input type="text" id="phone" />
-
-  <label>Office Hours (Optional):</label>
-  <input type="text" id="hours" />
-
-  <label>Profile Photo URL (Optional):</label>
-  <input type="url" id="photo" />
-
-  <label>Welcome Message:</label>
-  <textarea id="welcome" rows="4"></textarea>
-
-  <label>Syllabus Link:</label>
-  <input type="url" id="syllabus" />
-
-  <label>Live Session Info:</label>
-  <textarea id="liveInfo" rows="2"></textarea>
-
-  <label>Important Links (comma separated as Title|URL):</label>
-  <textarea id="importantLinks" rows="3"></textarea>
-
-  <label>Fun Fact/Quote (Optional):</label>
-  <input type="text" id="quote" />
-
-  <label>School Year:</label>
-  <input type="text" id="schoolYear" />
+<!-- ✅ Replace your existing HTML with this -->
+<div id="output" style="white-space: pre-wrap; background: #fdfdfd; padding: 1.5rem; border: 2px dashed #ccc; border-radius: 12px; margin: 2rem auto; max-width: 800px; font-size: 0.95rem;">
+  <textarea id="htmlOutput" rows="20" style="width: 100%; padding: 1rem; font-family: monospace; border: 1px solid #ccc; border-radius: 8px;"></textarea>
 </div>
 
-<div class="button-container">
-  <button type="button" onclick="generateHTML()">Generate HTML</button>
-  <button type="button" onclick="downloadHTML()">Download HTML</button>
-</div>
+<script>
+  function getColor(subject) {
+    const colors = {
+      math: '#cce0ff',
+      english: '#ffd6d6',
+      science: '#d1f7d6',
+      social: '#fff2cc',
+      arts: '#ecd4f2',
+      language: '#f7e2c4',
+      pe: '#c8f7f2',
+      elective: '#e4e4e4',
+      other: '#dddddd'
+    };
+    return colors[subject] || '#ffffff';
+  }
+
+  function generateHTML() {
+    const subject = document.getElementById("subject").value;
+    const bgColor = getColor(subject);
+
+    const html = `
+<div style="font-family: 'Nunito', sans-serif; background-color: ${bgColor}; padding: 20px; border-radius: 10px;">
+  ${document.getElementById("bannerImage").value ? `<img src="${document.getElementById("bannerImage").value}" alt="Header Banner" style="width: 100%; border-radius: 10px;" />` : ''}
+  <h1>${document.getElementById("className").value}</h1>
+  <h2>Welcome from ${document.getElementById("teacherName").value}</h2>
+  <p>${document.getElementById("welcome").value}</p>
+  <p><strong>📧 Email:</strong> ${document.getElementById("email").value}</p>
+  ${document.getElementById("phone").value ? `<p><strong>📞 Phone:</strong> ${document.getElementById("phone").value}</p>` : ''}
+  ${document.getElementById("hours").value ? `<p><strong>🕒 Office Hours:</strong> ${document.getElementById("hours").value}</p>` : ''}
+  ${document.getElementById("photo").value ? `<img src="${document.getElementById("photo").value}" alt="Teacher Photo" style="max-width: 150px; border-radius: 50%;" />` : ''}
+  <p><strong>📘 Syllabus:</strong> <a href="${document.getElementById("syllabus").value}" target="_blank">View Syllabus</a></p>
+  <p><strong>🖥️ Live Sessions:</strong> ${document.getElementById("liveInfo").value}</p>
+  ${document.getElementById("importantLinks").value.split(',').map(link => {
+      const [title, url] = link.split('|');
+      return url ? `<p><a href="${url.trim()}" target="_blank">🔗 ${title.trim()}</a></p>` : '';
+    }).join('')}
+  ${document.getElementById("quote").value ? `<blockquote>${document.getElementById("quote").value}</blockquote>` : ''}
+  <p><em>Academic Year: ${document.getElementById("schoolYear").value}</em></p>
+</div>`;
+
+    document.getElementById("htmlOutput").value = html.trim();
+    window.generatedHTML = html;
+  }
+
+  function downloadHTML() {
+    const blob = new Blob([window.generatedHTML || ''], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'canvas-landing-page.html';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+</script>
