@@ -130,7 +130,6 @@
     from {opacity: 0;max-height: 0;}
     to {opacity: 1; max-height: 500px;}
   }
-
   button[type=submit], #copy-btn, #download-btn, #clear-btn {
     grid-column: 1 / -1;
     justify-self: center;
@@ -235,32 +234,45 @@
     box-shadow: 0 5px 18px rgb(0 0 0 / 0.1);
     user-select: none;
     pointer-events: none;
+    overflow-x: auto;
+    white-space: nowrap;
   }
-
-  /* Buttons for weblinks in preview and output */
-  .embed-link-buttons {
+  /* Buttons for weblinks */
+  .button-links, .tabs-button-links {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 14px;
+    margin-bottom: 30px;
   }
-  .embed-link-buttons button {
+  .button-links button,
+  .tabs-button-links button,
+  .btn-large.btn-info.btn {
+    background-color: var(--button-bg);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    padding: 12px 16px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    transition: background-color 0.3s ease;
     flex-grow: 1;
     min-width: 140px;
-    padding: 12px 0;
-    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .button-links button:hover,
+  .tabs-button-links button:hover,
+  .btn-large.btn-info.btn:hover {
+    background-color: var(--button-hover-bg);
+    outline: none;
+  }
+  .rich-html-content img {
+    max-width: 100%;
     border-radius: 10px;
-    border: none;
-    color: white;
-    background: #039be5;
-    cursor: pointer;
-    box-shadow: 0 3px 10px rgba(3,155,229,0.5);
-    transition: background-color 0.3s ease;
+    margin: 6px 0;
   }
-  .embed-link-buttons button:hover {
-    background: #0277bd;
-  }
-
   /* Animation themes inside preview only */
   .anim-stars .sparkle {
     position: absolute;
@@ -298,7 +310,50 @@
     0% {transform: scale(0.8); opacity: 0.3;}
     100% {transform: scale(1.8); opacity: 0;}
   }
-
+  /* Tabs styles */
+  .enhanceable_content.tabs {
+    margin-top: 20px;
+    font-size: 1rem;
+    overflow: hidden;
+  }
+  .enhanceable_content.tabs ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    border-bottom: 2px solid var(--accent-color);
+    gap: 8px;
+  }
+  .enhanceable_content.tabs ul li {
+    margin: 0;
+  }
+  .enhanceable_content.tabs ul li a {
+    display: block;
+    padding: 10px 18px;
+    background: var(--secondary-color);
+    color: white;
+    font-weight: 700;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    text-decoration: none;
+    user-select: none;
+  }
+  .enhanceable_content.tabs ul li a[aria-selected="true"] {
+    background: var(--accent-color);
+    color: #fff;
+    cursor: default;
+  }
+  .enhanceable_content.tabs > div[id^="tab-"] {
+    padding: 20px 15px;
+    background: #fff;
+    border: 2px solid var(--accent-color);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    display: none;
+  }
+  .enhanceable_content.tabs > div[id^="tab-"].active {
+    display: block;
+  }
   /* Responsive */
   @media (max-width: 980px) {
     main {
@@ -323,7 +378,6 @@
       padding: 18px 22px;
     }
   }
-
 </style>
 </head>
 <body>
@@ -339,7 +393,7 @@
       Required fields indicate essential syllabus info for Canvas. Optional sections may be left blank for exclusion.
     </p>
 
-    <!-- Basic Course Information (all optional except title) -->
+    <!-- Basic Course Information -->
     <label class="required" for="course-title">Course Title</label>
     <input type="text" id="course-title" name="courseTitle" placeholder="e.g. Advanced Botany" required aria-required="true" autocomplete="off">
 
@@ -414,26 +468,44 @@
     <textarea id="contact-instructions" name="contactInstructions" placeholder="Best ways to reach the instructor"></textarea>
 
     <!-- Header Image URL & Preview -->
-    <label for="header-image-url">Header Image URL (optional, preview below)</label>
+    <label for="header-image-url">Header Image URL (optional, scrollable low height preview below)</label>
     <input type="url" id="header-image-url" name="headerImageUrl" placeholder="https://example.com/image.jpg" autocomplete="off" aria-describedby="header-image-note">
-    <small id="header-image-note" style="color:#666; margin-bottom: 6px;">Will appear as a scrollable low-height banner at header top</small>
+    <small id="header-image-note" style="color:#666; margin-bottom: 6px;">Appears as a horizontal scrollable banner at top of syllabus preview</small>
     <img id="header-image-preview" alt="Header image preview, scroll horizontally" src="" aria-hidden="true" style="display:none;">
 
-    <!-- Embedded Website Links Section -->
-    <label for="website-url-1">Website Link 1 URL</label>
-    <input type="url" id="website-url-1" name="websiteUrl1" placeholder="https://example.com" autocomplete="off">
-    <label for="website-label-1">Button Label 1</label>
-    <input type="text" id="website-label-1" name="websiteLabel1" placeholder="Open Course Website" autocomplete="off">
-
-    <label for="website-url-2">Website Link 2 URL</label>
-    <input type="url" id="website-url-2" name="websiteUrl2" placeholder="https://example.com" autocomplete="off">
-    <label for="website-label-2">Button Label 2</label>
-    <input type="text" id="website-label-2" name="websiteLabel2" placeholder="Access Resource Portal" autocomplete="off">
-
-    <label for="website-url-3">Website Link 3 URL</label>
-    <input type="url" id="website-url-3" name="websiteUrl3" placeholder="https://example.com" autocomplete="off">
-    <label for="website-label-3">Button Label 3</label>
-    <input type="text" id="website-label-3" name="websiteLabel3" placeholder="View Online Schedule" autocomplete="off">
+    <!-- Website Link Buttons or Tabs inputs -->
+    <fieldset class="full-width" style="margin-top:24px; border:1px solid #ddd; border-radius:10px; padding: 15px;">
+      <legend style="font-weight:700; margin-bottom:12px;">Website Links as Buttons or Tabs (optional)</legend>
+      <p style="color:#555; font-style: italic; margin-bottom:10px;">
+        Enter links and labels. Choose rendering style below: buttons or tabs.
+      </p>
+      <!-- Up to 5 url + label pairs -->
+      <div style="display:grid; grid-template-columns: 3fr 2fr; gap: 10px 15px; margin-bottom: 12px;">
+        <input type="url" name="customLinkUrl1" placeholder="URL 1 e.g. https://example.com" autocomplete="off" />
+        <input type="text" name="customLinkLabel1" placeholder="Label 1 e.g. Course Website" />
+      </div>
+      <div style="display:grid; grid-template-columns: 3fr 2fr; gap: 10px 15px; margin-bottom: 12px;">
+        <input type="url" name="customLinkUrl2" placeholder="URL 2" autocomplete="off" />
+        <input type="text" name="customLinkLabel2" placeholder="Label 2" />
+      </div>
+      <div style="display:grid; grid-template-columns: 3fr 2fr; gap: 10px 15px; margin-bottom: 12px;">
+        <input type="url" name="customLinkUrl3" placeholder="URL 3" autocomplete="off" />
+        <input type="text" name="customLinkLabel3" placeholder="Label 3" />
+      </div>
+      <div style="display:grid; grid-template-columns: 3fr 2fr; gap: 10px 15px; margin-bottom: 12px;">
+        <input type="url" name="customLinkUrl4" placeholder="URL 4" autocomplete="off" />
+        <input type="text" name="customLinkLabel4" placeholder="Label 4" />
+      </div>
+      <div style="display:grid; grid-template-columns: 3fr 2fr; gap: 10px 15px;">
+        <input type="url" name="customLinkUrl5" placeholder="URL 5" autocomplete="off" />
+        <input type="text" name="customLinkLabel5" placeholder="Label 5" />
+      </div>
+      <label for="links-render-style" style="margin-top: 15px; display: block; font-weight: 600;">Render links as:</label>
+      <select id="links-render-style" name="linksRenderStyle" aria-label="Select whether to render website links as Buttons or Tabs">
+        <option value="buttons" selected>Buttons</option>
+        <option value="tabs">Tabs</option>
+      </select>
+    </fieldset>
 
     <!-- Color Themes -->
     <label for="color-theme">Color Theme</label>
@@ -448,12 +520,12 @@
     <label for="animation-theme">Animation Theme</label>
     <select id="animation-theme" name="animationTheme" aria-label="Choose an animation theme">
       <option value="none" selected>None</option>
-      <option value="stars">&nbsp;Stars & Sparkles</option>
+      <option value="stars">Stars & Sparkles</option>
       <option value="paintsplat">Paint Splats & Splashes</option>
       <option value="waterripples">Water & Ripples</option>
     </select>
 
-    <!-- Optional Sections Collapsibles with Textareas -->
+    <!-- Optional Sections Collapsibles -->
     <div class="optional-section" tabindex="0" role="button" aria-expanded="false" aria-controls="rationale-content" id="rationale-toggle">
       Rationale for Teaching Methods <span class="toggle-icon">▶</span>
     </div>
@@ -473,6 +545,36 @@
     </div>
     <div class="optional-content" id="techpolicy-content">
       <textarea name="techPolicy" placeholder="Rules regarding technology usage during class..."></textarea>
+    </div>
+
+    <!-- Rich HTML Content Section -->
+    <div class="optional-section" tabindex="0" role="button" aria-expanded="false" aria-controls="richcontent-content" id="richcontent-toggle">
+      Rich HTML Content Section <span class="toggle-icon">▶</span>
+    </div>
+    <div class="optional-content" id="richcontent-content">
+      <textarea name="richContent" placeholder="Paste your custom HTML content here, including images, paragraphs, buttons, etc." 
+        style="font-family: monospace; height:160px; font-size: 13px;"></textarea>
+    </div>
+
+    <!-- Optional Tabs Section for raw tabs html -->
+    <div class="optional-section" tabindex="0" role="button" aria-expanded="false" aria-controls="tabs-content" id="tabs-toggle">
+      Optional Tabs Section (Paste tabs HTML here) <span class="toggle-icon">▶</span>
+    </div>
+    <div class="optional-content" id="tabs-content">
+      <textarea name="tabsHtml" placeholder="Paste your tabs HTML code here, e.g. the .enhanceable_content.tabs div" 
+        style="font-family: monospace; font-size: 13px; height: 200px;"></textarea>
+      <small style="color:#666; display:block; margin-top:5px;">Example structure:
+        <pre style="font-size: 12px; background:#eef; padding:8px; border-radius:8px;">
+&lt;div class="enhanceable_content tabs"&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href="#tab-1"&gt;First Tab&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#tab-2"&gt;Second Tab&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;div id="tab-1"&gt;&lt;p&gt;Content for tab 1&lt;/p&gt;&lt;/div&gt;
+  &lt;div id="tab-2"&gt;&lt;p&gt;Content for tab 2&lt;/p&gt;&lt;/div&gt;
+&lt;/div&gt;
+        </pre>
+      </small>
     </div>
 
     <button type="submit" id="generate-btn" aria-label="Generate syllabus HTML">Generate Syllabus</button>
@@ -511,6 +613,8 @@
     { toggle: document.getElementById('rationale-toggle'), content: document.getElementById('rationale-content') },
     { toggle: document.getElementById('etiquette-toggle'), content: document.getElementById('etiquette-content') },
     { toggle: document.getElementById('techpolicy-toggle'), content: document.getElementById('techpolicy-content') },
+    { toggle: document.getElementById('richcontent-toggle'), content: document.getElementById('richcontent-content') },
+    { toggle: document.getElementById('tabs-toggle'), content: document.getElementById('tabs-content') }
   ];
   optionalToggles.forEach(({toggle, content}) => {
     const toggleState = () => {
@@ -588,7 +692,7 @@
     if(!url) return '';
     const safeLabel = escapeHtml(label || 'Open Link');
     const safeUrl = escapeHtml(url);
-    return `<button onclick="window.open('${safeUrl}','_blank','noopener,noreferrer')" aria-label="Open link ${safeLabel}">${safeLabel}</button>`;
+    return `<a class="btn-large btn-info btn" href="${safeUrl}" target="_blank" rel="noopener noreferrer">${safeLabel}</a>`;
   };
 
   // Build paragraphs or list from multi-line text for output HTML
@@ -749,6 +853,11 @@
         padding: 25px 30px;
         max-width: 850px;
         margin: auto;
+        --primary-color: ${chosenTheme['--primary-color']};
+        --secondary-color: ${chosenTheme['--secondary-color']};
+        --accent-color: ${chosenTheme['--accent-color']};
+        --button-bg: ${chosenTheme['--button-bg']};
+        --button-hover-bg: ${chosenTheme['--button-hover-bg']};
       }
       nav {
         text-align: center;
@@ -808,14 +917,16 @@
         color: #666;
         font-size: 0.9rem;
       }
-      .button-links {
+      .button-links, .tabs-button-links {
         display: flex;
         flex-wrap: wrap;
         gap: 14px;
         margin-bottom: 30px;
       }
-      .button-links button {
-        background-color: ${chosenTheme['--button-bg']};
+      .button-links button,
+      .tabs-button-links button,
+      .btn-large.btn-info.btn {
+        background-color: var(--button-bg);
         border: none;
         border-radius: 10px;
         color: white;
@@ -826,12 +937,66 @@
         transition: background-color 0.3s ease;
         flex-grow: 1;
         min-width: 140px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
       }
-      .button-links button:hover {
-        background-color: ${chosenTheme['--button-hover-bg']};
+      .button-links button:hover,
+      .tabs-button-links button:hover,
+      .btn-large.btn-info.btn:hover {
+        background-color: var(--button-hover-bg);
         outline: none;
       }
+      .rich-html-content img {
+        max-width: 100%;
+        border-radius: 10px;
+        margin: 6px 0;
+      }
       ${animCss[data.animationTheme] || ''}
+      /* Tabs styles */
+      .enhanceable_content.tabs {
+        margin-top: 20px;
+        font-size: 1rem;
+        overflow: hidden;
+      }
+      .enhanceable_content.tabs ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        border-bottom: 2px solid var(--accent-color);
+        gap: 8px;
+      }
+      .enhanceable_content.tabs ul li {
+        margin: 0;
+      }
+      .enhanceable_content.tabs ul li a {
+        display: block;
+        padding: 10px 18px;
+        background: var(--secondary-color);
+        color: white;
+        font-weight: 700;
+        border-radius: 8px 8px 0 0;
+        cursor: pointer;
+        text-decoration: none;
+        user-select: none;
+      }
+      .enhanceable_content.tabs ul li a[aria-selected="true"] {
+        background: var(--accent-color);
+        color: #fff;
+        cursor: default;
+      }
+      .enhanceable_content.tabs > div[id^="tab-"] {
+        padding: 20px 15px;
+        background: #fff;
+        border: 2px solid var(--accent-color);
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        display: none;
+      }
+      .enhanceable_content.tabs > div[id^="tab-"].active {
+        display: block;
+      }
     `;
 
     // Compose optional sections HTML (only non-empty)
@@ -871,7 +1036,7 @@
       </section>`;
     }
 
-    // Compose helper for standard section, skip if empty
+    // Helper for standard section, skip if empty
     const sectionIfExists = (title, content, label) => {
       if(!content) return '';
       return `<section aria-label="${escapeHtml(label || title)}">
@@ -880,30 +1045,76 @@
       </section>`;
     };
 
-    // Compose web links buttons HTML (filter pairs with url and label present)
-    const links = [
-      [data.websiteUrl1, data.websiteLabel1],
-      [data.websiteUrl2, data.websiteLabel2],
-      [data.websiteUrl3, data.websiteLabel3]
-    ].filter(([url,label])=> url && label).map(([url,label]) => {
-      return `<button onclick="window.open('${escapeHtml(url)}','_blank','noopener,noreferrer')" aria-label="Open ${escapeHtml(label)}">${escapeHtml(label)}</button>`;
-    });
-    const buttonsSection = links.length ? `<section aria-label="Course Links" class="optional-section">
-      <h2 class="section-header">Course Links</h2>
-      <div class="button-links">${links.join('')}</div>
-    </section>` : '';
+    // Compose web links as Buttons or Tabs depending on user choice
+    const linkPairs = [
+      [data.customLinkUrl1, data.customLinkLabel1],
+      [data.customLinkUrl2, data.customLinkLabel2],
+      [data.customLinkUrl3, data.customLinkLabel3],
+      [data.customLinkUrl4, data.customLinkLabel4],
+      [data.customLinkUrl5, data.customLinkLabel5]
+    ].filter(([url,label])=> url && label && isValidUrl(url));
+
+    let linksSectionHtml = '';
+    if(linkPairs.length > 0){
+      if(data.linksRenderStyle === 'tabs'){
+        // Build tabs markup
+        const tabsListItems = linkPairs.map(([url,label], i) => `<li><a href="#tablink${i+1}">${escapeHtml(label)}</a></li>`).join('\n');
+        const tabsPanels = linkPairs.map(([url,label],i) => 
+          `<div id="tablink${i+1}">
+            <p><a class="btn-large btn-info btn" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a></p>
+          </div>`
+        ).join('\n');
+        linksSectionHtml = `<section aria-label="Course Links as Tabs" class="optional-section">
+  <h2 class="section-header">Course Links</h2>
+  <div class="enhanceable_content tabs">
+    <ul>
+      ${tabsListItems}
+    </ul>
+    ${tabsPanels}
+  </div>
+</section>`;
+      } else {
+        // Buttons layout
+        const buttonsHtml = linkPairs.map(([url,label]) => `<a class="btn-large btn-info btn" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`).join('\n');
+        linksSectionHtml = `<section aria-label="Course Links as Buttons" class="optional-section">
+  <h2 class="section-header">Course Links</h2>
+  <div class="button-links">${buttonsHtml}</div>
+</section>`;
+      }
+    }
+
+    // Rich HTML Content (raw)
+    const richContentHtml = data.richContent ? `<section aria-label="Additional Rich Content" class="optional-section">
+  <h2 class="section-header">Additional Rich Content</h2>
+  <div class="rich-html-content">
+    ${data.richContent}
+  </div>
+</section>` : '';
+
+    // Tabs Raw HTML pasted by user (no safe check, so teachers must paste trusted content)
+    const tabsRawHtml = data.tabsHtml || '';
+    const tabsSectionHtml = tabsRawHtml ? `
+<section aria-label="Tabs Section" class="optional-section">
+  <h2 class="section-header">Tabs Section</h2>
+  <div class="tabs-container">
+    ${tabsRawHtml}
+  </div>
+</section>
+` : '';
 
     // Compose header image html if given
     const headerImgHtml = data.headerImageUrl ? `<img src="${escapeHtml(data.headerImageUrl)}" alt="Course header image" class="header-image">` : '';
 
-    // Final full syllabus HTML output string
+    // Assemble final output HTML string
     const outputHtml = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>${escapeHtml(data.courseTitle)}</title>
-  <style>${styleContent}</style>
+  <style>
+  ${styleContent}
+  </style>
 </head>
 <body class="anim-${data.animationTheme}">
   <nav aria-label="Course Information">
@@ -922,10 +1133,68 @@
   ${sectionIfExists('Accessibility Statement', data.accessibilityStatement)}
   ${sectionIfExists('Contact Instructions', data.contactInstructions)}
   ${optionalHtml}
-  ${buttonsSection}
-  <footer>
-    © Mrs. B. Watts 2025
-  </footer>
+  ${richContentHtml}
+  ${tabsSectionHtml}
+  ${linksSectionHtml}
+  <footer>© Mrs. B. Watts 2025</footer>
+  <script>
+    // Tabs activation script
+    document.querySelectorAll('.enhanceable_content.tabs').forEach(tabsContainer => {
+      const tabLinks = tabsContainer.querySelectorAll('ul li a');
+      const tabPanels = Array.from(tabsContainer.querySelectorAll('> div[id^="tab-"]'));
+
+      if(tabLinks.length > 0) {
+        tabLinks.forEach((link, i) => {
+          link.setAttribute('role', 'tab');
+          link.setAttribute('aria-controls', link.getAttribute('href').substring(1));
+          link.setAttribute('tabindex', i === 0 ? '0' : '-1');
+          if(i === 0) link.setAttribute('aria-selected', 'true');
+          else link.setAttribute('aria-selected', 'false');
+          link.addEventListener('click', e => {
+            e.preventDefault();
+            if(link.getAttribute('aria-selected') === 'true') return;
+            tabLinks.forEach(l => {
+              l.setAttribute('aria-selected', 'false');
+              l.setAttribute('tabindex', '-1');
+            });
+            link.setAttribute('aria-selected', 'true');
+            link.setAttribute('tabindex', '0');
+            link.focus();
+
+            const targetId = link.getAttribute('aria-controls');
+            tabPanels.forEach(panel => {
+              if(panel.id === targetId) panel.classList.add('active');
+              else panel.classList.remove('active');
+            });
+          });
+          link.addEventListener('keydown', e => {
+            const currentIndex = Array.from(tabLinks).indexOf(e.target);
+            let nextIndex = null;
+            if(e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+              nextIndex = (currentIndex + 1) % tabLinks.length;
+              e.preventDefault();
+            } else if(e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+              nextIndex = (currentIndex - 1 + tabLinks.length) % tabLinks.length;
+              e.preventDefault();
+            } else if(e.key === 'Home') {
+              nextIndex = 0;
+              e.preventDefault();
+            } else if(e.key === 'End') {
+              nextIndex = tabLinks.length - 1;
+              e.preventDefault();
+            }
+            if(nextIndex !== null) {
+              tabLinks[nextIndex].click();
+            }
+          });
+        });
+        tabPanels.forEach((panel, i) => {
+          if(i === 0) panel.classList.add('active');
+          else panel.classList.remove('active');
+        });
+      }
+    });
+  </script>
 </body>
 </html>`;
 
@@ -937,21 +1206,15 @@
     generatedHtmlTextarea.value = outputHtml;
     previewContainer.hidden = false;
 
-    // Setup live preview by setting innerHTML (careful: sanitized)
-    // For safety do not inject raw HTML with event handlers in live preview; instead remove onclicks and disable pointer events.
+    // Setup live preview by setting innerHTML (remove inline onclick for safety)
     const previewDocHTML = outputHtml
       .replaceAll(/onclick="[^"]*"/g, '')
       .replaceAll(/aria-label="Open [^"]*"/g, '')
-      .replaceAll(/<button([^>]*)>/g, '<button$1 disabled title="Preview buttons disabled">');
+      .replaceAll(/<a class="btn-large btn-info btn"([^>]*)>/g, '<a class="btn-large btn-info btn" $1 tabindex="-1" aria-disabled="true" style="pointer-events:none;opacity:0.7;">');
     pagePreview.innerHTML = previewDocHTML;
-
-    // Remove 'disabled title' from footer & meta text for accessibility
-    // Because these do not have buttons, safe.
 
     // Scroll live preview top
     pagePreview.scrollTop = 0;
-    // Show header image preview within form area updated already by input listener.
-
   });
 
   // Copy button
