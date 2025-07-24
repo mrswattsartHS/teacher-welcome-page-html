@@ -45,6 +45,12 @@
       margin-top: 20px;
       white-space: pre-wrap;
     }
+    .preview-box {
+      background: #fff;
+      border: 1px dashed #999;
+      margin-top: 20px;
+      padding: 15px;
+    }
   </style>
 </head>
 <body>
@@ -59,8 +65,11 @@
         <input type="text" name="tabHeading">
         <label>Tab Description or Link:</label>
         <textarea name="tabContent"></textarea>
-        <label>Is this a Link? (yes/no)</label>
-        <input type="text" name="isLink">
+        <label>Is this a Link?</label>
+        <select name="isLink">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
         <hr>
       </div>
       <div class="tabInput">
@@ -68,8 +77,11 @@
         <input type="text" name="tabHeading">
         <label>Tab Description or Link:</label>
         <textarea name="tabContent"></textarea>
-        <label>Is this a Link? (yes/no)</label>
-        <input type="text" name="isLink">
+        <label>Is this a Link?</label>
+        <select name="isLink">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
         <hr>
       </div>
       <div class="tabInput">
@@ -77,8 +89,11 @@
         <input type="text" name="tabHeading">
         <label>Tab Description or Link:</label>
         <textarea name="tabContent"></textarea>
-        <label>Is this a Link? (yes/no)</label>
-        <input type="text" name="isLink">
+        <label>Is this a Link?</label>
+        <select name="isLink">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
         <hr>
       </div>
       <div class="tabInput">
@@ -86,8 +101,11 @@
         <input type="text" name="tabHeading">
         <label>Tab Description or Link:</label>
         <textarea name="tabContent"></textarea>
-        <label>Is this a Link? (yes/no)</label>
-        <input type="text" name="isLink">
+        <label>Is this a Link?</label>
+        <select name="isLink">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
         <hr>
       </div>
       <div class="tabInput">
@@ -95,8 +113,11 @@
         <input type="text" name="tabHeading">
         <label>Tab Description or Link:</label>
         <textarea name="tabContent"></textarea>
-        <label>Is this a Link? (yes/no)</label>
-        <input type="text" name="isLink">
+        <label>Is this a Link?</label>
+        <select name="isLink">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
         <hr>
       </div>
     </div>
@@ -128,6 +149,9 @@
   <h2>Your HTML Output</h2>
   <div class="output" id="output"></div>
 
+  <h2>Live Preview</h2>
+  <div class="preview-box" id="previewBox"></div>
+
   <script>
     function addTab() {
       const container = document.getElementById('tabContainer');
@@ -138,8 +162,11 @@
         <input type="text" name="tabHeading">
         <label>Tab Description or Link:</label>
         <textarea name="tabContent"></textarea>
-        <label>Is this a Link? (yes/no)</label>
-        <input type="text" name="isLink">
+        <label>Is this a Link?</label>
+        <select name="isLink">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
         <hr>
       `;
       container.appendChild(div);
@@ -171,11 +198,9 @@
 </div>
 `;
 
-      const finalHTML = `<!-- Header Image -->
-<img src="${getVal('headerImage')}" alt="Header Image" style="width:100%;">
-${html}`;
-
+      const finalHTML = `<!-- Header Image -->\n<img src="${getVal('headerImage')}" alt="Header Image" style="width:100%;">\n${html}`;
       document.getElementById('output').textContent = finalHTML;
+      document.getElementById('previewBox').innerHTML = finalHTML;
     }
   </script>
 </body>
