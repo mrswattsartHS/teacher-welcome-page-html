@@ -55,7 +55,7 @@
 </head>
 <body>
   <h1>Custom HTML Page Generator for Teachers</h1>
-  <p>Enter your tab information below. Your HTML code will be generated for Canvas. Tab headings and descriptions can be either text or links. If using a link, the tab will contain a button for students to click.</p>
+  <p>Enter your tab information below. Your HTML code will be generated for Canvas using standard tab format.</p>
 
   <form id="generatorForm">
     <h2>Tabs</h2>
@@ -72,82 +72,11 @@
         </select>
         <hr>
       </div>
-      <div class="tabInput">
-        <label>Tab Heading:</label>
-        <input type="text" name="tabHeading">
-        <label>Tab Description or Link:</label>
-        <textarea name="tabContent"></textarea>
-        <label>Is this a Link?</label>
-        <select name="isLink">
-          <option value="no">No</option>
-          <option value="yes">Yes</option>
-        </select>
-        <hr>
-      </div>
-      <div class="tabInput">
-        <label>Tab Heading:</label>
-        <input type="text" name="tabHeading">
-        <label>Tab Description or Link:</label>
-        <textarea name="tabContent"></textarea>
-        <label>Is this a Link?</label>
-        <select name="isLink">
-          <option value="no">No</option>
-          <option value="yes">Yes</option>
-        </select>
-        <hr>
-      </div>
-      <div class="tabInput">
-        <label>Tab Heading:</label>
-        <input type="text" name="tabHeading">
-        <label>Tab Description or Link:</label>
-        <textarea name="tabContent"></textarea>
-        <label>Is this a Link?</label>
-        <select name="isLink">
-          <option value="no">No</option>
-          <option value="yes">Yes</option>
-        </select>
-        <hr>
-      </div>
-      <div class="tabInput">
-        <label>Tab Heading:</label>
-        <input type="text" name="tabHeading">
-        <label>Tab Description or Link:</label>
-        <textarea name="tabContent"></textarea>
-        <label>Is this a Link?</label>
-        <select name="isLink">
-          <option value="no">No</option>
-          <option value="yes">Yes</option>
-        </select>
-        <hr>
-      </div>
     </div>
     <button type="button" onclick="addTab()">Add Another Tab</button>
 
-    <h2>Style Options</h2>
-    <label>Color Scheme:</label>
-    <select id="colorScheme">
-      <option value="blue">Blue</option>
-      <option value="green">Green</option>
-      <option value="pink">Pink</option>
-      <option value="gray">Gray</option>
-    </select>
-
-    <label>Animation Effect:</label>
-    <select id="animation">
-      <option value="none">None</option>
-      <option value="sparkle">Sparkle</option>
-      <option value="glitter">Glitter</option>
-      <option value="smoke">Smoke</option>
-    </select>
-
     <label>Header Image URL:</label>
     <input type="url" id="headerImage">
-
-    <label>Show Live Preview?</label>
-    <select id="showPreview">
-      <option value="yes">Yes</option>
-      <option value="no">No</option>
-    </select>
 
     <button type="button" onclick="generateHTML()">Generate HTML</button>
   </form>
@@ -183,13 +112,12 @@
       const headings = document.getElementsByName('tabHeading');
       const contents = document.getElementsByName('tabContent');
       const links = document.getElementsByName('isLink');
-      const showPreview = getVal('showPreview');
       let tabs = '';
       let bodies = '';
 
       for (let i = 0; i < headings.length; i++) {
-        const head = headings[i].value;
-        const cont = contents[i].value;
+        const head = headings[i].value.trim();
+        const cont = contents[i].value.trim();
         const isL = links[i].value.toLowerCase().trim() === 'yes';
         const id = `tab-${i + 1}`;
         tabs += `<li><a href="#${id}">${head}</a></li>`;
@@ -207,12 +135,7 @@
 
       const finalHTML = `<!-- Header Image -->\n<img src="${getVal('headerImage')}" alt="Header Image" style="width:100%;">\n${html}`;
       document.getElementById('output').textContent = finalHTML;
-
-      if (showPreview === 'yes') {
-        document.getElementById('previewBox').innerHTML = finalHTML;
-      } else {
-        document.getElementById('previewBox').innerHTML = '';
-      }
+      document.getElementById('previewBox').innerHTML = finalHTML;
     }
   </script>
 </body>
