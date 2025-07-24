@@ -1,1260 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Syllabus HTML Generator - Mrs. B. Watts 2025</title>
-<style>
-  /* Reset & base */
-  *, *::before, *::after {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f5f7fa;
-    color: #333;
-    min-height: 100vh;
-    display: flex; flex-direction: column;
-  }
-  /* Sticky horizontal scrollable top header */
-  header#page-header {
-    position: sticky; top: 0; left: 0; right: 0;
-    background: linear-gradient(90deg, #006bb3, #00b5e2);
-    color: white;
-    padding: 8px 0;
-    font-weight: 700; font-size: 1.2rem;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-    overflow-x: auto;
-    white-space: nowrap;
-    z-index: 1000;
-  }
-  header#page-header > div.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-  }
-  /* Form container */
-  main {
-    flex-grow: 1;
-    width: 100%;
-    max-width: 1200px;
-    margin: 20px auto 40px;
-    background: white;
-    box-shadow: 0 8px 20px rgb(0 0 0 / 0.05);
-    border-radius: 10px;
-    padding: 24px 30px;
-  }
-  /* Form grid layout */
-  form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px 40px;
-  }
-  form > .full-width {
-    grid-column: 1 / -1;
-  }
-  label {
-    font-weight: 600;
-    display: block;
-    margin-bottom: 6px;
-  }
-  input[type=text], input[type=url], input[type=email], textarea, select {
-    width: 100%;
-    padding: 9px 12px;
-    font-size: 1rem;
-    border-radius: 6px;
-    border: 1.8px solid #bbb;
-    transition: border-color 0.3s;
-    font-family: inherit;
-    resize: vertical;
-  }
-  input[type=text]:focus,
-  input[type=url]:focus,
-  input[type=email]:focus,
-  textarea:focus,
-  select:focus {
-    border-color: #00bcd4;
-    outline: none;
-  }
-  textarea {
-    min-height: 100px;
-  }
-  .required::after {
-    content: " *";
-    color: #e53935;
-    font-weight: 900;
-  }
-  /* Collapsible optional sections */
-  .optional-section {
-    border: 1px solid #ddd; padding: 12px 18px;
-    border-radius: 8px;
-    background: #fcfcfc;
-    cursor: pointer;
-    user-select: none;
-    font-weight: 700;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 21px;
-    grid-column: 1 / -1;
-  }
-  .optional-section:hover {
-    background: #e1f5fe;
-    border-color: #00bcd4;
-  }
-  .optional-content {
-    padding: 15px 12px 30px;
-    background: #fff;
-    border: 1px solid #eee;
-    border-top: none;
-    border-radius: 0 0 10px 10px;
-    display: none;
-    animation: slideDownFade 0.4s ease forwards;
-    overflow: hidden;
-    grid-column: 1 / -1;
-  }
-  .optional-section.open + .optional-content {
-    display: block;
-  }
-  .toggle-icon {
-    font-size: 1.35rem;
-    user-select: none;
-    color: #777;
-    transition: transform 0.3s ease;
-  }
-  .optional-section.open .toggle-icon {
-    transform: rotate(90deg);
-    color: #00bcd4;
-  }
-  @keyframes slideDownFade {
-    from {opacity: 0;max-height: 0;}
-    to {opacity: 1; max-height: 500px;}
-  }
-  button[type=submit], #copy-btn, #download-btn, #clear-btn {
-    grid-column: 1 / -1;
-    justify-self: center;
-    margin-top: 30px;
-    padding: 14px 42px;
-    font-size: 1.18rem;
-    font-weight: 700;
-    border-radius: 30px;
-    border: none;
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 5px 20px rgba(0,188,212,0.6);
-    background: #00bcd4;
-    transition: background-color 0.25s ease;
-  }
-  button[type=submit]:hover,
-  #copy-btn:hover,
-  #download-btn:hover,
-  #clear-btn:hover {
-    background-color: #0097a7;
-    outline: none;
-  }
-  button[disabled] {
-    background-color: #999 !important;
-    cursor: not-allowed !important;
-    box-shadow: none !important;
-  }
-  /* Preview container */
-  #preview-container {
-    margin-top: 40px;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-    align-items: flex-start;
-  }
-  /* Left: generated HTML code */
-  #output-area {
-    flex: 1 1 600px;
-    display: flex;
-    flex-direction: column;
-  }
-  #generated-html {
-    height: 440px;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 14px;
-    white-space: pre-wrap;
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    resize: vertical;
-    background: #fcfcfc;
-    box-shadow: inset 0 0 12px rgba(0,0,0,0.04);
-  }
-  #copy-btn, #download-btn, #clear-btn {
-    margin-top: 14px;
-    padding: 10px 25px;
-    font-weight: 600;
-    border-radius: 25px;
-    border: none;
-    cursor: pointer;
-    background: #00bcd4;
-    color: white;
-    box-shadow: 0 5px 15px rgb(0 188 212 / 0.5);
-    transition: background-color 0.3s ease;
-    align-self: flex-start;
-    user-select: none;
-  }
-  #copy-btn:hover,
-  #download-btn:hover,
-  #clear-btn:hover {
-    background: #0097a7;
-  }
-  /* Right: page preview with website embed buttons */
-  #page-preview {
-    flex: 1 1 520px;
-    border-radius: 10px;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
-    overflow-y: auto;
-    background: white;
-    padding: 22px 25px;
-    max-height: 700px;
-  }
-  #page-preview h2 {
-    margin-top: 0;
-    color: #007BB3;
-    font-weight: 800;
-    border-bottom: 3px solid #00BCD4;
-    padding-bottom: 7px;
-    margin-bottom: 20px;
-  }
-  /* Header image preview - scroll horizontally but keep height small */
-  #header-image-preview {
-    width: 100%;
-    max-height: 70px;
-    object-fit: contain;
-    margin-top: 5px;
-    margin-bottom: 20px;
-    border-radius: 6px;
-    box-shadow: 0 5px 18px rgb(0 0 0 / 0.1);
-    user-select: none;
-    pointer-events: none;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-  /* Buttons for weblinks */
-  .button-links, .tabs-button-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
-    margin-bottom: 30px;
-  }
-  .button-links button,
-  .tabs-button-links button,
-  .btn-large.btn-info.btn {
-    background-color: var(--button-bg);
-    border: none;
-    border-radius: 10px;
-    color: white;
-    padding: 12px 16px;
-    cursor: pointer;
-    font-weight: 600;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-    transition: background-color 0.3s ease;
-    flex-grow: 1;
-    min-width: 140px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-  }
-  .button-links button:hover,
-  .tabs-button-links button:hover,
-  .btn-large.btn-info.btn:hover {
-    background-color: var(--button-hover-bg);
-    outline: none;
-  }
-  .rich-html-content img {
-    max-width: 100%;
-    border-radius: 10px;
-    margin: 6px 0;
-  }
-  /* Animation themes inside preview only */
-  .anim-stars .sparkle {
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-    opacity: 0.75;
-    box-shadow: 0 0 8px 3px white;
-    animation: sparkle 2.8s ease-in-out infinite alternate;
-  }
-  .anim-paintsplat .paint-blob {
-    position: absolute;
-    background: var(--accent-color);
-    border-radius: 50%;
-    opacity: 0.15;
-    filter: blur(5px);
-    animation: pulse 5s infinite ease-in-out;
-  }
-  .anim-waterripples .ripple {
-    position: absolute;
-    border: 3px solid var(--primary-color);
-    border-radius: 50%;
-    opacity: 0.25;
-    animation: ripple 3.5s linear infinite;
-  }
-  /* Animations keyframes */
-  @keyframes sparkle {
-    0% {opacity: 1; transform: scale(1);}
-    100% {opacity: 0.3; transform: scale(0.5);}
-  }
-  @keyframes pulse {
-    0%, 100% {transform: scale(1);}
-    50% {transform: scale(1.2);}
-  }
-  @keyframes ripple {
-    0% {transform: scale(0.8); opacity: 0.3;}
-    100% {transform: scale(1.8); opacity: 0;}
-  }
-  /* Tabs styles */
-  .enhanceable_content.tabs {
-    margin-top: 20px;
-    font-size: 1rem;
-    overflow: hidden;
-  }
-  .enhanceable_content.tabs ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    border-bottom: 2px solid var(--accent-color);
-    gap: 8px;
-  }
-  .enhanceable_content.tabs ul li {
-    margin: 0;
-  }
-  .enhanceable_content.tabs ul li a {
-    display: block;
-    padding: 10px 18px;
-    background: var(--secondary-color);
-    color: white;
-    font-weight: 700;
-    border-radius: 8px 8px 0 0;
-    cursor: pointer;
-    text-decoration: none;
-    user-select: none;
-  }
-  .enhanceable_content.tabs ul li a[aria-selected="true"] {
-    background: var(--accent-color);
-    color: #fff;
-    cursor: default;
-  }
-  .enhanceable_content.tabs > div[id^="tab-"] {
-    padding: 20px 15px;
-    background: #fff;
-    border: 2px solid var(--accent-color);
-    border-top: none;
-    border-radius: 0 0 8px 8px;
-    display: none;
-  }
-  .enhanceable_content.tabs > div[id^="tab-"].active {
-    display: block;
-  }
-  /* Responsive */
-  @media (max-width: 980px) {
-    main {
-      padding: 20px 21px;
-    }
-    form {
-      grid-template-columns: 1fr;
-    }
-    #preview-container {
-      flex-direction: column;
-      padding-bottom: 60px;
-    }
-    #output-area, #page-preview {
-      flex-basis: auto;
-      width: 100%;
-    }
-    #generated-html {
-      height: 260px;
-    }
-    #page-preview {
-      max-height: 500px;
-      padding: 18px 22px;
-    }
-  }
-</style>
-</head>
-<body>
-<header id="page-header" role="banner" tabindex="0" aria-label="Page header with title and horizontal scroll">
-  <div class="container">
-    Mrs. B. Watts Syllabus HTML Generator 2025
-  </div>
-</header>
-<main role="main" aria-label="Syllabus Input Form and Preview">
-
-  <form id="syllabus-form" novalidate aria-describedby="form-instruction" aria-live="assertive" aria-relevant="all">
-    <p id="form-instruction" style="grid-column:1/-1; color:#555; font-style: italic; margin-bottom:18px;">
-      Required fields indicate essential syllabus info for Canvas. Optional sections may be left blank for exclusion.
-    </p>
-
-    <!-- Basic Course Information -->
-    <label class="required" for="course-title">Course Title</label>
-    <input type="text" id="course-title" name="courseTitle" placeholder="e.g. Advanced Botany" required aria-required="true" autocomplete="off">
-
-    <label for="course-number">Course Number</label>
-    <input type="text" id="course-number" name="courseNumber" placeholder="e.g. BOT301" autocomplete="off">
-
-    <label for="course-section">Course Section</label>
-    <input type="text" id="course-section" name="courseSection" placeholder="e.g. Section 01" autocomplete="off">
-
-    <label for="meeting-times">Meeting Times</label>
-    <input type="text" id="meeting-times" name="meetingTimes" placeholder="e.g. 9:30 AM - 11:00 AM" autocomplete="off">
-
-    <label for="meeting-days">Meeting Days</label>
-    <input type="text" id="meeting-days" name="meetingDays" placeholder="e.g. Mon/Wed/Fri" autocomplete="off">
-
-    <label for="meeting-location">Meeting Location</label>
-    <input type="text" id="meeting-location" name="meetingLocation" placeholder="e.g. Room 220 - Science Building" autocomplete="off">
-
-    <label for="semester">Semester</label>
-    <input type="text" id="semester" name="semester" placeholder="e.g. Spring 2025" autocomplete="off">
-
-    <!-- Instructor Information -->
-    <label for="instructor-name">Instructor Name</label>
-    <input type="text" id="instructor-name" name="instructorName" placeholder="Full Name" autocomplete="off">
-
-    <label for="instructor-title">Instructor Title</label>
-    <input type="text" id="instructor-title" name="instructorTitle" placeholder="e.g. Associate Professor" autocomplete="off">
-
-    <label for="office-location">Office Location</label>
-    <input type="text" id="office-location" name="officeLocation" placeholder="e.g. Room 311, Main Campus" autocomplete="off">
-
-    <label for="instructor-phone">Instructor Phone</label>
-    <input type="text" id="instructor-phone" name="instructorPhone" placeholder="e.g. (555) 555-5555" autocomplete="off">
-
-    <label for="instructor-email">Instructor Email</label>
-    <input type="email" id="instructor-email" name="instructorEmail" placeholder="email@school.edu" autocomplete="off">
-
-    <!-- Course Description -->
-    <label for="course-description">Course Description</label>
-    <textarea id="course-description" name="courseDescription" placeholder="Course overview, goals, prerequisites, summary"></textarea>
-
-    <!-- Learning Objectives/Outcomes -->
-    <label for="learning-objectives">Learning Objectives / Outcomes</label>
-    <textarea id="learning-objectives" name="learningObjectives" placeholder="What students will learn and do"></textarea>
-
-    <!-- Required Materials -->
-    <label for="required-materials">Required Materials</label>
-    <textarea id="required-materials" name="requiredMaterials" placeholder="Texts, resources, supplies, etc"></textarea>
-
-    <!-- Course Policies -->
-    <label for="course-policies">Course Policies</label>
-    <textarea id="course-policies" name="coursePolicies" placeholder="Attendance, late work, grading, academic integrity"></textarea>
-
-    <!-- Grading Criteria -->
-    <label for="grading-criteria">Grading Criteria</label>
-    <textarea id="grading-criteria" name="gradingCriteria" placeholder="Breakdown of assessments and weighting"></textarea>
-
-    <!-- Schedule -->
-    <label for="course-schedule">Course Schedule</label>
-    <textarea id="course-schedule" name="courseSchedule" placeholder="Weekly topics, assignments, exams"></textarea>
-
-    <!-- Academic Conduct Expectations -->
-    <label for="academic-conduct">Expectations for Academic Conduct</label>
-    <textarea id="academic-conduct" name="academicConduct" placeholder="Rules on plagiarism, honesty, behavior"></textarea>
-
-    <!-- Accessibility Statement -->
-    <label for="accessibility-statement">Accessibility Statement</label>
-    <textarea id="accessibility-statement" name="accessibilityStatement" placeholder="Accommodations for students with disabilities"></textarea>
-
-    <!-- Contact Instructions -->
-    <label for="contact-instructions">Contact Instructions</label>
-    <textarea id="contact-instructions" name="contactInstructions" placeholder="Best ways to reach the instructor"></textarea>
-
-    <!-- Header Image URL & Preview -->
-    <label for="header-image-url">Header Image URL (optional, scrollable low height preview below)</label>
-    <input type="url" id="header-image-url" name="headerImageUrl" placeholder="https://example.com/image.jpg" autocomplete="off" aria-describedby="header-image-note">
-    <small id="header-image-note" style="color:#666; margin-bottom: 6px;">Appears as a horizontal scrollable banner at top of syllabus preview</small>
-    <img id="header-image-preview" alt="Header image preview, scroll horizontally" src="" aria-hidden="true" style="display:none;">
-
-    <!-- Website Link Buttons or Tabs inputs -->
-    <fieldset class="full-width" style="margin-top:24px; border:1px solid #ddd; border-radius:10px; padding: 15px;">
-      <legend style="font-weight:700; margin-bottom:12px;">Website Links as Buttons or Tabs (optional)</legend>
-      <p style="color:#555; font-style: italic; margin-bottom:10px;">
-        Enter links and labels. Choose rendering style below: buttons or tabs.
-      </p>
-      <!-- Up to 5 url + label pairs -->
-      <div style="display:grid; grid-template-columns: 3fr 2fr; gap: 10px 15px; margin-bottom: 12px;">
-        <input type="url" name="customLinkUrl1" placeholder="URL 1 e.g. https://example.com" autocomplete="off" />
-        <input type="text" name="customLinkLabel1" placeholder="Label 1 e.g. Course Website" />
-      </div>
-      <div style="display:grid; grid-template-columns: 3fr 2fr; gap: 10px 15px; margin-bottom: 12px;">
-        <input type="url" name="customLinkUrl2" placeholder="URL 2" autocomplete="off" />
-        <input type="text" name="customLinkLabel2" placeholder="Label 2" />
-      </div>
-      <div style="display:grid; grid-template-columns: 3fr 2fr; gap: 10px 15px; margin-bottom: 12px;">
-        <input type="url" name="customLinkUrl3" placeholder="URL 3" autocomplete="off" />
-        <input type="text" name="customLinkLabel3" placeholder="Label 3" />
-      </div>
-      <div style="display:grid; grid-template-columns: 3fr 2fr; gap: 10px 15px; margin-bottom: 12px;">
-        <input type="url" name="customLinkUrl4" placeholder="URL 4" autocomplete="off" />
-        <input type="text" name="customLinkLabel4" placeholder="Label 4" />
-      </div>
-      <div style="display:grid; grid-template-columns: 3fr 2fr; gap: 10px 15px;">
-        <input type="url" name="customLinkUrl5" placeholder="URL 5" autocomplete="off" />
-        <input type="text" name="customLinkLabel5" placeholder="Label 5" />
-      </div>
-      <label for="links-render-style" style="margin-top: 15px; display: block; font-weight: 600;">Render links as:</label>
-      <select id="links-render-style" name="linksRenderStyle" aria-label="Select whether to render website links as Buttons or Tabs">
-        <option value="buttons" selected>Buttons</option>
-        <option value="tabs">Tabs</option>
-      </select>
-    </fieldset>
-
-    <!-- Color Themes -->
-    <label for="color-theme">Color Theme</label>
-    <select id="color-theme" name="colorTheme" aria-label="Choose a color theme">
-      <option value="cool" selected>Cool (Blue)</option>
-      <option value="warm">Warm (Orange/Pink)</option>
-      <option value="neutral">Neutral (Gray)</option>
-      <option value="complementary">Complementary (Teal/Pink)</option>
-    </select>
-
-    <!-- Animation Themes -->
-    <label for="animation-theme">Animation Theme</label>
-    <select id="animation-theme" name="animationTheme" aria-label="Choose an animation theme">
-      <option value="none" selected>None</option>
-      <option value="stars">Stars & Sparkles</option>
-      <option value="paintsplat">Paint Splats & Splashes</option>
-      <option value="waterripples">Water & Ripples</option>
-    </select>
-
-    <!-- Optional Sections Collapsibles -->
-    <div class="optional-section" tabindex="0" role="button" aria-expanded="false" aria-controls="rationale-content" id="rationale-toggle">
-      Rationale for Teaching Methods <span class="toggle-icon">▶</span>
-    </div>
-    <div class="optional-content" id="rationale-content">
-      <textarea name="rationale" placeholder="Explain rationale for your teaching methods..."></textarea>
-    </div>
-
-    <div class="optional-section" tabindex="0" role="button" aria-expanded="false" aria-controls="etiquette-content" id="etiquette-toggle">
-      Classroom Etiquette <span class="toggle-icon">▶</span>
-    </div>
-    <div class="optional-content" id="etiquette-content">
-      <textarea name="etiquette" placeholder="Guidelines for respectful classroom interactions..."></textarea>
-    </div>
-
-    <div class="optional-section" tabindex="0" role="button" aria-expanded="false" aria-controls="techpolicy-content" id="techpolicy-toggle">
-      Technology Use Policy <span class="toggle-icon">▶</span>
-    </div>
-    <div class="optional-content" id="techpolicy-content">
-      <textarea name="techPolicy" placeholder="Rules regarding technology usage during class..."></textarea>
-    </div>
-
-    <!-- Rich HTML Content Section -->
-    <div class="optional-section" tabindex="0" role="button" aria-expanded="false" aria-controls="richcontent-content" id="richcontent-toggle">
-      Rich HTML Content Section <span class="toggle-icon">▶</span>
-    </div>
-    <div class="optional-content" id="richcontent-content">
-      <textarea name="richContent" placeholder="Paste your custom HTML content here, including images, paragraphs, buttons, etc." 
-        style="font-family: monospace; height:160px; font-size: 13px;"></textarea>
-    </div>
-
-    <!-- Optional Tabs Section for raw tabs html -->
-    <div class="optional-section" tabindex="0" role="button" aria-expanded="false" aria-controls="tabs-content" id="tabs-toggle">
-      Optional Tabs Section (Paste tabs HTML here) <span class="toggle-icon">▶</span>
-    </div>
-    <div class="optional-content" id="tabs-content">
-      <textarea name="tabsHtml" placeholder="Paste your tabs HTML code here, e.g. the .enhanceable_content.tabs div" 
-        style="font-family: monospace; font-size: 13px; height: 200px;"></textarea>
-      <small style="color:#666; display:block; margin-top:5px;">Example structure:
-        <pre style="font-size: 12px; background:#eef; padding:8px; border-radius:8px;">
-&lt;div class="enhanceable_content tabs"&gt;
-  &lt;ul&gt;
-    &lt;li&gt;&lt;a href="#tab-1"&gt;First Tab&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="#tab-2"&gt;Second Tab&lt;/a&gt;&lt;/li&gt;
-  &lt;/ul&gt;
-  &lt;div id="tab-1"&gt;&lt;p&gt;Content for tab 1&lt;/p&gt;&lt;/div&gt;
-  &lt;div id="tab-2"&gt;&lt;p&gt;Content for tab 2&lt;/p&gt;&lt;/div&gt;
-&lt;/div&gt;
-        </pre>
-      </small>
-    </div>
-
-    <button type="submit" id="generate-btn" aria-label="Generate syllabus HTML">Generate Syllabus</button>
-    <button type="button" id="clear-btn" aria-label="Clear all form inputs and output">Clear Form</button>
-  </form>
-
-  <section id="preview-container" aria-label="Generated code and live preview" tabindex="0" hidden>
-
-    <div id="output-area" role="region" aria-live="polite" aria-label="Generated HTML code output" tabindex="0">
-      <h2>Generated HTML Code</h2>
-      <textarea id="generated-html" readonly spellcheck="false" aria-describedby="output-desc"></textarea>
-      <div style="margin-top:8px;">
-        <button id="copy-btn" aria-label="Copy generated code to clipboard">Copy</button>
-        <button id="download-btn" aria-label="Download generated code as .html file">Download</button>
-      </div>
-      <small id="output-desc" style="display:block; margin-top:10px; color:#444;">
-        Copy or download this code and paste into your Canvas blank page HTML editor.
-      </small>
-    </div>
-
-    <div id="page-preview" role="region" aria-label="Live syllabus page preview" tabindex="0">
-      <h2>Live Syllabus Preview</h2>
-    </div>
-  </section>
-
-</main>
-
-<script>
-(() => {
-  const form = document.getElementById('syllabus-form');
-  const headerImageInput = document.getElementById('header-image-url');
-  const headerImagePreview = document.getElementById('header-image-preview');
-
-  // Optional sections toggle controls
-  const optionalToggles = [
-    { toggle: document.getElementById('rationale-toggle'), content: document.getElementById('rationale-content') },
-    { toggle: document.getElementById('etiquette-toggle'), content: document.getElementById('etiquette-content') },
-    { toggle: document.getElementById('techpolicy-toggle'), content: document.getElementById('techpolicy-content') },
-    { toggle: document.getElementById('richcontent-toggle'), content: document.getElementById('richcontent-content') },
-    { toggle: document.getElementById('tabs-toggle'), content: document.getElementById('tabs-content') }
-  ];
-  optionalToggles.forEach(({toggle, content}) => {
-    const toggleState = () => {
-      const isOpen = toggle.classList.contains('open');
-      toggle.classList.toggle('open');
-      content.style.display = isOpen ? 'none' : 'block';
-      toggle.setAttribute('aria-expanded', !isOpen);
-    };
-    toggle.addEventListener('click', toggleState);
-    toggle.addEventListener('keydown', e=> {
-      if(e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        toggleState();
-      }
-    });
-  });
-
-  // Header image preview live update + horizontal scroll with small height
-  headerImageInput.addEventListener('input', e => {
-    const url = e.target.value.trim();
-    if(url && isValidUrl(url)) {
-      headerImagePreview.src = url;
-      headerImagePreview.style.display = 'block';
-    } else {
-      headerImagePreview.src = '';
-      headerImagePreview.style.display = 'none';
-    }
-  });
-
-  // URL Validator
-  const isValidUrl = str => {
-    try {
-      new URL(str);
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  // Escape HTML characters in output
-  const escapeHtml = str => {
-    if(!str) return '';
-    return str.replace(/&/g, "&amp;")
-              .replace(/</g, "&lt;")
-              .replace(/>/g, "&gt;")
-              .replace(/"/g, "&quot;")
-              .replace(/'/g, "&#039;");
-  };
-
-  // Clear form helper
-  const clearForm = () => {
-    form.reset();
-    headerImagePreview.src = '';
-    headerImagePreview.style.display = 'none';
-    document.getElementById('preview-container').hidden = true;
-    document.getElementById('generated-html').value = '';
-    document.getElementById('page-preview').innerHTML = '<h2>Live Syllabus Preview</h2>';
-    // Close all optional sections
-    optionalToggles.forEach(({toggle, content}) => {
-      toggle.classList.remove('open');
-      content.style.display = 'none';
-      toggle.setAttribute('aria-expanded', 'false');
-    });
-  };
-
-  // Add event for clear button
-  document.getElementById('clear-btn').addEventListener('click', () => {
-    if(confirm('Clear all inputs and output?')) {
-      clearForm();
-    }
-  });
-
-  // Generate buttons HTML for links (exclude empty)
-  const createLinkButtonHTML = (url, label) => {
-    if(!url) return '';
-    const safeLabel = escapeHtml(label || 'Open Link');
-    const safeUrl = escapeHtml(url);
-    return `<a class="btn-large btn-info btn" href="${safeUrl}" target="_blank" rel="noopener noreferrer">${safeLabel}</a>`;
-  };
-
-  // Build paragraphs or list from multi-line text for output HTML
-  const buildParagraphsOrList = (text) => {
-    if(!text) return '';
-    // If lines start with "- " treat as list
-    let lines = text.trim().split(/\r?\n/);
-    if(lines.every(l => l.trim().startsWith('- '))) {
-      let items = lines.map(l => `<li>${escapeHtml(l.trim().substring(2))}</li>`).join('\n');
-      return `<ul>\n${items}\n</ul>`;
-    } else {
-      // Otherwise convert paragraphs by double line breaks
-      let paras = text.trim().split(/\r?\n\r?\n/).map(p=>`<p>${escapeHtml(p.trim())}</p>`);
-      return paras.join('\n');
-    }
-  };
-
-  // The main generate function
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-
-    // Collect values
-    const data = {};
-    new FormData(form).forEach((v,k) => data[k] = v.trim());
-
-    // Validate required fields: only courseTitle (required) for this case
-    if(!data.courseTitle) {
-      alert('Please enter the required field: Course Title');
-      form.courseTitle.focus();
-      return;
-    }
-
-    // Prepare color themes (CSS variables)
-    const themes = {
-      cool: {
-        '--primary-color': '#1976d2',
-        '--secondary-color': '#00bcd4',
-        '--accent-color': '#e53935',
-        '--background-color': '#e3f2fd',
-        '--button-bg': '#039be5',
-        '--button-hover-bg': '#0277bd'
-      },
-      warm: {
-        '--primary-color': '#f06292',
-        '--secondary-color': '#ff7043',
-        '--accent-color': '#d84315',
-        '--background-color': '#fff3e0',
-        '--button-bg': '#f06292',
-        '--button-hover-bg': '#e64a19'
-      },
-      neutral: {
-        '--primary-color': '#616161',
-        '--secondary-color': '#9e9e9e',
-        '--accent-color': '#b71c1c',
-        '--background-color': '#eeeeee',
-        '--button-bg': '#616161',
-        '--button-hover-bg': '#424242'
-      },
-      complementary: {
-        '--primary-color': '#00796b',
-        '--secondary-color': '#f48fb1',
-        '--accent-color': '#ad1457',
-        '--background-color': '#e0f2f1',
-        '--button-bg': '#00796b',
-        '--button-hover-bg': '#004d40'
-      }
-    };
-    const chosenTheme = themes[data.colorTheme] || themes.cool;
-
-    // Animation CSS per theme for generated HTML (only minimal to avoid huge code)
-    const animCss = {
-      none: '',
-      stars: `
-        /* Stars & Sparkles animation */
-        .anim-stars {
-          position: relative;
-        }
-        .anim-stars::before, .anim-stars::after {
-          content: "";
-          position: absolute;
-          border-radius: 50%;
-          box-shadow:
-            15px 5px 8px var(--secondary-color),
-            30px 20px 10px var(--secondary-color),
-            50px 40px 12px var(--secondary-color),
-            20px 35px 9px var(--primary-color);
-          top: -15px; left: -15px;
-          width: 120%;
-          height: 120%;
-          animation: twinkle 3s ease-in-out infinite alternate;
-          opacity: 0.3;
-          pointer-events:none;
-          z-index:-1;
-        }
-        .anim-stars::after {
-          animation-delay: 1.2s;
-        }
-        @keyframes twinkle {
-          from {opacity: 0.3; transform: scale(1);}
-          to {opacity: 1; transform: scale(1.15);}
-        }
-      `,
-      paintsplat: `
-        /* Paint Splats animation */
-        .anim-paintsplat {
-          position: relative;
-        }
-        .anim-paintsplat::before {
-          content: "";
-          position: absolute;
-          border-radius: 50%;
-          background: var(--secondary-color);
-          width: 120%;
-          height: 110%;
-          top: -10%;
-          left: -15%;
-          opacity: 0.12;
-          filter: blur(25px);
-          animation: paintsplat-pulse 4s ease-in-out infinite;
-          pointer-events:none;
-          z-index:-1;
-        }
-        @keyframes paintsplat-pulse {
-          0%, 100% {transform: scale(1);}
-          50% {transform: scale(1.08);}
-        }
-      `,
-      waterripples: `
-        /* Water Ripples animation */
-        .anim-waterripples {
-          position: relative;
-        }
-        .anim-waterripples::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          border-radius: 10px;
-          box-shadow:
-            0 0 20px 6px var(--secondary-color);
-          animation: rippler 3s ease-in-out infinite;
-          opacity: 0.3;
-          pointer-events:none;
-          z-index:-1;
-        }
-        @keyframes rippler {
-          0%, 100% { box-shadow: 0 0 20px 6px var(--secondary-color); }
-          50% {box-shadow: 0 0 8px 2px var(--primary-color); }
-        }
-      `
-    };
-
-    // Compose CSS for the generated site
-    const styleContent = `
-      body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: ${chosenTheme['--background-color']};
-        color: ${chosenTheme['--primary-color']};
-        padding: 25px 30px;
-        max-width: 850px;
-        margin: auto;
-        --primary-color: ${chosenTheme['--primary-color']};
-        --secondary-color: ${chosenTheme['--secondary-color']};
-        --accent-color: ${chosenTheme['--accent-color']};
-        --button-bg: ${chosenTheme['--button-bg']};
-        --button-hover-bg: ${chosenTheme['--button-hover-bg']};
-      }
-      nav {
-        text-align: center;
-        color: white;
-        background: linear-gradient(90deg, ${chosenTheme['--primary-color']}, ${chosenTheme['--secondary-color']});
-        padding: 10px 10px;
-        border-radius: 10px;
-        margin-bottom: 24px;
-        box-shadow: 0 5px 18px rgba(0,0,0,0.15);
-      }
-      nav .course-title {
-        font-size: 2rem;
-        font-weight: 700;
-      }
-      nav .course-meta {
-        font-weight: 600;
-        margin-top: 2px;
-      }
-      img.header-image {
-        width: 100%;
-        max-height: 70px;
-        object-fit: contain;
-        border-radius: 6px;
-        margin-bottom: 30px;
-        user-select: none;
-        pointer-events: none;
-        box-shadow: 0 5px 18px rgb(0 0 0 / 0.15);
-      }
-      h2.section-header {
-        border-bottom: 3px solid ${chosenTheme['--accent-color']};
-        padding-bottom: 6px;
-        margin-bottom: 14px;
-        color: ${chosenTheme['--primary-color']};
-        font-weight: 700;
-        font-size: 1.6rem;
-      }
-      p, li {
-        font-size: 1.05rem;
-      }
-      ul {
-        padding-left: 22px;
-        margin-bottom: 24px;
-      }
-      section.optional-section {
-        background: #fff;
-        border: 1px solid ${chosenTheme['--secondary-color']};
-        padding: 16px 18px;
-        border-radius: 10px;
-        margin-bottom: 28px;
-        user-select: none;
-      }
-      footer {
-        margin-top: 50px;
-        padding-top: 14px;
-        text-align: center;
-        border-top: 1px solid ${chosenTheme['--secondary-color']};
-        color: #666;
-        font-size: 0.9rem;
-      }
-      .button-links, .tabs-button-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 14px;
-        margin-bottom: 30px;
-      }
-      .button-links button,
-      .tabs-button-links button,
-      .btn-large.btn-info.btn {
-        background-color: var(--button-bg);
-        border: none;
-        border-radius: 10px;
-        color: white;
-        padding: 12px 16px;
-        cursor: pointer;
-        font-weight: 600;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-        transition: background-color 0.3s ease;
-        flex-grow: 1;
-        min-width: 140px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-      }
-      .button-links button:hover,
-      .tabs-button-links button:hover,
-      .btn-large.btn-info.btn:hover {
-        background-color: var(--button-hover-bg);
-        outline: none;
-      }
-      .rich-html-content img {
-        max-width: 100%;
-        border-radius: 10px;
-        margin: 6px 0;
-      }
-      ${animCss[data.animationTheme] || ''}
-      /* Tabs styles */
-      .enhanceable_content.tabs {
-        margin-top: 20px;
-        font-size: 1rem;
-        overflow: hidden;
-      }
-      .enhanceable_content.tabs ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        border-bottom: 2px solid var(--accent-color);
-        gap: 8px;
-      }
-      .enhanceable_content.tabs ul li {
-        margin: 0;
-      }
-      .enhanceable_content.tabs ul li a {
-        display: block;
-        padding: 10px 18px;
-        background: var(--secondary-color);
-        color: white;
-        font-weight: 700;
-        border-radius: 8px 8px 0 0;
-        cursor: pointer;
-        text-decoration: none;
-        user-select: none;
-      }
-      .enhanceable_content.tabs ul li a[aria-selected="true"] {
-        background: var(--accent-color);
-        color: #fff;
-        cursor: default;
-      }
-      .enhanceable_content.tabs > div[id^="tab-"] {
-        padding: 20px 15px;
-        background: #fff;
-        border: 2px solid var(--accent-color);
-        border-top: none;
-        border-radius: 0 0 8px 8px;
-        display: none;
-      }
-      .enhanceable_content.tabs > div[id^="tab-"].active {
-        display: block;
-      }
-    `;
-
-    // Compose optional sections HTML (only non-empty)
-    const optionalHtml = [
-      ['Rationale for Teaching Methods', data.rationale],
-      ['Classroom Etiquette', data.etiquette],
-      ['Technology Use Policy', data.techPolicy]
-    ].map(([title, content]) => {
-      if(!content) return '';
-      return `<section class="optional-section" aria-label="${escapeHtml(title)}">
-        <h2 class="section-header">${escapeHtml(title)}</h2>
-        ${buildParagraphsOrList(content)}
-      </section>`;
-    }).join('\n');
-
-    // Compose course meta info string if any
-    const metaItemsRaw = [
-      data.courseNumber,
-      data.courseSection,
-      data.meetingTimes,
-      data.meetingDays,
-      data.meetingLocation,
-      data.semester
-    ].filter(Boolean);
-    const metaInfoHTML = metaItemsRaw.length ? `<div class="course-meta">${escapeHtml(metaItemsRaw.join(' | '))}</div>` : '';
-
-    // Prepare instructor info block (conditionally)
-    let instructorHTML = '';
-    if(data.instructorName || data.instructorTitle || data.officeLocation || data.instructorPhone || data.instructorEmail) {
-      instructorHTML = `<section aria-label="Instructor Information">
-        <h2 class="section-header">Instructor Information</h2>
-        ${data.instructorName ? `<p><strong>Name:</strong> ${escapeHtml(data.instructorName)}</p>` : ''}
-        ${data.instructorTitle ? `<p><strong>Title:</strong> ${escapeHtml(data.instructorTitle)}</p>` : ''}
-        ${data.officeLocation ? `<p><strong>Office Location:</strong> ${escapeHtml(data.officeLocation)}</p>` : ''}
-        ${data.instructorPhone ? `<p><strong>Phone:</strong> ${escapeHtml(data.instructorPhone)}</p>` : ''}
-        ${data.instructorEmail ? `<p><strong>Email:</strong> <a href="mailto:${escapeHtml(data.instructorEmail)}">${escapeHtml(data.instructorEmail)}</a></p>` : ''}
-      </section>`;
-    }
-
-    // Helper for standard section, skip if empty
-    const sectionIfExists = (title, content, label) => {
-      if(!content) return '';
-      return `<section aria-label="${escapeHtml(label || title)}">
-        <h2 class="section-header">${escapeHtml(title)}</h2>
-        ${buildParagraphsOrList(content)}
-      </section>`;
-    };
-
-    // Compose web links as Buttons or Tabs depending on user choice
-    const linkPairs = [
-      [data.customLinkUrl1, data.customLinkLabel1],
-      [data.customLinkUrl2, data.customLinkLabel2],
-      [data.customLinkUrl3, data.customLinkLabel3],
-      [data.customLinkUrl4, data.customLinkLabel4],
-      [data.customLinkUrl5, data.customLinkLabel5]
-    ].filter(([url,label])=> url && label && isValidUrl(url));
-
-    let linksSectionHtml = '';
-    if(linkPairs.length > 0){
-      if(data.linksRenderStyle === 'tabs'){
-        // Build tabs markup
-        const tabsListItems = linkPairs.map(([url,label], i) => `<li><a href="#tablink${i+1}">${escapeHtml(label)}</a></li>`).join('\n');
-        const tabsPanels = linkPairs.map(([url,label],i) => 
-          `<div id="tablink${i+1}">
-            <p><a class="btn-large btn-info btn" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a></p>
-          </div>`
-        ).join('\n');
-        linksSectionHtml = `<section aria-label="Course Links as Tabs" class="optional-section">
-  <h2 class="section-header">Course Links</h2>
-  <div class="enhanceable_content tabs">
-    <ul>
-      ${tabsListItems}
-    </ul>
-    ${tabsPanels}
-  </div>
-</section>`;
-      } else {
-        // Buttons layout
-        const buttonsHtml = linkPairs.map(([url,label]) => `<a class="btn-large btn-info btn" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`).join('\n');
-        linksSectionHtml = `<section aria-label="Course Links as Buttons" class="optional-section">
-  <h2 class="section-header">Course Links</h2>
-  <div class="button-links">${buttonsHtml}</div>
-</section>`;
-      }
-    }
-
-    // Rich HTML Content (raw)
-    const richContentHtml = data.richContent ? `<section aria-label="Additional Rich Content" class="optional-section">
-  <h2 class="section-header">Additional Rich Content</h2>
-  <div class="rich-html-content">
-    ${data.richContent}
-  </div>
-</section>` : '';
-
-    // Tabs Raw HTML pasted by user (no safe check, so teachers must paste trusted content)
-    const tabsRawHtml = data.tabsHtml || '';
-    const tabsSectionHtml = tabsRawHtml ? `
-<section aria-label="Tabs Section" class="optional-section">
-  <h2 class="section-header">Tabs Section</h2>
-  <div class="tabs-container">
-    ${tabsRawHtml}
-  </div>
-</section>
-` : '';
-
-    // Compose header image html if given
-    const headerImgHtml = data.headerImageUrl ? `<img src="${escapeHtml(data.headerImageUrl)}" alt="Course header image" class="header-image">` : '';
-
-    // Assemble final output HTML string
-    const outputHtml = `<!DOCTYPE html>
-<html lang="en">
-<head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>${escapeHtml(data.courseTitle)}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Canvas Course Page Generator</title>
   <style>
-  ${styleContent}
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom right, #f0f8ff, #e6f7ff);
+      color: #333;
+      transition: background 0.5s;
+    }
+    header {
+      background: #004080;
+      color: white;
+      padding: 0.5em;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header img {
+      max-height: 40px;
+      margin-right: 10px;
+    }
+    main {
+      padding: 2em;
+      max-width: 1000px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin-top: 1em;
+      font-weight: bold;
+    }
+    input[type="text"], textarea, select {
+      width: 100%;
+      padding: 0.5em;
+      margin-top: 0.5em;
+    }
+    button {
+      margin-top: 1em;
+      padding: 0.7em 1.5em;
+      background: #0066cc;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #004080;
+    }
+    #output {
+      margin-top: 2em;
+      white-space: pre-wrap;
+      background: #f9f9f9;
+      padding: 1em;
+      border: 1px solid #ccc;
+    }
+    iframe.preview {
+      margin-top: 2em;
+      width: 100%;
+      height: 400px;
+      border: 2px solid #0066cc;
+    }
+    footer {
+      text-align: center;
+      padding: 1em;
+      background: #f0f0f0;
+      margin-top: 3em;
+    }
+    .color-scheme {
+      margin-top: 1em;
+    }
   </style>
 </head>
-<body class="anim-${data.animationTheme}">
-  <nav aria-label="Course Information">
-    <div class="course-title">${escapeHtml(data.courseTitle)}</div>
-    ${metaInfoHTML}
-  </nav>
-  ${headerImgHtml}
-  ${instructorHTML}
-  ${sectionIfExists('Course Description', data.courseDescription)}
-  ${sectionIfExists('Learning Objectives / Outcomes', data.learningObjectives)}
-  ${sectionIfExists('Required Materials', data.requiredMaterials)}
-  ${sectionIfExists('Course Policies', data.coursePolicies)}
-  ${sectionIfExists('Grading Criteria', data.gradingCriteria)}
-  ${sectionIfExists('Course Schedule', data.courseSchedule)}
-  ${sectionIfExists('Expectations for Academic Conduct', data.academicConduct)}
-  ${sectionIfExists('Accessibility Statement', data.accessibilityStatement)}
-  ${sectionIfExists('Contact Instructions', data.contactInstructions)}
-  ${optionalHtml}
-  ${richContentHtml}
-  ${tabsSectionHtml}
-  ${linksSectionHtml}
-  <footer>© Mrs. B. Watts 2025</footer>
+<body>
+  <header>
+    <img id="headerImgPreview" src="" alt="Header Image Preview" style="display:none;">
+    <h1>Canvas Course Page Generator</h1>
+  </header>
+  <main>
+    <p>Fill in the information below to generate an HTML course homepage for Canvas. You can embed a webpage and include a backup link. Customize color theme, heading text, and effects below.</p>
+
+    <label for="colorTheme">Select a Color Scheme:</label>
+    <select id="colorTheme" class="color-scheme" onchange="changeColorScheme()">
+      <option value="default">Blue Sky</option>
+      <option value="sunset">Sunset Orange</option>
+      <option value="forest">Forest Green</option>
+      <option value="night">Night Mode</option>
+    </select>
+
+    <label for="sparkle">Add Effects:</label>
+    <select id="sparkle">
+      <option value="none">None</option>
+      <option value="stars">Stars and Sparkles</option>
+      <option value="paint">Paint Splats and Splashes</option>
+      <option value="water">Water and Ripples</option>
+    </select>
+
+    <label for="headerImg">Header Image URL (optional):</label>
+    <input type="text" id="headerImg" oninput="previewHeaderImage()" />
+
+    <label for="courseTitle">Course Title:</label>
+    <input type="text" id="courseTitle" />
+
+    <label for="embedUrl">Webpage to Embed:</label>
+    <input type="text" id="embedUrl" />
+
+    <button onclick="generateHTML()">Generate HTML</button>
+    <button onclick="downloadHTML()">Download HTML File</button>
+
+    <div id="output"></div>
+    <iframe id="previewFrame" class="preview" style="display:none;"></iframe>
+  </main>
+  <footer>
+    &copy; B. Watts 2025
+  </footer>
+
   <script>
-    // Tabs activation script
-    document.querySelectorAll('.enhanceable_content.tabs').forEach(tabsContainer => {
-      const tabLinks = tabsContainer.querySelectorAll('ul li a');
-      const tabPanels = Array.from(tabsContainer.querySelectorAll('> div[id^="tab-"]'));
-
-      if(tabLinks.length > 0) {
-        tabLinks.forEach((link, i) => {
-          link.setAttribute('role', 'tab');
-          link.setAttribute('aria-controls', link.getAttribute('href').substring(1));
-          link.setAttribute('tabindex', i === 0 ? '0' : '-1');
-          if(i === 0) link.setAttribute('aria-selected', 'true');
-          else link.setAttribute('aria-selected', 'false');
-          link.addEventListener('click', e => {
-            e.preventDefault();
-            if(link.getAttribute('aria-selected') === 'true') return;
-            tabLinks.forEach(l => {
-              l.setAttribute('aria-selected', 'false');
-              l.setAttribute('tabindex', '-1');
-            });
-            link.setAttribute('aria-selected', 'true');
-            link.setAttribute('tabindex', '0');
-            link.focus();
-
-            const targetId = link.getAttribute('aria-controls');
-            tabPanels.forEach(panel => {
-              if(panel.id === targetId) panel.classList.add('active');
-              else panel.classList.remove('active');
-            });
-          });
-          link.addEventListener('keydown', e => {
-            const currentIndex = Array.from(tabLinks).indexOf(e.target);
-            let nextIndex = null;
-            if(e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-              nextIndex = (currentIndex + 1) % tabLinks.length;
-              e.preventDefault();
-            } else if(e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-              nextIndex = (currentIndex - 1 + tabLinks.length) % tabLinks.length;
-              e.preventDefault();
-            } else if(e.key === 'Home') {
-              nextIndex = 0;
-              e.preventDefault();
-            } else if(e.key === 'End') {
-              nextIndex = tabLinks.length - 1;
-              e.preventDefault();
-            }
-            if(nextIndex !== null) {
-              tabLinks[nextIndex].click();
-            }
-          });
-        });
-        tabPanels.forEach((panel, i) => {
-          if(i === 0) panel.classList.add('active');
-          else panel.classList.remove('active');
-        });
-      }
-    });
-  </script>
-</body>
-</html>`;
-
-    // Show output area and fill code display
-    const previewContainer = document.getElementById('preview-container');
-    const generatedHtmlTextarea = document.getElementById('generated-html');
-    const pagePreview = document.getElementById('page-preview');
-
-    generatedHtmlTextarea.value = outputHtml;
-    previewContainer.hidden = false;
-
-    // Setup live preview by setting innerHTML (remove inline onclick for safety)
-    const previewDocHTML = outputHtml
-      .replaceAll(/onclick="[^"]*"/g, '')
-      .replaceAll(/aria-label="Open [^"]*"/g, '')
-      .replaceAll(/<a class="btn-large btn-info btn"([^>]*)>/g, '<a class="btn-large btn-info btn" $1 tabindex="-1" aria-disabled="true" style="pointer-events:none;opacity:0.7;">');
-    pagePreview.innerHTML = previewDocHTML;
-
-    // Scroll live preview top
-    pagePreview.scrollTop = 0;
-  });
-
-  // Copy button
-  document.getElementById('copy-btn').addEventListener('click', () => {
-    const textarea = document.getElementById('generated-html');
-    textarea.select();
-    textarea.setSelectionRange(0, 999999);
-    try {
-      if(document.execCommand('copy')) {
-        const btn = document.getElementById('copy-btn');
-        btn.textContent = 'Copied!';
-        setTimeout(() => btn.textContent = 'Copy', 1500);
-      } else {
-        alert('Copy failed. Please copy manually.');
-      }
-    } catch {
-      alert('Copy failed. Please copy manually.');
+    function get(id) {
+      return document.getElementById(id).value.trim();
     }
-    window.getSelection().removeAllRanges();
-  });
 
-  // Download button
-  document.getElementById('download-btn').addEventListener('click', () => {
-    const textarea = document.getElementById('generated-html');
-    const blob = new Blob([textarea.value], { type: 'text/html' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    const filename = (form.courseTitle.value.trim() || 'syllabus').toLowerCase().replaceAll(/\s+/g, '_') + '.html';
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(a.href);
-  });
+    function previewHeaderImage() {
+      const url = get("headerImg");
+      const img = document.getElementById("headerImgPreview");
+      if (url) {
+        img.src = url;
+        img.style.display = "block";
+      } else {
+        img.style.display = "none";
+      }
+    }
 
-  // Utility patch for replaceAll on older browsers
-  if(!String.prototype.replaceAll) {
-    String.prototype.replaceAll = function(str, newStr) {
-      return this.split(str).join(newStr);
-    };
-  }
-})();
-</script>
+    function changeColorScheme() {
+      const scheme = get("colorTheme");
+      const body = document.body;
+      switch (scheme) {
+        case "sunset":
+          body.style.background = "linear-gradient(to right, #ff9966, #ff5e62)";
+          break;
+        case "forest":
+          body.style.background = "linear-gradient(to right, #a8e063, #56ab2f)";
+          break;
+        case "night":
+          body.style.background = "linear-gradient(to right, #232526, #414345)";
+          body.style.color = "#f5f5f5";
+          break;
+        default:
+          body.style.background = "linear-gradient(to bottom right, #f0f8ff, #e6f7ff)";
+          body.style.color = "#333";
+      }
+    }
+
+    function getEffectCSS(effect) {
+      switch (effect) {
+        case "stars":
+          return `<style>body::after { content: ''; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-image: url('https://i.imgur.com/5FzJzyf.gif'); background-size: cover; opacity: 0.3; pointer-events: none; }</style>`;
+        case "paint":
+          return `<style>body::after { content: ''; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-image: url('https://i.imgur.com/VevJrjH.png'); background-size: contain; background-repeat: repeat; opacity: 0.2; pointer-events: none; }</style>`;
+        case "water":
+          return `<style>body::after { content: ''; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-image: url('https://i.imgur.com/SZ0K5cL.gif'); background-size: cover; opacity: 0.2; pointer-events: none; }</style>`;
+        default:
+          return "";
+      }
+    }
+
+    function generateHTML() {
+      const headerImg = get("headerImg");
+      const courseTitle = get("courseTitle");
+      const embedUrl = get("embedUrl");
+      const sparkle = get("sparkle");
+
+      let html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>${courseTitle}</title>
+        ${getEffectCSS(sparkle)}
+      </head>
+      <body>
+        ${headerImg ? `<img src="${headerImg}" alt="Header Image" style="max-width: 100%;">` : ""}
+        <h2>${courseTitle}</h2>
+        ${embedUrl ? `<details><summary><strong>Embedded Webpage</strong></summary>
+        <iframe src="${embedUrl}" width="100%" height="300px" style="border:none;"></iframe>
+        <p><a href="${embedUrl}" target="_blank"><button>Open in New Window</button></a></p>
+        </details>` : ""}
+      </body>
+      </html>
+      `;
+
+      document.getElementById("output").innerText = html;
+      const preview = document.getElementById("previewFrame");
+      preview.style.display = "block";
+      preview.srcdoc = html;
+    }
+
+    function downloadHTML() {
+      const blob = new Blob([document.getElementById("output").innerText], { type: 'text/html' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "canvas_course_page.html";
+      link.click();
+    }
+  </script>
 </body>
 </html>
