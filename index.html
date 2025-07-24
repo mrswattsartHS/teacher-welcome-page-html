@@ -143,6 +143,12 @@
     <label>Header Image URL:</label>
     <input type="url" id="headerImage">
 
+    <label>Show Live Preview?</label>
+    <select id="showPreview">
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+
     <button type="button" onclick="generateHTML()">Generate HTML</button>
   </form>
 
@@ -177,6 +183,7 @@
       const headings = document.getElementsByName('tabHeading');
       const contents = document.getElementsByName('tabContent');
       const links = document.getElementsByName('isLink');
+      const showPreview = getVal('showPreview');
       let tabs = '';
       let bodies = '';
 
@@ -200,7 +207,12 @@
 
       const finalHTML = `<!-- Header Image -->\n<img src="${getVal('headerImage')}" alt="Header Image" style="width:100%;">\n${html}`;
       document.getElementById('output').textContent = finalHTML;
-      document.getElementById('previewBox').innerHTML = finalHTML;
+
+      if (showPreview === 'yes') {
+        document.getElementById('previewBox').innerHTML = finalHTML;
+      } else {
+        document.getElementById('previewBox').innerHTML = '';
+      }
     }
   </script>
 </body>
