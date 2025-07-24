@@ -1,215 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Canvas Syllabus Generator</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher HTML Generator</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
+      background: #f5f7fa;
+      color: #333;
+      padding: 20px;
     }
-
-    .form-section {
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      padding: 15px;
-      border-radius: 10px;
-      background-color: #f9f9f9;
+    h1, h2 {
+      color: #2c3e50;
     }
-
     label {
       display: block;
       margin-top: 10px;
+      font-weight: bold;
     }
-
-    input[type="text"],
-    input[type="url"],
-    textarea,
-    select {
+    input[type="text"], input[type="url"], textarea, select {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
       border-radius: 5px;
-      border: 1px solid #ccc;
     }
-
     textarea {
-      height: 80px;
+      resize: vertical;
     }
-
     button {
-      background-color: #4CAF50;
+      background-color: #3498db;
       color: white;
+      padding: 10px 20px;
       border: none;
-      padding: 12px 20px;
-      font-size: 16px;
+      border-radius: 5px;
       cursor: pointer;
-      border-radius: 8px;
     }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
-    #outputCode {
-      white-space: pre-wrap;
-      background-color: #f4f4f4;
-      padding: 20px;
+    .output {
+      background: #ecf0f1;
       border: 1px solid #ccc;
-      border-radius: 10px;
-    }
-
-    .preview-box {
+      padding: 10px;
       margin-top: 20px;
-      border: 2px dashed #ccc;
-      padding: 20px;
-    }
-
-    .hidden {
-      display: none;
+      white-space: pre-wrap;
     }
   </style>
 </head>
 <body>
+  <h1>Custom HTML Page Generator for Teachers</h1>
+  <p>Enter your tab information below. Your HTML code will be generated for Canvas. Tab headings and descriptions can be either text or links. If using a link, the tab will contain a button for students to click.</p>
 
-  <h1>Canvas Syllabus HTML Generator</h1>
-
-  <form id="syllabusForm">
-    <div class="form-section">
-      <h2>1. Design Preferences</h2>
-      <label for="colorScheme">Choose a color scheme:</label>
-      <select id="colorScheme">
-        <option value="cool">Cool Colors (Blue, Green, Purple)</option>
-        <option value="warm">Warm Colors (Red, Orange, Yellow)</option>
-        <option value="neutral">Neutral Colors (Gray, Beige, White)</option>
-        <option value="complementary">Complementary Colors</option>
-      </select>
-
-      <label for="visualEffect">Choose a visual theme or effect:</label>
-      <select id="visualEffect">
-        <option value="none">None</option>
-        <option value="sparkle">Stars & Sparkles</option>
-        <option value="paint">Paint Splats & Splashes</option>
-        <option value="water">Water & Ripples</option>
-      </select>
+  <form id="generatorForm">
+    <h2>Tabs</h2>
+    <div id="tabContainer">
+      <div class="tabInput">
+        <label>Tab Heading:</label>
+        <input type="text" name="tabHeading">
+        <label>Tab Description or Link:</label>
+        <textarea name="tabContent"></textarea>
+        <label>Is this a Link? (yes/no)</label>
+        <input type="text" name="isLink">
+        <hr>
+      </div>
+      <div class="tabInput">
+        <label>Tab Heading:</label>
+        <input type="text" name="tabHeading">
+        <label>Tab Description or Link:</label>
+        <textarea name="tabContent"></textarea>
+        <label>Is this a Link? (yes/no)</label>
+        <input type="text" name="isLink">
+        <hr>
+      </div>
+      <div class="tabInput">
+        <label>Tab Heading:</label>
+        <input type="text" name="tabHeading">
+        <label>Tab Description or Link:</label>
+        <textarea name="tabContent"></textarea>
+        <label>Is this a Link? (yes/no)</label>
+        <input type="text" name="isLink">
+        <hr>
+      </div>
+      <div class="tabInput">
+        <label>Tab Heading:</label>
+        <input type="text" name="tabHeading">
+        <label>Tab Description or Link:</label>
+        <textarea name="tabContent"></textarea>
+        <label>Is this a Link? (yes/no)</label>
+        <input type="text" name="isLink">
+        <hr>
+      </div>
+      <div class="tabInput">
+        <label>Tab Heading:</label>
+        <input type="text" name="tabHeading">
+        <label>Tab Description or Link:</label>
+        <textarea name="tabContent"></textarea>
+        <label>Is this a Link? (yes/no)</label>
+        <input type="text" name="isLink">
+        <hr>
+      </div>
     </div>
+    <button type="button" onclick="addTab()">Add Another Tab</button>
 
-    <div class="form-section">
-      <h2>2. Web Link Tab</h2>
-      <label for="webTabTitle">Tab Title:</label>
-      <input type="text" id="webTabTitle" value="Helpful Links" />
+    <h2>Style Options</h2>
+    <label>Color Scheme:</label>
+    <select id="colorScheme">
+      <option value="blue">Blue</option>
+      <option value="green">Green</option>
+      <option value="pink">Pink</option>
+      <option value="gray">Gray</option>
+    </select>
 
-      <label for="webEmbedUrl">Website to Embed:</label>
-      <input type="url" id="webEmbedUrl" placeholder="https://example.com" />
+    <label>Animation Effect:</label>
+    <select id="animation">
+      <option value="none">None</option>
+      <option value="sparkle">Sparkle</option>
+      <option value="glitter">Glitter</option>
+      <option value="smoke">Smoke</option>
+    </select>
 
-      <label for="webLinkBackup">Backup Link Button:</label>
-      <input type="url" id="webLinkBackup" placeholder="https://example.com" />
-    </div>
+    <label>Header Image URL:</label>
+    <input type="url" id="headerImage">
 
-    <div class="form-section">
-      <h2>3. Course Information Tab</h2>
-      <label for="courseTitle">Course Title & Number:</label>
-      <input type="text" id="courseTitle" />
-
-      <label for="instructorInfo">Instructor Info:</label>
-      <textarea id="instructorInfo" placeholder="Name, Email, Office Hours"></textarea>
-
-      <label for="courseDesc">Course Description:</label>
-      <textarea id="courseDesc"></textarea>
-
-      <label for="prerequisites">Prerequisites:</label>
-      <textarea id="prerequisites"></textarea>
-
-      <label for="courseGoals">Course Goals/Learning Objectives:</label>
-      <textarea id="courseGoals"></textarea>
-
-      <label for="materials">Required Materials:</label>
-      <textarea id="materials"></textarea>
-
-      <label for="schedule">Course Schedule:</label>
-      <textarea id="schedule"></textarea>
-
-      <label for="gradingBreakdown">Grading Breakdown:</label>
-      <textarea id="gradingBreakdown"></textarea>
-
-      <label for="gradingScale">Grading Scale:</label>
-      <textarea id="gradingScale"></textarea>
-    </div>
-
-    <div class="form-section">
-      <h2>4. Class Policies Tab</h2>
-      <label for="integrity">Academic Integrity:</label>
-      <textarea id="integrity"></textarea>
-
-      <label for="attendance">Attendance Policy:</label>
-      <textarea id="attendance"></textarea>
-
-      <label for="lateWork">Late Work Policy:</label>
-      <textarea id="lateWork"></textarea>
-
-      <label for="classroom">Classroom Expectations:</label>
-      <textarea id="classroom"></textarea>
-
-      <label for="communication">Communication Protocols:</label>
-      <textarea id="communication"></textarea>
-
-      <label for="technology">Technology Use:</label>
-      <textarea id="technology"></textarea>
-    </div>
-
-    <button type="button" onclick="generateCode()">Generate HTML</button>
+    <button type="button" onclick="generateHTML()">Generate HTML</button>
   </form>
 
-  <h2>Live Preview</h2>
-  <div id="preview" class="preview-box"></div>
-
-  <h2>Generated HTML Code</h2>
-  <pre id="outputCode"></pre>
+  <h2>Your HTML Output</h2>
+  <div class="output" id="output"></div>
 
   <script>
-    function generateCode() {
-      const color = document.getElementById("colorScheme").value;
-      const effect = document.getElementById("visualEffect").value;
+    function addTab() {
+      const container = document.getElementById('tabContainer');
+      const div = document.createElement('div');
+      div.classList.add('tabInput');
+      div.innerHTML = `
+        <label>Tab Heading:</label>
+        <input type="text" name="tabHeading">
+        <label>Tab Description or Link:</label>
+        <textarea name="tabContent"></textarea>
+        <label>Is this a Link? (yes/no)</label>
+        <input type="text" name="isLink">
+        <hr>
+      `;
+      container.appendChild(div);
+    }
 
-      const courseHTML = `
+    function generateHTML() {
+      const getVal = id => document.getElementById(id).value;
+      const headings = document.getElementsByName('tabHeading');
+      const contents = document.getElementsByName('tabContent');
+      const links = document.getElementsByName('isLink');
+      let tabs = '';
+      let bodies = '';
+
+      for (let i = 0; i < headings.length; i++) {
+        const head = headings[i].value;
+        const cont = contents[i].value;
+        const isL = links[i].value.toLowerCase().trim() === 'yes';
+        const id = `tab-${i + 1}`;
+        tabs += `<li><a href="#${id}">${head}</a></li>`;
+        bodies += `<div id="${id}">${isL ? `<button onclick=\"window.open('${cont}', '_blank')\">Open Link</button>` : `<p>${cont}</p>`}</div>`;
+      }
+
+      const html = `
 <div class="enhanceable_content tabs">
   <ul>
-    <li><a href="#tab-1">${document.getElementById("webTabTitle").value}</a></li>
-    <li><a href="#tab-2">Course Info</a></li>
-    <li><a href="#tab-3">Class Policies</a></li>
+    ${tabs}
   </ul>
-
-  <div id="tab-1">
-    <iframe src="${document.getElementById("webEmbedUrl").value}" width="100%" height="400px"></iframe>
-    <p><a href="${document.getElementById("webLinkBackup").value}" target="_blank"><button>Open in New Tab</button></a></p>
-  </div>
-
-  <div id="tab-2">
-    <h3>${document.getElementById("courseTitle").value}</h3>
-    <p><strong>Instructor:</strong> ${document.getElementById("instructorInfo").value}</p>
-    <p><strong>Description:</strong> ${document.getElementById("courseDesc").value}</p>
-    <p><strong>Prerequisites:</strong> ${document.getElementById("prerequisites").value}</p>
-    <p><strong>Goals:</strong> ${document.getElementById("courseGoals").value}</p>
-    <p><strong>Materials:</strong> ${document.getElementById("materials").value}</p>
-    <p><strong>Schedule:</strong> ${document.getElementById("schedule").value}</p>
-    <p><strong>Grading:</strong> ${document.getElementById("gradingBreakdown").value}</p>
-    <p><strong>Scale:</strong> ${document.getElementById("gradingScale").value}</p>
-  </div>
-
-  <div id="tab-3">
-    <p><strong>Academic Integrity:</strong> ${document.getElementById("integrity").value}</p>
-    <p><strong>Attendance:</strong> ${document.getElementById("attendance").value}</p>
-    <p><strong>Late Work:</strong> ${document.getElementById("lateWork").value}</p>
-    <p><strong>Expectations:</strong> ${document.getElementById("classroom").value}</p>
-    <p><strong>Communication:</strong> ${document.getElementById("communication").value}</p>
-    <p><strong>Technology Use:</strong> ${document.getElementById("technology").value}</p>
-  </div>
+  ${bodies}
 </div>
-      `;
+`;
 
-      document.getElementById("preview").innerHTML = courseHTML;
-      document.getElementById("outputCode").textContent = courseHTML;
+      const finalHTML = `<!-- Header Image -->
+<img src="${getVal('headerImage')}" alt="Header Image" style="width:100%;">
+${html}`;
+
+      document.getElementById('output').textContent = finalHTML;
     }
   </script>
 </body>
