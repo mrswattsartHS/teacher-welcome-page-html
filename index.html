@@ -1,179 +1,240 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Custom Tab Generator for Canvas</title>
-  <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet" />
-  <style id="dynamicStyles">
-    body {
-      background: url('https://www.transparenttextures.com/patterns/cardboard.png');
-      color: #333;
-      font-family: 'Architects Daughter', cursive;
-    }
-    label {
-      display: block;
-      margin-top: 1em;
-      font-weight: bold;
-    }
-    .form-section {
-      background: #fffaf0;
-      padding: 1em;
-      margin-bottom: 1em;
-      border: 3px dotted #f08080;
-      border-radius: 12px;
-    }
-    .output, .preview-box {
-      background: #fffde7;
-      padding: 1em;
-      margin-top: 1em;
-      border: 3px ridge #c0a060;
-      box-shadow: 0 0 15px #ffc107;
-      white-space: pre-wrap;
-    }
-    .tabs li a {
-      background-color: #454851;
-      text-decoration: none;
-      color: white;
-      padding: 0.5em 1em;
-      display: inline-block;
-      border-radius: 10px 10px 0 0;
-      font-family: 'Architects Daughter', cursive;
-      font-size: 18pt;
-      margin-right: 0.5em;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Custom Tab Generator for Canvas</title>
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet" />
+<style id="dynamicStyles">
+  body {
+    background: url('https://www.transparenttextures.com/patterns/cardboard.png');
+    color: #333;
+    font-family: 'Architects Daughter', cursive;
+  }
+  label {
+    display: block;
+    margin-top: 1em;
+    font-weight: bold;
+  }
+  .form-section {
+    background: #fffaf0;
+    padding: 1em;
+    margin-bottom: 1em;
+    border: 3px dotted #f08080;
+    border-radius: 12px;
+  }
+  .output, .preview-box {
+    background: #fffde7;
+    padding: 1em;
+    margin-top: 1em;
+    border: 3px ridge #c0a060;
+    box-shadow: 0 0 15px #ffc107;
+    white-space: pre-wrap;
+  }
+  /* Tabs style */
+  .enhanceable_content.tabs ul {
+    padding-left: 0;
+    list-style: none;
+    display: flex;
+  }
+  .enhanceable_content.tabs li {
+    margin-right: 0.5em;
+  }
+  .enhanceable_content.tabs li a {
+    background-color: #454851;
+    text-decoration: none;
+    color: white;
+    padding: 0.5em 1em;
+    display: inline-block;
+    border-radius: 10px 10px 0 0;
+    font-family: 'Architects Daughter', cursive;
+    font-size: 18pt;
+    cursor: pointer;
+  }
+  .enhanceable_content.tabs > div {
+    display: none;
+    padding: 1em;
+    border: 3px dotted #f08080;
+    border-top: none;
+    background: #fffaf0;
+    border-radius: 0 10px 10px 10px;
+  }
+  .enhanceable_content.tabs > div.active {
+    display: block;
+  }
+  button.tab-link-button {
+    margin-top: 0.5em;
+    padding: 0.5em 1em;
+    cursor: pointer;
+  }
+</style>
 </head>
 <body>
-  <h1>Canvas Tab HTML Generator</h1>
-  <p>Fill in each field to build your own tabbed HTML layout for Canvas. Customize headings, content, and link buttons. Select style and animations to personalize your design. Copy the output HTML to your Canvas page HTML editor.</p>
+<h1>Canvas Tab HTML Generator</h1>
+<p>Fill in each field to build your own tabbed HTML layout for Canvas. Customize headings, content, and link buttons. Select style and animations to personalize your design. Copy the output HTML to your Canvas page HTML editor.</p>
 
-  <div class="form-section">
-    <label for="themeSelector">Choose Color Scheme</label>
-    <select id="themeSelector" onchange="applyTheme()">
-      <option value="fun">Fun</option>
-      <option value="dark">Dark</option>
-      <option value="light">Light</option>
-    </select>
+<div class="form-section">
+  <label for="themeSelector">Choose Color Scheme</label>
+  <select id="themeSelector" onchange="applyTheme()">
+    <option value="fun" selected>Fun</option>
+    <option value="dark">Dark</option>
+    <option value="light">Light</option>
+  </select>
 
-    <label for="fontSelector">Choose Font Style</label>
-    <select id="fontSelector" onchange="applyFont()">
-      <option value="Architects Daughter">Architects Daughter</option>
-      <option value="Comic Sans MS">Comic Sans MS</option>
-      <option value="Georgia">Georgia</option>
-      <option value="Courier New">Courier New</option>
-    </select>
-  </div>
+  <label for="fontSelector">Choose Font Style</label>
+  <select id="fontSelector" onchange="applyFont()">
+    <option value="Architects Daughter" selected>Architects Daughter</option>
+    <option value="Comic Sans MS">Comic Sans MS</option>
+    <option value="Georgia">Georgia</option>
+    <option value="Courier New">Courier New</option>
+  </select>
+</div>
 
-  <div id="tabInputs" class="form-section">
-    <h2>Tab Inputs</h2>
-    <div id="tabInputFields"></div>
-    <button onclick="addTabInput()">Add Another Tab</button>
-  </div>
+<div id="tabInputs" class="form-section">
+  <h2>Tab Inputs</h2>
+  <div id="tabInputFields"></div>
+  <button type="button" onclick="addTabInput()">Add Another Tab</button>
+</div>
 
-  <div class="form-section">
-    <button onclick="generateHTML()">Generate HTML</button>
-  </div>
+<div class="form-section">
+  <button type="button" onclick="generateHTML()">Generate HTML</button>
+</div>
 
-  <div class="form-section">
-    <label>Preview:</label>
-    <div id="previewBox" class="preview-box"></div>
-    <label>Generated HTML Code:</label>
-    <textarea id="output" class="output" rows="10" cols="80"></textarea>
-  </div>
+<div class="form-section">
+  <label>Preview:</label>
+  <div id="previewBox" class="preview-box"></div>
+  <label>Generated HTML Code:</label>
+  <textarea id="output" class="output" rows="10" cols="80" readonly></textarea>
+</div>
 
-  <script>
-    let tabCounter = 0;
+<script>
+let tabCounter = 0;
 
-    function addTabInput() {
-      const container = document.getElementById("tabInputFields");
-      const tabId = `tab-${tabCounter}`;
-      const div = document.createElement("div");
-      div.innerHTML = `
-        <label>Tab Heading ${tabCounter + 1}</label>
-        <input type="text" id="heading-${tabId}" placeholder="Enter tab title">
-        <label>Tab Content ${tabCounter + 1}</label>
-        <textarea id="content-${tabId}" placeholder="Enter description or link text" rows="3"></textarea>
-        <label>Optional Link URL</label>
-        <input type="url" id="url-${tabId}" placeholder="https://example.com">
-      `;
-      container.appendChild(div);
-      tabCounter++;
-    }
+function addTabInput() {
+  const container = document.getElementById("tabInputFields");
+  const tabId = `tab-${tabCounter}`;
+  const div = document.createElement("div");
+  div.innerHTML = `
+    <label for="heading-${tabId}">Tab Heading ${tabCounter + 1}</label>
+    <input type="text" id="heading-${tabId}" placeholder="Enter tab title" />
+    <label for="content-${tabId}">Tab Content ${tabCounter + 1}</label>
+    <textarea id="content-${tabId}" placeholder="Enter description or link text" rows="3"></textarea>
+    <label for="url-${tabId}">Optional Link URL</label>
+    <input type="url" id="url-${tabId}" placeholder="https://example.com" />
+  `;
+  container.appendChild(div);
+  tabCounter++;
+}
 
-    function generateHTML() {
-      let tabs = "";
-      let content = "";
+// Activate tabs switching in preview area
+function activateTabs(container) {
+  const links = container.querySelectorAll('ul > li > a');
+  const panels = Array.from(container.querySelectorAll('> div'));
+  if(links.length === 0) return;
 
-      for (let i = 0; i < tabCounter; i++) {
-        const tabId = `tab-${i}`;
-        const heading = document.getElementById(`heading-${tabId}`).value || `Tab ${i+1}`;
-        const text = document.getElementById(`content-${tabId}`).value;
-        const url = document.getElementById(`url-${tabId}`).value;
-
-        tabs += `<li><a style="background-color: #454851; text-decoration: none; color: white;" href="#${tabId}"><span style="font-size: 18pt; font-family: 'Architects Daughter', lato, 'Helvetica Neue', Helvetica, Arial, sans-serif;">${heading}</span></a></li>`;
-
-        content += `<div id="${tabId}">
-          <p>${text}</p>
-          ${url ? `<button onclick=\"window.open('${url}','_blank')\">Visit Link</button>` : ""}
-        </div>`;
+  function selectTab(index){
+    links.forEach((link,i)=>{
+      if(i === index){
+        link.style.backgroundColor = '#f08080';
+      } else {
+        link.style.backgroundColor = '#454851';
       }
+    });
+    panels.forEach((panel,i)=>{
+      panel.classList.toggle('active', i === index);
+    });
+  }
+  // Initially show first tab panel
+  selectTab(0);
 
-      const html = `
+  links.forEach((link,i)=>{
+    link.addEventListener('click', e=>{
+      e.preventDefault();
+      selectTab(i);
+    });
+  });
+}
+
+function generateHTML() {
+  if(tabCounter === 0) {
+    alert('Add at least one tab before generating.');
+    return;
+  }
+  let tabs = "";
+  let content = "";
+
+  for (let i = 0; i < tabCounter; i++) {
+    const tabId = `tab-${i}`;
+    const headingInput = document.getElementById(`heading-${tabId}`);
+    const contentInput = document.getElementById(`content-${tabId}`);
+    const urlInput = document.getElementById(`url-${tabId}`);
+
+    const heading = headingInput ? headingInput.value.trim() || `Tab ${i+1}` : `Tab ${i+1}`;
+    const text = contentInput ? contentInput.value.trim() : "";
+    const url = urlInput ? urlInput.value.trim() : "";
+
+    tabs += `<li><a href="#${tabId}">${heading}</a></li>`;
+
+    let panelContent = text ? `<p>${text.replace(/\n/g, '<br/>')}</p>` : '';
+
+    if(url) {
+      panelContent += `<p><button class="tab-link-button" onclick="window.open('${url}', '_blank', 'noopener')">Visit Link</button></p>`;
+    }
+    content += `<div id="${tabId}">${panelContent}</div>`;
+  }
+
+  const html = `
 <div class="enhanceable_content tabs">
-  <ul>
+  <ul class="tabs">
     ${tabs}
   </ul>
   ${content}
-</div>`;
+</div>`.trim();
 
-      document.getElementById("output").textContent = html.trim();
-      document.getElementById("previewBox").innerHTML = html;
-    }
+  const previewBox = document.getElementById("previewBox");
+  const output = document.getElementById("output");
 
-    function applyTheme() {
-      const theme = document.getElementById('themeSelector').value;
-      const style = document.getElementById('dynamicStyles');
+  output.textContent = html;
+  previewBox.innerHTML = html;
 
-      if (theme === 'light') {
-        style.innerHTML = `body { background: #fff; color: #000; font-family: inherit; } .output { background: #eee; color: #111; } .preview-box { background: #fff; border: 2px solid #999; }`;
-      } else if (theme === 'fun') {
-        style.innerHTML = `body { background: url('https://www.transparenttextures.com/patterns/cardboard.png'); color: #333; font-family: 'Architects Daughter', cursive; } .output { background: #fffaf0; color: #000; border: 4px dotted #f08080; } .preview-box { background: #fffde7; border: 3px ridge #c0a060; box-shadow: 0 0 15px #ffc107; } .tabs li a { background-color: #454851; color: white; }`;
-      } else {
-        style.innerHTML = `body { background: #1e1e1e; color: #fff; } .output { background: #111; color: #ccc; } .preview-box { background: #2c2c2c; border: 2px solid #ccc; } .tabs li a { background-color: #555; color: #eee; }`;
-      }
-    }
+  activateTabs(previewBox.querySelector('.enhanceable_content.tabs'));
+}
 
-    function applyFont() {
-      const font = document.getElementById('fontSelector').value;
-      document.body.style.fontFamily = `'${font}', cursive`;
-    }
+// Apply themes and fonts on page load and user change
+function applyTheme() {
+  const theme = document.getElementById('themeSelector').value;
+  const style = document.getElementById('dynamicStyles');
 
-    // Sparkle trail
-    const colors = ["#ffcc70", "#f06292", "#64ffda"];
-    const sparkles = [];
-    document.addEventListener('mousemove', e => {
-      const dot = document.createElement("div");
-      dot.style.position = "fixed";
-      dot.style.pointerEvents = "none";
-      dot.style.width = "6px";
-      dot.style.height = "6px";
-      dot.style.borderRadius = "50%";
-      dot.style.background = colors[Math.floor(Math.random() * colors.length)];
-      dot.style.left = `${e.pageX}px`;
-      dot.style.top = `${e.pageY}px`;
-      dot.style.zIndex = 9999;
-      document.body.appendChild(dot);
-      sparkles.push(dot);
-      setTimeout(() => {
-        dot.remove();
-        sparkles.shift();
-      }, 400);
-    });
+  if (theme === 'light') {
+    style.innerHTML = `body { background: #fff; color: #000; font-family: inherit; }
+      .output { background: #eee; color: #111; }
+      .preview-box { background: #fff; border: 2px solid #999; }
+      .enhanceable_content.tabs li a { background-color: #666; color: #000; }`;
+  } else if (theme === 'fun') {
+    style.innerHTML = `body { background: url('https://www.transparenttextures.com/patterns/cardboard.png'); color: #333; font-family: 'Architects Daughter', cursive; }
+      .output { background: #fffaf0; color: #000; border: 4px dotted #f08080; }
+      .preview-box { background: #fffde7; border: 3px ridge #c0a060; box-shadow: 0 0 15px #ffc107; }
+      .enhanceable_content.tabs li a { background-color: #454851; color: white; }`;
+  } else {
+    style.innerHTML = `body { background: #1e1e1e; color: #fff; }
+      .output { background: #111; color: #ccc; }
+      .preview-box { background: #2c2c2c; border: 2px solid #ccc; }
+      .enhanceable_content.tabs li a { background-color: #555; color: #eee; }`;
+  }
+}
 
-    // Initialize with 2 tabs by default
-    addTabInput();
-    addTabInput();
-  </script>
+function applyFont() {
+  const font = document.getElementById('fontSelector').value;
+  document.body.style.fontFamily = `'${font}', cursive`;
+}
+
+// Initialize page with two tabs by default
+window.onload = function() {
+  addTabInput();
+  addTabInput();
+  applyTheme();
+  applyFont();
+};
+</script>
 </body>
 </html>
