@@ -31,18 +31,24 @@
       box-shadow: 0 0 15px #ffc107;
       white-space: pre-wrap;
     }
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      list-style-type: none;
+      padding-left: 0;
+      margin-bottom: 0;
+    }
     .tabs li a {
       background-color: #454851;
       text-decoration: none;
       color: white;
       padding: 0.5em 1em;
-      .tabs {
-  display: flex;
-  flex-wrap: wrap;
-  list-style-type: none;
-  padding-left: 0;
-  margin-bottom: 0;
-            transition: background-color 0.3s ease;
+      display: inline-block;
+      border-radius: 10px 10px 0 0;
+      font-family: 'Architects Daughter', cursive;
+      font-size: 18pt;
+      margin-right: 0.5em;
+      transition: background-color 0.3s ease;
     }
     .tabs-content > div {
       display: none;
