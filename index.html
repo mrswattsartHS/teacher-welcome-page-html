@@ -36,12 +36,13 @@
       text-decoration: none;
       color: white;
       padding: 0.5em 1em;
-      display: inline-block;
-      border-radius: 10px 10px 0 0;
-      font-family: 'Architects Daughter', cursive;
-      font-size: 18pt;
-      margin-right: 0.5em;
-      transition: background-color 0.3s ease;
+      .tabs {
+  display: flex;
+  flex-wrap: wrap;
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: 0;
+            transition: background-color 0.3s ease;
     }
     .tabs-content > div {
       display: none;
