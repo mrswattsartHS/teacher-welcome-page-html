@@ -1,8 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Canvas Tab Generator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2em;
+      background: #f4f4f9;
+    }
+    h2 {
+      color: #4b0082;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 1em;
+    }
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 0.5em;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 1em;
+      resize: vertical;
+    }
+    button {
+      background: #4b0082;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 1em;
+    }
+    button:hover {
+      background: #8a2be2;
+    }
+    #output {
+      white-space: pre-wrap;
+      background: #fff;
+      border: 1px dashed #999;
+      padding: 1em;
+      margin-top: 2em;
+      border-radius: 10px;
+    }
+    iframe {
+      width: 100%;
+      height: 300px;
+      border: 2px solid #4b0082;
+      margin-top: 1em;
+      border-radius: 12px;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🎨 Canvas Tab HTML Generator</h2>
+
+  <label>Tab 1 Title</label>
+  <input type="text" id="tab1Title" placeholder="Example: Overview" />
+
+  <label>Tab 1 Content</label>
+  <textarea id="tab1Content" rows="4" placeholder="Write the content for tab 1..."></textarea>
+
+  <label>Tab 2 Title</label>
+  <input type="text" id="tab2Title" placeholder="Example: Instructions" />
+
+  <label>Tab 2 Content</label>
+  <textarea id="tab2Content" rows="4" placeholder="Write the content for tab 2..."></textarea>
+
+  <label>Tab 3 Title</label>
+  <input type="text" id="tab3Title" placeholder="Example: Resources" />
+
+  <label>Tab 3 Content</label>
+  <textarea id="tab3Content" rows="4" placeholder="Write the content for tab 3..."></textarea>
+
+  <button onclick="generateTabs()">Generate Canvas Tab HTML</button>
+
+  <h3>📋 Copy This HTML for Canvas:</h3>
+  <div id="output"></div>
+
+  <h3>👀 Preview:</h3>
+  <iframe id="previewFrame"></iframe>
+
+  <script>
+    function generateTabs() {
+      const t1 = document.getElementById('tab1Title').value || 'Tab 1';
+      const c1 = document.getElementById('tab1Content').value || 'Content for Tab 1';
+      const t2 = document.getElementById('tab2Title').value || 'Tab 2';
+      const c2 = document.getElementById('tab2Content').value || 'Content for Tab 2';
+      const t3 = document.getElementById('tab3Title').value || 'Tab 3';
+      const c3 = document.getElementById('tab3Content').value || 'Content for Tab 3';
+
+      const html = `
 <div class="tab-container">
   <style>
-    .tab-container {
-      font-family: 'Comic Sans MS', cursive;
-    }
     .tab-labels {
       display: flex;
       gap: 10px;
@@ -41,28 +135,36 @@
     }
   </style>
 
-  <!-- Hidden Radio Buttons -->
   <input type="radio" name="tabs" id="tab1" checked>
   <input type="radio" name="tabs" id="tab2">
   <input type="radio" name="tabs" id="tab3">
 
-  <!-- Tab Labels -->
   <div class="tab-labels">
-    <label for="tab1">Overview</label>
-    <label for="tab2">Instructions</label>
-    <label for="tab3">Resources</label>
+    <label for="tab1">${t1}</label>
+    <label for="tab2">${t2}</label>
+    <label for="tab3">${t3}</label>
   </div>
 
-  <!-- Tab Contents -->
   <div class="tabs">
     <div id="content1" class="tab-content">
-      <p>This tab gives you an overview of the project.</p>
+      <p>${c1}</p>
     </div>
     <div id="content2" class="tab-content">
-      <p>This tab contains instructions on how to complete the assignment.</p>
+      <p>${c2}</p>
     </div>
     <div id="content3" class="tab-content">
-      <p>This tab contains links and resources you’ll need.</p>
+      <p>${c3}</p>
     </div>
   </div>
 </div>
+      `.trim();
+
+      document.getElementById('output').textContent = html;
+
+      const preview = document.getElementById('previewFrame');
+      preview.srcdoc = html;
+    }
+  </script>
+
+</body>
+</html>
