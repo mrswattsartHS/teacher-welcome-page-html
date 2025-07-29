@@ -2,14 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Custom Tab Generator for Canvas</title>
-  <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet" />
+  <title>Canvas Tab Generator - Compatible</title>
   <style id="dynamicStyles"></style>
 </head>
 <body>
   <h1>Canvas Tab HTML Generator</h1>
-  <p>Fill in each field to build your own tabbed HTML layout for Canvas. Customize headings, content, and link buttons. Select style and animations to personalize your design. Copy the output HTML to your Canvas page HTML editor.</p>
 
   <div class="form-section">
     <label for="themeSelector">Choose Color Scheme</label>
@@ -28,15 +25,11 @@
     </select>
   </div>
 
-  <div id="tabInputs" class="form-section">
+  <div class="form-section" id="tabInputFields">
     <h2>Tab Inputs</h2>
-    <div id="tabInputFields"></div>
-    <button onclick="addTabInput()">Add Another Tab</button>
   </div>
-
-  <div class="form-section">
-    <button onclick="generateHTML()">Generate HTML</button>
-  </div>
+  <button onclick="addTabInput()">Add Tab</button>
+  <button onclick="generateHTML()">Generate HTML</button>
 
   <div class="form-section">
     <label>Generated HTML Code:</label>
@@ -56,168 +49,111 @@
       const tabId = `tab-${tabCounter}`;
       const div = document.createElement("div");
       div.innerHTML = `
-        <label>Tab Heading ${tabCounter + 1}</label>
-        <input type="text" id="heading-${tabId}" placeholder="Enter tab title">
+        <label>Tab Title ${tabCounter + 1}</label>
+        <input type="text" id="heading-${tabId}" placeholder="Tab Heading"><br/>
         <label>Tab Content ${tabCounter + 1}</label>
-        <textarea id="content-${tabId}" placeholder="Enter description or link text" rows="3"></textarea>
-        <label>Optional Link URL</label>
-        <input type="url" id="url-${tabId}" placeholder="https://example.com">
+        <textarea id="content-${tabId}" rows="3" placeholder="Tab Content or Instructions"></textarea>
       `;
       container.appendChild(div);
       tabCounter++;
     }
 
     function generateHTML() {
-      let tabs = "";
-      let content = "";
+      let tabLinks = '';
+      let tabContent = '';
 
       for (let i = 0; i < tabCounter; i++) {
-        const tabId = `tab-${i}`;
-        const heading = document.getElementById(`heading-${tabId}`).value || `Tab ${i+1}`;
-        const text = document.getElementById(`content-${tabId}`).value;
-        const url = document.getElementById(`url-${tabId}`).value;
-
-        tabs += `<li><a href="#" onclick="switchTab('${tabId}', this); return false;"><span>${heading}</span></a></li>`;
-        content += `<div id="${tabId}" class="tab-panel"><p>${text}</p>${url ? `<p><button onclick=\"window.open('${url}','_blank')\">Visit Link</button></p>` : ""}</div>`;
+        const heading = document.getElementById(`heading-tab-${i}`).value || `Tab ${i + 1}`;
+        const content = document.getElementById(`content-tab-${i}`).value || `Content for Tab ${i + 1}`;
+        tabLinks += `<a href="#tab${i + 1}" class="tablink">${heading}</a>\n`;
+        tabContent += `<div id="tab${i + 1}" class="tabcontent"><p>${content}</p></div>\n`;
       }
 
       const html = `
-<div class="enhanceable_content tabs">
-  <ul class="tabs">
-    ${tabs}
-  </ul>
-  <div class="tabs-content">
-    ${content}
+<div class="tabcontainer">
+  <div class="tabmenu">
+    ${tabLinks}
   </div>
-</div>`;
+  ${tabContent}
+</div>
 
-      document.getElementById("output").textContent = html.trim();
+<style>
+  .tabmenu a {
+    background: #454851;
+    color: white;
+    padding: 10px 15px;
+    margin: 0 5px 0 0;
+    text-decoration: none;
+    border-radius: 10px 10px 0 0;
+    display: inline-block;
+  }
+  .tabmenu a:hover {
+    background: #f08080;
+  }
+  .tabcontent {
+    display: none;
+    border: 2px dotted #f08080;
+    padding: 1em;
+    background: #fffaf0;
+    border-radius: 0 10px 10px 10px;
+    margin-top: -2px;
+  }
+  .tabcontent:target {
+    display: block;
+  }
+</style>`.trim();
+
+      document.getElementById("output").value = html;
       document.getElementById("previewBox").innerHTML = html;
-      switchTab(`tab-0`, document.querySelector(".tabs li a"));
-    }
-
-    function switchTab(tabId, el) {
-      const panels = document.querySelectorAll(".tabs-content > div");
-      panels.forEach(p => p.classList.remove("active"));
-      const activePanel = document.getElementById(tabId);
-      if (activePanel) activePanel.classList.add("active");
-
-      const links = document.querySelectorAll(".tabs li a");
-      links.forEach(link => link.style.backgroundColor = "");
-      el.style.backgroundColor = "#f08080";
     }
 
     function applyTheme() {
-      const theme = document.getElementById('themeSelector').value;
-      const style = document.getElementById('dynamicStyles');
-
+      const theme = document.getElementById("themeSelector").value;
+      const style = document.getElementById("dynamicStyles");
       const baseStyles = `
         body {
           font-family: 'Architects Daughter', cursive;
         }
-        label {
-          display: block;
-          margin-top: 1em;
-          font-weight: bold;
-        }
         .form-section {
           padding: 1em;
-          margin-bottom: 1em;
-          border-radius: 12px;
+          margin: 1em 0;
+          border-radius: 10px;
         }
         .output, .preview-box {
           padding: 1em;
-          margin-top: 1em;
           white-space: pre-wrap;
-        }
-        .tabs {
-          display: flex;
-          flex-wrap: wrap;
-          list-style-type: none;
-          padding-left: 0;
-          margin-bottom: 0;
-        }
-        .tabs li a {
-          text-decoration: none;
-          padding: 0.5em 1em;
-          display: inline-block;
-          border-radius: 10px 10px 0 0;
-          font-family: 'Architects Daughter', cursive;
-          font-size: 18pt;
-          margin-right: 0.5em;
-          transition: background-color 0.3s ease;
-        }
-        .tabs-content > div {
-          display: none;
-          padding: 1em;
-          border-radius: 0 10px 10px 10px;
-          animation: fadeIn 0.4s ease-in-out;
-        }
-        .tabs-content > div.active {
-          display: block;
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
+          margin-top: 1em;
         }
       `;
-
-      let themeStyles = '';
-
-      if (theme === 'light') {
+      let themeStyles = "";
+      if (theme === "light") {
         themeStyles = `
-          body { background: #ffffff; color: #000000; }
-          .form-section { background: #f9f9f9; border: 3px solid #ccc; }
-          .output { background: #eee; color: #111; border: 2px solid #999; }
-          .preview-box { background: #fff; border: 2px solid #999; }
-          .tabs li a { background-color: #888; color: #000; }
-          .tabs-content > div { background: #fdfdfd; border: 2px solid #ccc; }
+          body { background: #fff; color: #000; }
+          .form-section { background: #f4f4f4; border: 2px solid #ccc; }
+          .output, .preview-box { background: #fff; border: 1px solid #999; }
         `;
-      } else if (theme === 'fun') {
+      } else if (theme === "fun") {
         themeStyles = `
           body { background: url('https://www.transparenttextures.com/patterns/cardboard.png'); color: #333; }
           .form-section { background: #fffaf0; border: 3px dotted #f08080; }
-          .output { background: #fffaf0; color: #000; border: 4px dotted #f08080; }
-          .preview-box { background: #fffde7; border: 3px ridge #c0a060; box-shadow: 0 0 15px #ffc107; }
-          .tabs li a { background-color: #454851; color: white; }
-          .tabs-content > div { background: #fffaf0; border: 3px dotted #f08080; }
+          .output { background: #fffde7; border: 3px ridge #c0a060; }
+          .preview-box { background: #fffde7; border: 3px solid #f08080; }
         `;
       } else {
         themeStyles = `
           body { background: #1e1e1e; color: #fff; }
-          .form-section { background: #2a2a2a; border: 3px solid #666; }
-          .output { background: #111; color: #ccc; border: 2px solid #444; }
-          .preview-box { background: #2c2c2c; border: 2px solid #ccc; }
-          .tabs li a { background-color: #555; color: #eee; }
-          .tabs-content > div { background: #1f1f1f; border: 2px solid #444; }
+          .form-section { background: #2a2a2a; border: 2px solid #888; }
+          .output, .preview-box { background: #2c2c2c; border: 1px solid #ccc; color: #eee; }
         `;
       }
-
       style.innerHTML = baseStyles + themeStyles;
     }
 
     function applyFont() {
-      const font = document.getElementById('fontSelector').value;
+      const font = document.getElementById("fontSelector").value;
       document.body.style.fontFamily = `'${font}', cursive`;
     }
 
-    // Cursor sparkle effect
-    document.addEventListener('mousemove', e => {
-      const dot = document.createElement("div");
-      dot.style.position = "fixed";
-      dot.style.pointerEvents = "none";
-      dot.style.width = "6px";
-      dot.style.height = "6px";
-      dot.style.borderRadius = "50%";
-      dot.style.background = ["#ffcc70", "#f06292", "#64ffda"][Math.floor(Math.random() * 3)];
-      dot.style.left = `${e.pageX}px`;
-      dot.style.top = `${e.pageY}px`;
-      dot.style.zIndex = 9999;
-      document.body.appendChild(dot);
-      setTimeout(() => dot.remove(), 400);
-    });
-
-    // Initialize
     applyTheme();
     addTabInput();
     addTabInput();
