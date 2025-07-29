@@ -1,162 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Canvas Tab Generator - Compatible</title>
-  <style id="dynamicStyles"></style>
-</head>
-<body>
-  <h1>Canvas Tab HTML Generator</h1>
-
-  <div class="form-section">
-    <label for="themeSelector">Choose Color Scheme</label>
-    <select id="themeSelector" onchange="applyTheme()">
-      <option value="fun">Fun</option>
-      <option value="dark">Dark</option>
-      <option value="light">Light</option>
-    </select>
-
-    <label for="fontSelector">Choose Font Style</label>
-    <select id="fontSelector" onchange="applyFont()">
-      <option value="Architects Daughter">Architects Daughter</option>
-      <option value="Comic Sans MS">Comic Sans MS</option>
-      <option value="Georgia">Georgia</option>
-      <option value="Courier New">Courier New</option>
-    </select>
-  </div>
-
-  <div class="form-section" id="tabInputFields">
-    <h2>Tab Inputs</h2>
-  </div>
-  <button onclick="addTabInput()">Add Tab</button>
-  <button onclick="generateHTML()">Generate HTML</button>
-
-  <div class="form-section">
-    <label>Generated HTML Code:</label>
-    <textarea id="output" class="output" rows="10" cols="80"></textarea>
-  </div>
-
-  <div class="form-section">
-    <label>Live Preview:</label>
-    <div id="previewBox" class="preview-box"></div>
-  </div>
-
-  <script>
-    let tabCounter = 0;
-
-    function addTabInput() {
-      const container = document.getElementById("tabInputFields");
-      const tabId = `tab-${tabCounter}`;
-      const div = document.createElement("div");
-      div.innerHTML = `
-        <label>Tab Title ${tabCounter + 1}</label>
-        <input type="text" id="heading-${tabId}" placeholder="Tab Heading"><br/>
-        <label>Tab Content ${tabCounter + 1}</label>
-        <textarea id="content-${tabId}" rows="3" placeholder="Tab Content or Instructions"></textarea>
-      `;
-      container.appendChild(div);
-      tabCounter++;
+<div class="tab-container">
+  <style>
+    .tab-container {
+      font-family: 'Comic Sans MS', cursive;
     }
+    .tab-labels {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 0;
+    }
+    .tab-labels label {
+      background: #454851;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 10px 10px 0 0;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .tab-labels label:hover {
+      background: #f08080;
+    }
+    .tab-content {
+      display: none;
+      border: 2px dotted #f08080;
+      border-radius: 0 10px 10px 10px;
+      padding: 1em;
+      background: #fffaf0;
+    }
+    input[name="tabs"] {
+      display: none;
+    }
+    #tab1:checked ~ .tabs #content1,
+    #tab2:checked ~ .tabs #content2,
+    #tab3:checked ~ .tabs #content3 {
+      display: block;
+    }
+    #tab1:checked ~ .tab-labels label[for="tab1"],
+    #tab2:checked ~ .tab-labels label[for="tab2"],
+    #tab3:checked ~ .tab-labels label[for="tab3"] {
+      background: #f08080;
+    }
+  </style>
 
-    function generateHTML() {
-      let tabLinks = '';
-      let tabContent = '';
+  <!-- Hidden Radio Buttons -->
+  <input type="radio" name="tabs" id="tab1" checked>
+  <input type="radio" name="tabs" id="tab2">
+  <input type="radio" name="tabs" id="tab3">
 
-      for (let i = 0; i < tabCounter; i++) {
-        const heading = document.getElementById(`heading-tab-${i}`).value || `Tab ${i + 1}`;
-        const content = document.getElementById(`content-tab-${i}`).value || `Content for Tab ${i + 1}`;
-        tabLinks += `<a href="#tab${i + 1}" class="tablink">${heading}</a>\n`;
-        tabContent += `<div id="tab${i + 1}" class="tabcontent"><p>${content}</p></div>\n`;
-      }
-
-      const html = `
-<div class="tabcontainer">
-  <div class="tabmenu">
-    ${tabLinks}
+  <!-- Tab Labels -->
+  <div class="tab-labels">
+    <label for="tab1">Overview</label>
+    <label for="tab2">Instructions</label>
+    <label for="tab3">Resources</label>
   </div>
-  ${tabContent}
+
+  <!-- Tab Contents -->
+  <div class="tabs">
+    <div id="content1" class="tab-content">
+      <p>This tab gives you an overview of the project.</p>
+    </div>
+    <div id="content2" class="tab-content">
+      <p>This tab contains instructions on how to complete the assignment.</p>
+    </div>
+    <div id="content3" class="tab-content">
+      <p>This tab contains links and resources you’ll need.</p>
+    </div>
+  </div>
 </div>
-
-<style>
-  .tabmenu a {
-    background: #454851;
-    color: white;
-    padding: 10px 15px;
-    margin: 0 5px 0 0;
-    text-decoration: none;
-    border-radius: 10px 10px 0 0;
-    display: inline-block;
-  }
-  .tabmenu a:hover {
-    background: #f08080;
-  }
-  .tabcontent {
-    display: none;
-    border: 2px dotted #f08080;
-    padding: 1em;
-    background: #fffaf0;
-    border-radius: 0 10px 10px 10px;
-    margin-top: -2px;
-  }
-  .tabcontent:target {
-    display: block;
-  }
-</style>`.trim();
-
-      document.getElementById("output").value = html;
-      document.getElementById("previewBox").innerHTML = html;
-    }
-
-    function applyTheme() {
-      const theme = document.getElementById("themeSelector").value;
-      const style = document.getElementById("dynamicStyles");
-      const baseStyles = `
-        body {
-          font-family: 'Architects Daughter', cursive;
-        }
-        .form-section {
-          padding: 1em;
-          margin: 1em 0;
-          border-radius: 10px;
-        }
-        .output, .preview-box {
-          padding: 1em;
-          white-space: pre-wrap;
-          margin-top: 1em;
-        }
-      `;
-      let themeStyles = "";
-      if (theme === "light") {
-        themeStyles = `
-          body { background: #fff; color: #000; }
-          .form-section { background: #f4f4f4; border: 2px solid #ccc; }
-          .output, .preview-box { background: #fff; border: 1px solid #999; }
-        `;
-      } else if (theme === "fun") {
-        themeStyles = `
-          body { background: url('https://www.transparenttextures.com/patterns/cardboard.png'); color: #333; }
-          .form-section { background: #fffaf0; border: 3px dotted #f08080; }
-          .output { background: #fffde7; border: 3px ridge #c0a060; }
-          .preview-box { background: #fffde7; border: 3px solid #f08080; }
-        `;
-      } else {
-        themeStyles = `
-          body { background: #1e1e1e; color: #fff; }
-          .form-section { background: #2a2a2a; border: 2px solid #888; }
-          .output, .preview-box { background: #2c2c2c; border: 1px solid #ccc; color: #eee; }
-        `;
-      }
-      style.innerHTML = baseStyles + themeStyles;
-    }
-
-    function applyFont() {
-      const font = document.getElementById("fontSelector").value;
-      document.body.style.fontFamily = `'${font}', cursive`;
-    }
-
-    applyTheme();
-    addTabInput();
-    addTabInput();
-  </script>
-</body>
-</html>
