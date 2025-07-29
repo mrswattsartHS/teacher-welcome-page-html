@@ -2,156 +2,169 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Canvas Tab Generator</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 20px;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2em;
+      background: #f4f4f9;
     }
-    label, select, input, textarea, button {
+    h2 {
+      color: #4b0082;
+    }
+    label {
+      font-weight: bold;
       display: block;
-      margin: 10px 0;
+      margin-top: 1em;
+    }
+    input[type="text"], textarea {
       width: 100%;
-      max-width: 600px;
-    }
-    .tab-container {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    .tab-preview {
+      padding: 0.5em;
       border: 1px solid #ccc;
-      padding: 20px;
-      background: #fff;
-      max-width: 800px;
+      border-radius: 8px;
+      margin-bottom: 1em;
+      resize: vertical;
     }
-    .tab-preview .tabs {
-      display: flex;
-      border-bottom: 2px solid #ccc;
-      margin-bottom: 10px;
-    }
-    .tab-preview .tabs button {
-      background: #eee;
+    button {
+      background: #4b0082;
+      color: white;
+      padding: 10px 20px;
       border: none;
-      padding: 10px 15px;
+      border-radius: 10px;
       cursor: pointer;
+      margin-top: 1em;
     }
-    .tab-preview .tabs button.active {
-      background: #ccc;
+    button:hover {
+      background: #8a2be2;
     }
-    .tab-preview .tab-content {
-      display: none;
+    #output {
+      white-space: pre-wrap;
+      background: #fff;
+      border: 1px dashed #999;
+      padding: 1em;
+      margin-top: 2em;
+      border-radius: 10px;
     }
-    .tab-preview .tab-content.active {
-      display: block;
+    iframe {
+      width: 100%;
+      height: 300px;
+      border: 2px solid #4b0082;
+      margin-top: 1em;
+      border-radius: 12px;
+      background: #fff;
     }
   </style>
 </head>
 <body>
-  <h1>Canvas Tab Generator</h1>
 
-  <label for="mainTitle">Section Title (optional):</label>
-  <input type="text" id="mainTitle" placeholder="e.g., 📚 Class Resources">
+  <h2>🎨 Canvas Tab HTML Generator</h2>
 
-  <label for="fontSelect">Select Font:</label>
-  <select id="fontSelect">
-    <option value="Arial">Arial</option>
-    <option value="Georgia">Georgia</option>
-    <option value="Comic Sans MS">Comic Sans MS</option>
-    <option value="Courier New">Courier New</option>
-    <option value="'Indie Flower', cursive">Indie Flower</option>
-  </select>
+  <label>Tab 1 Title</label>
+  <input type="text" id="tab1Title" placeholder="Example: Overview" />
 
-  <div id="tabsContainer"></div>
-  <button onclick="addTab()">➕ Add Another Tab</button>
+  <label>Tab 1 Content</label>
+  <textarea id="tab1Content" rows="4" placeholder="Write the content for tab 1..."></textarea>
 
-  <button onclick="generateHTML()">Generate HTML</button>
-  <button onclick="previewTabs()">Preview Tabs</button>
+  <label>Tab 2 Title</label>
+  <input type="text" id="tab2Title" placeholder="Example: Instructions" />
 
-  <label for="output">Generated HTML:</label>
-  <textarea id="output" rows="10"></textarea>
+  <label>Tab 2 Content</label>
+  <textarea id="tab2Content" rows="4" placeholder="Write the content for tab 2..."></textarea>
 
-  <h2>Preview:</h2>
-  <div class="tab-preview" id="previewBox"></div>
+  <label>Tab 3 Title</label>
+  <input type="text" id="tab3Title" placeholder="Example: Resources" />
+
+  <label>Tab 3 Content</label>
+  <textarea id="tab3Content" rows="4" placeholder="Write the content for tab 3..."></textarea>
+
+  <button onclick="generateTabs()">Generate Canvas Tab HTML</button>
+
+  <h3>📋 Copy This HTML for Canvas:</h3>
+  <div id="output"></div>
+
+  <h3>👀 Preview:</h3>
+  <iframe id="previewFrame"></iframe>
 
   <script>
-    let tabCount = 0;
+    function generateTabs() {
+      const t1 = document.getElementById('tab1Title').value || 'Tab 1';
+      const c1 = document.getElementById('tab1Content').value || 'Content for Tab 1';
+      const t2 = document.getElementById('tab2Title').value || 'Tab 2';
+      const c2 = document.getElementById('tab2Content').value || 'Content for Tab 2';
+      const t3 = document.getElementById('tab3Title').value || 'Tab 3';
+      const c3 = document.getElementById('tab3Content').value || 'Content for Tab 3';
 
-    const emojiList = ['📚', '✏️', '📓', '📘', '🧠', '📐', '🧪', '🎓', '🏫', '📖', '💡'];
-
-    function addTab() {
-      tabCount++;
-      const container = document.createElement('div');
-      container.innerHTML = `
-        <label>Tab Title:</label>
-        <input type="text" class="tabTitle" placeholder="Tab ${tabCount}">
-        <label>Tab Content:</label>
-        <textarea class="tabContent" placeholder="Content for Tab ${tabCount}"></textarea>
-        <label>Tab Link (optional):</label>
-        <input type="url" class="tabLink" placeholder="https://example.com">
-        <label>Select Emoji:</label>
-        <select class="tabEmoji">
-          ${emojiList.map(e => `<option value="${e}">${e}</option>`).join('')}
-        </select>
-        <hr>
-      `;
-      document.getElementById('tabsContainer').appendChild(container);
+      const html = `
+<div class="tab-container">
+  <style>
+    .tab-labels {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 0;
     }
-
-    function generateHTML() {
-      const font = document.getElementById('fontSelect').value;
-      const title = document.getElementById('mainTitle').value;
-      const titles = document.querySelectorAll('.tabTitle');
-      const contents = document.querySelectorAll('.tabContent');
-      const links = document.querySelectorAll('.tabLink');
-      const emojis = document.querySelectorAll('.tabEmoji');
-
-      let html = `<div style="font-family: ${font};">`;
-      if (title) html += `<h2>${title}</h2>`;
-
-      html += `<div class='tabs'>`;
-      titles.forEach((t, i) => {
-        html += `<button class='tabBtn' onclick="openTab(event, 'tab${i}')">${emojis[i].value} ${t.value}</button>`;
-      });
-      html += `</div>`;
-
-      titles.forEach((t, i) => {
-        let content = contents[i].value;
-        let link = links[i].value;
-        if (link) content += ` <a href='${link}' target='_blank'>Click Here</a>`;
-        html += `<div id='tab${i}' class='tabContent'>${content}</div>`;
-      });
-
-      html += `</div>`;
-      html += `
-<script>
-function openTab(evt, tabId) {
-  var i, tabContent, tabBtn;
-  tabContent = document.getElementsByClassName("tabContent");
-  for (i = 0; i < tabContent.length; i++) {
-    tabContent[i].style.display = "none";
-  }
-  tabBtn = document.getElementsByClassName("tabBtn");
-  for (i = 0; i < tabBtn.length; i++) {
-    tabBtn[i].className = tabBtn[i].className.replace(" active", "");
-  }
-  document.getElementById(tabId).style.display = "block";
-  evt.currentTarget.className += " active";
-}
-</script>
-`;      
-      document.getElementById('output').value = html;
+    .tab-labels label {
+      background: #454851;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 10px 10px 0 0;
+      cursor: pointer;
+      transition: background 0.3s ease;
     }
-
-    function previewTabs() {
-      generateHTML();
-      document.getElementById('previewBox').innerHTML = document.getElementById('output').value;
+    .tab-labels label:hover {
+      background: #f08080;
     }
+    .tab-content {
+      display: none;
+      border: 2px dotted #f08080;
+      border-radius: 0 10px 10px 10px;
+      padding: 1em;
+      background: #fffaf0;
+    }
+    input[name="tabs"] {
+      display: none;
+    }
+    #tab1:checked ~ .tabs #content1,
+    #tab2:checked ~ .tabs #content2,
+    #tab3:checked ~ .tabs #content3 {
+      display: block;
+    }
+    #tab1:checked ~ .tab-labels label[for="tab1"],
+    #tab2:checked ~ .tab-labels label[for="tab2"],
+    #tab3:checked ~ .tab-labels label[for="tab3"] {
+      background: #f08080;
+    }
+  </style>
 
-    // Initialize with 1 tab
-    addTab();
+  <input type="radio" name="tabs" id="tab1" checked>
+  <input type="radio" name="tabs" id="tab2">
+  <input type="radio" name="tabs" id="tab3">
+
+  <div class="tab-labels">
+    <label for="tab1">${t1}</label>
+    <label for="tab2">${t2}</label>
+    <label for="tab3">${t3}</label>
+  </div>
+
+  <div class="tabs">
+    <div id="content1" class="tab-content">
+      <p>${c1}</p>
+    </div>
+    <div id="content2" class="tab-content">
+      <p>${c2}</p>
+    </div>
+    <div id="content3" class="tab-content">
+      <p>${c3}</p>
+    </div>
+  </div>
+</div>
+      `.trim();
+
+      document.getElementById('output').textContent = html;
+
+      const preview = document.getElementById('previewFrame');
+      preview.srcdoc = html;
+    }
   </script>
+
 </body>
 </html>
