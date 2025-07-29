@@ -1,75 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Custom Tab Generator for Canvas</title>
-  <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
-  <style id="dynamicStyles">
-    body {
-      background: url('https://www.transparenttextures.com/patterns/cardboard.png');
-      color: #333;
-      font-family: 'Architects Daughter', cursive;
-    }
-    label {
-      display: block;
-      margin-top: 1em;
-      font-weight: bold;
-    }
-    .form-section {
-      background: #fffaf0;
-      padding: 1em;
-      margin-bottom: 1em;
-      border: 3px dotted #f08080;
-      border-radius: 12px;
-    }
-    .output, .preview-box {
-      background: #fffde7;
-      padding: 1em;
-      margin-top: 1em;
-      border: 3px ridge #c0a060;
-      box-shadow: 0 0 15px #ffc107;
-      white-space: pre-wrap;
-    }
-    .tabs {
-      display: flex;
-      flex-wrap: wrap;
-      list-style-type: none;
-      padding-left: 0;
-      margin-bottom: 0;
-    }
-    .tabs li a {
-      background-color: #454851;
-      text-decoration: none;
-      color: white;
-      padding: 0.5em 1em;
-      display: inline-block;
-      border-radius: 10px 10px 0 0;
-      font-family: 'Architects Daughter', cursive;
-      font-size: 18pt;
-      margin-right: 0.5em;
-      transition: background-color 0.3s ease;
-    }
-    .tabs-content > div {
-      display: none;
-      border: 2px dotted #f08080;
-      padding: 1em;
-      background: #fffaf0;
-      border-radius: 0 10px 10px 10px;
-      animation: fadeIn 0.4s ease-in-out;
-    }
-    .tabs-content > div.active {
-      display: block;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet" />
+  <style id="dynamicStyles"></style>
 </head>
 <body>
   <h1>Canvas Tab HTML Generator</h1>
   <p>Fill in each field to build your own tabbed HTML layout for Canvas. Customize headings, content, and link buttons. Select style and animations to personalize your design. Copy the output HTML to your Canvas page HTML editor.</p>
+
   <div class="form-section">
     <label for="themeSelector">Choose Color Scheme</label>
     <select id="themeSelector" onchange="applyTheme()">
@@ -98,10 +39,13 @@
   </div>
 
   <div class="form-section">
-    <label>Preview:</label>
-    <div id="previewBox" class="preview-box"></div>
     <label>Generated HTML Code:</label>
     <textarea id="output" class="output" rows="10" cols="80"></textarea>
+  </div>
+
+  <div class="form-section">
+    <label>Live Preview:</label>
+    <div id="previewBox" class="preview-box"></div>
   </div>
 
   <script>
@@ -159,7 +103,7 @@
       if (activePanel) activePanel.classList.add("active");
 
       const links = document.querySelectorAll(".tabs li a");
-      links.forEach(link => link.style.backgroundColor = "#454851");
+      links.forEach(link => link.style.backgroundColor = "");
       el.style.backgroundColor = "#f08080";
     }
 
@@ -167,13 +111,89 @@
       const theme = document.getElementById('themeSelector').value;
       const style = document.getElementById('dynamicStyles');
 
+      const baseStyles = `
+        body {
+          font-family: 'Architects Daughter', cursive;
+        }
+        label {
+          display: block;
+          margin-top: 1em;
+          font-weight: bold;
+        }
+        .form-section {
+          padding: 1em;
+          margin-bottom: 1em;
+          border-radius: 12px;
+        }
+        .output, .preview-box {
+          padding: 1em;
+          margin-top: 1em;
+          white-space: pre-wrap;
+        }
+        .tabs {
+          display: flex;
+          flex-wrap: wrap;
+          list-style-type: none;
+          padding-left: 0;
+          margin-bottom: 0;
+        }
+        .tabs li a {
+          text-decoration: none;
+          padding: 0.5em 1em;
+          display: inline-block;
+          border-radius: 10px 10px 0 0;
+          font-family: 'Architects Daughter', cursive;
+          font-size: 18pt;
+          margin-right: 0.5em;
+          transition: background-color 0.3s ease;
+        }
+        .tabs-content > div {
+          display: none;
+          padding: 1em;
+          border-radius: 0 10px 10px 10px;
+          animation: fadeIn 0.4s ease-in-out;
+        }
+        .tabs-content > div.active {
+          display: block;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `;
+
+      let themeStyles = '';
+
       if (theme === 'light') {
-        style.innerHTML = `body { background: #fff; color: #000; font-family: inherit; } .output { background: #eee; color: #111; } .preview-box { background: #fff; border: 2px solid #999; } .tabs li a { background-color: #666; color: #000; }`;
+        themeStyles = `
+          body { background: #ffffff; color: #000000; }
+          .form-section { background: #f9f9f9; border: 3px solid #ccc; }
+          .output { background: #eee; color: #111; border: 2px solid #999; }
+          .preview-box { background: #fff; border: 2px solid #999; }
+          .tabs li a { background-color: #888; color: #000; }
+          .tabs-content > div { background: #fdfdfd; border: 2px solid #ccc; }
+        `;
       } else if (theme === 'fun') {
-        style.innerHTML = `body { background: url('https://www.transparenttextures.com/patterns/cardboard.png'); color: #333; font-family: 'Architects Daughter', cursive; } .output { background: #fffaf0; color: #000; border: 4px dotted #f08080; } .preview-box { background: #fffde7; border: 3px ridge #c0a060; box-shadow: 0 0 15px #ffc107; } .tabs li a { background-color: #454851; color: white; }`;
+        themeStyles = `
+          body { background: url('https://www.transparenttextures.com/patterns/cardboard.png'); color: #333; }
+          .form-section { background: #fffaf0; border: 3px dotted #f08080; }
+          .output { background: #fffaf0; color: #000; border: 4px dotted #f08080; }
+          .preview-box { background: #fffde7; border: 3px ridge #c0a060; box-shadow: 0 0 15px #ffc107; }
+          .tabs li a { background-color: #454851; color: white; }
+          .tabs-content > div { background: #fffaf0; border: 3px dotted #f08080; }
+        `;
       } else {
-        style.innerHTML = `body { background: #1e1e1e; color: #fff; } .output { background: #111; color: #ccc; } .preview-box { background: #2c2c2c; border: 2px solid #ccc; } .tabs li a { background-color: #555; color: #eee; }`;
+        themeStyles = `
+          body { background: #1e1e1e; color: #fff; }
+          .form-section { background: #2a2a2a; border: 3px solid #666; }
+          .output { background: #111; color: #ccc; border: 2px solid #444; }
+          .preview-box { background: #2c2c2c; border: 2px solid #ccc; }
+          .tabs li a { background-color: #555; color: #eee; }
+          .tabs-content > div { background: #1f1f1f; border: 2px solid #444; }
+        `;
       }
+
+      style.innerHTML = baseStyles + themeStyles;
     }
 
     function applyFont() {
@@ -181,6 +201,7 @@
       document.body.style.fontFamily = `'${font}', cursive`;
     }
 
+    // Cursor sparkle effect
     document.addEventListener('mousemove', e => {
       const dot = document.createElement("div");
       dot.style.position = "fixed";
@@ -196,6 +217,8 @@
       setTimeout(() => dot.remove(), 400);
     });
 
+    // Initialize
+    applyTheme();
     addTabInput();
     addTabInput();
   </script>
